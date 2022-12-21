@@ -590,6 +590,14 @@ jQuery( document ).ready( function( $ ) {
     $( ".<?php echo esc_attr( HELPDOCS_GO_PF ); ?>role_checkbox" ).change( function() {
         saveReminder();
     } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>color_ac" ).on( "change", function() {
+        const ac_elements = [ 'input[type="checkbox"]' ];
+        console.log( ac_elements );
+        for ( let ac = 0; ac < ac_elements.length; ac++ ) {
+            $( ac_elements[ac] ).attr( 'style', 'border: 1px solid ' + this.value + ' !important;' );
+        }
+        saveReminder();
+    } )
     $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>color_bg" ).on( "change", function() {
         const bg_elements = [ 'html', 'body', '#wpwrap', '#wpcontent', '#wpbody', '#wpbody-content', '.wrap', '.nav-tab-wrapper .nav-tab' ];
         const border_elements = [ '.nav-tab-wrapper .nav-tab.nav-tab-active' ];
@@ -614,7 +622,7 @@ jQuery( document ).ready( function( $ ) {
         const cl_elements = [ '#wpbody-content a', '#footer-thankyou a', '#footer-upgrade a' ];
         for ( let cl = 0; cl < cl_elements.length; cl++ ) {
             const currentStyle = $( cl_elements[cl] ).css( 'background-color' );
-            $( cl_elements[cl] ).attr( 'style', 'background-color: ' + currentStyle + ' !important; color: ' + this.value + ' !important' );
+            $( cl_elements[cl] ).attr( 'style', 'color: ' + this.value + ' !important' );
         }
         saveReminder();
     } )
