@@ -1,0 +1,626 @@
+<style>
+#dashicon-preview {
+    display: inline-block;
+    font-family: dashicons;
+    font-size: 1.5rem;
+    line-height: 1;
+    height: 25px;
+    vertical-align: middle;
+}
+.notice .button {
+    margin: 0px 4px;
+}
+.notice-buttons {
+    margin-left: 10px;
+}
+#save-reminder {
+    display: none;
+    position: fixed;
+    bottom: 3rem;
+    right: 2rem;
+    background: yellow;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    box-shadow: 4px 4px 16px;
+    font-weight: 600;
+    font-size: medium;
+}
+#other-settings {
+    margin-top: 30px;
+}
+</style>
+
+<?php 
+include 'header-page.php';
+$allowed_html = helpdocs_wp_kses_allowed_html(); 
+
+// Build the current url
+$page = helpdocs_plugin_options_short_path();
+$tab = 'settings';
+$current_url = helpdocs_plugin_options_path( $tab );
+
+// Are we resetting options?
+if ( $reset = helpdocs_get( 'reset' ) ) {
+
+    // Remove the query string
+    helpdocs_remove_qs_without_refresh( 'reset' );
+
+    // Check if confirmed
+    if ( !helpdocs_get( 'confirmed', '==', 'true' ) ) {
+
+        // Get the suffix
+        if ( $reset == 'colors' ) {
+            $what = 'all of the colors you have set for your documents';
+        } elseif ( $reset == 'all' ) {
+            $what = 'all of the plugin settings below';
+        } else {
+            return 'Nice try buddy!';
+        }
+
+        // Add a notice to confirm
+        ?>
+        <div class="notice notice-warning is-dismissible">
+        <p><?php _e( 'Are you absolutely sure you want to reset '.esc_html( $what ).'?', 'admin-help-docs' ); ?> <span class="notice-buttons"><a class="button button-secondary" href="<?php echo esc_url( $current_url ); ?>&reset=<?php echo esc_attr( $reset ); ?>&confirmed=true">Yes</a> <a class="button button-secondary" href="<?php echo esc_url( $current_url ); ?>">No</a></span></p>
+        </div>
+        <?php
+
+    } else {
+
+        // If colors
+        if ( $reset == 'colors' ) {
+
+            // Get the color keys
+            $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
+            $reset_keys = $HELPDOCS_GLOBAL_OPTIONS->colors;
+
+        } elseif ( $reset == 'all' ) {
+
+            // Get all keys
+            $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
+            $reset_keys = $HELPDOCS_GLOBAL_OPTIONS->settings_general;
+        }
+
+        // If we are resetting something legit
+        if ( $reset == 'colors' || $reset == 'all' ) {
+
+            // Iter the colors
+            foreach ( $reset_keys as $reset_key ) {
+
+                // Delete the option
+                delete_option( HELPDOCS_GO_PF.$reset_key );
+
+                // Refresh page again so CSS will take
+                header( 'Refresh:0 url='.$current_url );
+            }
+        }
+    }
+}
+
+// Update json
+if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
+    helpdocs_create_json_from_settings();
+}
+?>
+
+<?php if ( is_network_admin() ) { ?>
+    <p>You are currently on the multisite network. Settings are only available on a per-site bases. Please navigate to the appropriate site to update settings.</p>
+
+    <?php
+    $current_domain = helpdocs_get_domain();
+
+    // Get all of the subsites
+    global $wpdb;
+    $subsites = $wpdb->get_results( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE archived = '0' AND deleted = '0' AND spam = '0' ORDER BY blog_id" );
+
+    // Iter the subsites
+    if ( $subsites && !empty( $subsites ) ) {
+        ?><ul><?php
+        foreach( $subsites as $subsite ) {
+            $subsite_id = $subsite->blog_id;
+            $subsite_name = get_blog_details( $subsite_id )->blogname;
+            $link = str_replace( $current_domain, $subsite->domain, $current_url );
+            ?>
+            <li><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_attr( $subsite_name ); ?></a> (ID: <?php echo absint( $subsite_id ); ?>)</li>
+            <?php
+        }
+        ?></ul><?php
+    }
+    ?>
+
+<?php } else { ?>
+
+    <form method="post" action="options.php">
+        <?php settings_fields( HELPDOCS_PF.'group_settings' ); ?>
+        <?php do_settings_sections( HELPDOCS_PF.'group_settings' ); ?>
+        <table class="form-table">
+
+            <?php echo wp_kses( helpdocs_options_tr( 'admin_bar', 'Enable Admin Bar Menu Quick Link', 'checkbox', '' ), $allowed_html ); ?>
+
+            <?php $di = 'dashicons-';
+            $dashicons = [
+                $di.'menu',
+                $di.'admin-site',
+                $di.'dashboard',
+                $di.'admin-media',
+                $di.'admin-page',
+                $di.'admin-comments',
+                $di.'admin-appearance',
+                $di.'admin-plugins',
+                $di.'admin-users',
+                $di.'admin-tools',
+                $di.'admin-settings',
+                $di.'admin-network',
+                $di.'admin-generic',
+                $di.'admin-home',
+                $di.'admin-collapse',
+                $di.'filter',
+                $di.'admin-customizer',
+                $di.'admin-multisite',
+                $di.'admin-links',
+                $di.'format-links',
+                $di.'admin-post',
+                $di.'format-standard',
+                $di.'format-image',
+                $di.'format-gallery',
+                $di.'format-audio',
+                $di.'format-video',
+                $di.'format-chat',
+                $di.'format-status',
+                $di.'format-aside',
+                $di.'format-quote',
+                $di.'welcome-write-blog',
+                $di.'welcome-edit-page',
+                $di.'welcome-add-page',
+                $di.'welcome-view-site',
+                $di.'welcome-widgets-menus',
+                $di.'welcome-comments',
+                $di.'welcome-learn-more',
+                $di.'image-crop',
+                $di.'image-rotate',
+                $di.'image-rotate-left',
+                $di.'image-rotate-right',
+                $di.'image-flip-vertical',
+                $di.'image-flip-horizontal',
+                $di.'image-filter',
+                $di.'undo',
+                $di.'redo',
+                $di.'editor-bold',
+                $di.'editor-italic',
+                $di.'editor-ul',
+                $di.'editor-ol',
+                $di.'editor-quote',
+                $di.'editor-alignleft',
+                $di.'editor-aligncenter',
+                $di.'editor-alignright',
+                $di.'editor-insertmore',
+                $di.'editor-spellcheck',
+                $di.'editor-distractionfree',
+                $di.'editor-expand',
+                $di.'editor-contract',
+                $di.'editor-kitchensink',
+                $di.'editor-underline',
+                $di.'editor-justify',
+                $di.'editor-textcolor',
+                $di.'editor-paste-word',
+                $di.'editor-paste-text',
+                $di.'editor-removeformatting',
+                $di.'editor-video',
+                $di.'editor-customchar',
+                $di.'editor-outdent',
+                $di.'editor-indent',
+                $di.'editor-help',
+                $di.'editor-strikethrough',
+                $di.'editor-unlink',
+                $di.'editor-rtl',
+                $di.'editor-break',
+                $di.'editor-code',
+                $di.'editor-paragraph',
+                $di.'editor-table',
+                $di.'align-left',
+                $di.'align-right',
+                $di.'align-center',
+                $di.'align-none',
+                $di.'lock',
+                $di.'unlock',
+                $di.'calendar',
+                $di.'calendar-alt',
+                $di.'visibility',
+                $di.'hidden',
+                $di.'post-status',
+                $di.'edit',
+                $di.'post-trash',
+                $di.'trash',
+                $di.'sticky',
+                $di.'external',
+                $di.'arrow-up',
+                $di.'arrow-down',
+                $di.'arrow-left',
+                $di.'arrow-right',
+                $di.'arrow-up-alt',
+                $di.'arrow-down-alt',
+                $di.'arrow-left-alt',
+                $di.'arrow-right-alt',
+                $di.'arrow-up-alt2',
+                $di.'arrow-down-alt2',
+                $di.'arrow-left-alt2',
+                $di.'arrow-right-alt2',
+                $di.'leftright',
+                $di.'sort',
+                $di.'randomize',
+                $di.'list-view',
+                $di.'excerpt-view',
+                $di.'grid-view',
+                $di.'hammer',
+                $di.'art',
+                $di.'migrate',
+                $di.'performance',
+                $di.'universal-access',
+                $di.'universal-access-alt',
+                $di.'tickets',
+                $di.'nametag',
+                $di.'clipboard',
+                $di.'heart',
+                $di.'megaphone',
+                $di.'schedule',
+                $di.'wordpress',
+                $di.'wordpress-alt',
+                $di.'pressthis',
+                $di.'update',
+                $di.'screenoptions',
+                $di.'cart',
+                $di.'feedback',
+                $di.'cloud',
+                $di.'translation',
+                $di.'tag',
+                $di.'category',
+                $di.'archive',
+                $di.'tagcloud',
+                $di.'text',
+                $di.'media-archive',
+                $di.'media-audio',
+                $di.'media-code',
+                $di.'media-default',
+                $di.'media-document',
+                $di.'media-interactive',
+                $di.'media-spreadsheet',
+                $di.'media-text',
+                $di.'media-video',
+                $di.'playlist-audio',
+                $di.'playlist-video',
+                $di.'controls-play',
+                $di.'controls-pause',
+                $di.'controls-forward',
+                $di.'controls-skipforward',
+                $di.'controls-back',
+                $di.'controls-skipback',
+                $di.'controls-repeat',
+                $di.'controls-volumeon',
+                $di.'controls-volumeoff',
+                $di.'yes',
+                $di.'no',
+                $di.'no-alt',
+                $di.'plus',
+                $di.'plus-alt',
+                $di.'plus-alt2',
+                $di.'minus',
+                $di.'dismiss',
+                $di.'marker',
+                $di.'star-filled',
+                $di.'star-half',
+                $di.'star-empty',
+                $di.'flag',
+                $di.'info',
+                $di.'warning',
+                $di.'share',
+                $di.'share1',
+                $di.'share-alt',
+                $di.'share-alt2',
+                $di.'twitter',
+                $di.'rss',
+                $di.'email',
+                $di.'email-alt',
+                $di.'facebook',
+                $di.'facebook-alt',
+                $di.'networking',
+                $di.'googleplus',
+                $di.'location',
+                $di.'location-alt',
+                $di.'camera',
+                $di.'images-alt',
+                $di.'images-alt2',
+                $di.'video-alt',
+                $di.'video-alt2',
+                $di.'video-alt3',
+                $di.'vault',
+                $di.'shield',
+                $di.'shield-alt',
+                $di.'sos',
+                $di.'search',
+                $di.'slides',
+                $di.'analytics',
+                $di.'chart-pie',
+                $di.'chart-bar',
+                $di.'chart-line',
+                $di.'chart-area',
+                $di.'groups',
+                $di.'businessman',
+                $di.'id',
+                $di.'id-alt',
+                $di.'products',
+                $di.'awards',
+                $di.'forms',
+                $di.'testimonial',
+                $di.'portfolio',
+                $di.'book',
+                $di.'book-alt',
+                $di.'download',
+                $di.'upload',
+                $di.'backup',
+                $di.'clock',
+                $di.'lightbulb',
+                $di.'microphone',
+                $di.'desktop',
+                $di.'tablet',
+                $di.'smartphone',
+                $di.'phone',
+                $di.'smiley',
+                $di.'index-card',
+                $di.'carrot',
+                $di.'building',
+                $di.'store',
+                $di.'album',
+                $di.'palmtree',
+                $di.'tickets-alt',
+                $di.'money',
+                $di.'thumbs-up',
+                $di.'thumbs-down',
+                $di.'layout',
+                $di.'align-pull-left',
+                $di.'align-pull-right',
+                $di.'block-default',
+                $di.'cloud-saved',
+                $di.'cloud-upload',
+                $di.'columns',
+                $di.'cover-image',
+                $di.'embed-audio',
+                $di.'embed-generic',
+                $di.'embed-photo',
+                $di.'embed-post',
+                $di.'embed-video',
+                $di.'exit',
+                $di.'html',
+                $di.'info-outline',
+                $di.'insert-after',
+                $di.'insert-before',
+                $di.'insert',
+                $di.'remove',
+                $di.'shortcode',
+                $di.'table-col-after',
+                $di.'table-col-before',
+                $di.'table-col-delete',
+                $di.'table-row-after',
+                $di.'table-row-before',
+                $di.'table-row-delete',
+                $di.'saved',
+                $di.'amazon',
+                $di.'google',
+                $di.'linkedin',
+                $di.'pinterest',
+                $di.'podio',
+                $di.'reddit',
+                $di.'spotify',
+                $di.'twitch',
+                $di.'whatsapp',
+                $di.'xing',
+                $di.'youtube',
+                $di.'database-add',
+                $di.'database-export',
+                $di.'database-import',
+                $di.'database-remove',
+                $di.'database-view',
+                $di.'database',
+                $di.'bell',
+                $di.'airplane',
+                $di.'car',
+                $di.'calculator',
+                $di.'ames',
+                $di.'printer',
+                $di.'beer',
+                $di.'coffee',
+                $di.'drumstick',
+                $di.'food',
+                $di.'bank',
+                $di.'hourglass',
+                $di.'money-alt',
+                $di.'open-folder',
+                $di.'pdf',
+                $di.'pets',
+                $di.'privacy',
+                $di.'superhero',
+                $di.'superhero-alt',
+                $di.'edit-page',
+                $di.'fullscreen-alt',
+                $di.'fullscreen-exit-alt'
+            ];
+            sort( $dashicons );
+            $icons = [
+                'options' => $dashicons,
+                'width' => '20rem',
+                'default' => $di.'editor-help'
+            ]; 
+            $current_dashicon = get_option( HELPDOCS_GO_PF.'dashicon', 'dashicons-editor-help' );
+            $current_dashicon = str_replace( 'dashicons-', '', $current_dashicon );
+            $dashicons_url = 'https://developer.wordpress.org/resource/dashicons/'; ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'dashicon', 'Menu Icon', 'select', '<div id="dashicon-preview" class="dashicons-'.$current_dashicon.'"></div><br><a id="view-dashicons-link" href="'.$dashicons_url.'#'.$current_dashicon.'" target="_blank">View Dashicons</a>', $icons ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'logo', 'Logo<br><span style="font-style: italic; font-weight: normal;">(No Live Preview)</span>', 'text', '<br>Preferred size: 100x100 pixels. Accepted formats: jpg | jpeg | png | webp ', [ 'default' => HELPDOCS_PLUGIN_IMG_PATH.'logo.png', 'pattern' => '^https?:\/\/.+\.(jpg|jpeg|png|webp)$' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'page_title', 'Page Title', 'text', '', [ 'default' => HELPDOCS_NAME, 'width' => '20rem' ] ), $allowed_html ); ?>
+
+            <?php if ( is_multisite() ) { ?>
+                <?php echo wp_kses( helpdocs_options_tr( 'multisite_sfx', 'Multisite Title Suffix', 'text', '', [ 'default' => trim( helpdocs_multisite_suffix() ), 'width' => '20rem' ] ), $allowed_html ); ?>
+            <?php } ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'hide_version', 'Hide Version Number', 'checkbox', '' ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'menu_title', 'Menu Title', 'text', '', [ 'default' => 'Help Docs', 'width' => '20rem' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'menu_position', 'Menu Position<br><span style="font-style: italic; font-weight: normal;">(No Live Preview)</span>', 'number', '<br>1 = Above Dashboard, 2 = Under Dashboard, 999 = Bottom, etc.', [ 'width' => '5rem', 'default' => 2 ] ), $allowed_html ); ?>
+
+            <?php $footer_text = sprintf(
+			    /* translators: %s: https://wordpress.org/ */
+                __( 'Thank you for creating with <a href="%s">WordPress</a>.' ),
+                __( 'https://wordpress.org/' )
+            ); 
+            if ( get_option( HELPDOCS_GO_PF.'menu_title' ) && get_option( HELPDOCS_GO_PF.'menu_title' ) != '' ) {
+                $menu_title = get_option( HELPDOCS_GO_PF.'menu_title' );
+            } else {
+                $menu_title = 'Help Docs';
+            }
+            ob_start();
+            $left_footer_default = apply_filters( 'admin_footer_text', '<span id="footer-thankyou">' . $footer_text . '</span>' );
+            ob_clean();
+            ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'footer_left', 'Left Footer Text', 'text', '<br>Example: <em>"For help, see the <a href="/'.HELPDOCS_ADMIN_URL.'/admin.php?page='.HELPDOCS_TEXTDOMAIN.'%2Fincludes%2Fadmin%2Foptions.php&tab=topics">'.$menu_title.'</a></em>"', [ 'default' => $left_footer_default ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'footer_right', 'Right Footer Text', 'text', '', [ 'default' => apply_filters( 'update_footer', '' ) ] ), $allowed_html ); ?>
+
+            <?php 
+            // Get the role details
+            $roles = get_editable_roles();
+
+            // Store the roles here
+            $role_options = [];
+
+            // Iter the roles
+            foreach ( $roles as $key => $role ) {
+
+                // Do not include admin
+                if ( $key != 'administrator' ) {
+
+                    // Add the option's label and value
+                    $role_options[] = [
+                        'label' => $role[ 'name' ],
+                        'value' => $key
+                    ];
+                }
+            }
+
+            // Set the args
+            $edit_roles_args = [
+                'options' => $role_options,
+                'class'   => HELPDOCS_GO_PF.'role_checkbox'
+            ]; ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'edit_roles', 'Additional Roles That Can Add/Edit Help Sections', 'checkboxes', '', $edit_roles_args ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'color_ac', 'Accent Color', 'color', null, [ 'default' => '#1F9DAB' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'color_bg', 'Background Color', 'color', null, [ 'default' => '#FFFFFF' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'color_ti', 'Document Title Color', 'color', null, [ 'default' => '#1D2327' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'color_fg', 'Text Color', 'color', null, [ 'default' => '#1D2327' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'color_cl', 'Link Color', 'color', null, [ 'default' => '#1F9DAB' ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'disable_user_prefs', 'Disable User Preferences', 'checkbox', '' ), $allowed_html ); ?>
+
+        </table>
+        
+        <?php submit_button(); ?>
+    </form>
+<?php } ?>
+
+<div id="other-settings"><a href="<?php echo esc_url( $current_url ); ?>&reset=colors">Reset Colors to Default</a> | <a href="<?php echo esc_url( $current_url ); ?>&reset=all">Reset All Settings to Default</a> | <a href="<?php echo esc_url( helpdocs_plugin_options_path( 'settingsie' ) ); ?>">Copy Settings from Another Site</a></div>
+
+<div id="save-reminder">Don't forget to save your changes!</div>
+
+<script id="<?php echo esc_attr( HELPDOCS_GO_PF ); ?>jquery">
+jQuery( document ).ready( function( $ ) {
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>dashicon" ).on( "change", function() {
+        $( "#adminmenu #toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> .wp-menu-image" ).attr( "class", "wp-menu-image dashicons-before " + this.value );
+        var dashiconName = this.value.replace( 'dashicons-', '' );
+        $( "#view-dashicons-link" ).attr( "href", "<?php echo esc_url( $dashicons_url ); ?>#" + dashiconName );
+        $( "#dashicon-preview" ).attr( "class", this.value );
+        if ( $( "#wp-admin-bar-<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>" ) ) {
+            $( "#wp-admin-bar-<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> .dashicons-before" ).attr( "class", "dashicons-before " + this.value );
+        }
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>logo" ).on( "keyup change", function() {
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>page_title" ).on( "keyup change", function() {
+        $( "#plugin-page-title" ).html( this.value );
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>multisite_sfx" ).on( "keyup change", function() {
+        $( "#plugin-multisite-suffix" ).html( this.value );
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>hide_version" ).change( function(e) {
+        $( "#plugin-version" ).toggle();
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>menu_title" ).on( "keyup change", function() {
+        $( "#toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> .wp-menu-name" ).html( this.value );
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>menu_position" ).on( "keyup change", function() {
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>footer_left" ).on( "keyup change", function() {
+        $( "#footer-left" ).html( this.value );
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>footer_right" ).on( "keyup change", function() {
+        $( "#footer-upgrade" ).html( this.value );
+        saveReminder();
+    } )
+    $( ".<?php echo esc_attr( HELPDOCS_GO_PF ); ?>role_checkbox" ).change( function() {
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>color_bg" ).on( "change", function() {
+        const bg_elements = [ 'html', 'body', '#wpwrap', '#wpcontent', '#wpbody', '#wpbody-content', '.wrap', '.nav-tab-wrapper .nav-tab' ];
+        const border_elements = [ '.nav-tab-wrapper .nav-tab.nav-tab-active' ];
+        for ( let bg = 0; bg < bg_elements.length; bg++ ) {
+            const currentStyle = $( bg_elements[bg] ).css( 'color' );
+            $( bg_elements[bg] ).attr( 'style', 'color: ' + currentStyle + ' !important; background-color: ' + this.value + ' !important' );
+        }
+        for ( let b = 0; b < border_elements.length; b++ ) {
+            $( border_elements[b] ).attr( 'style', 'border-color: ' + this.value + ' !important' );
+        }
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>color_fg" ).on( "change", function() {
+        const fg_elements = [ 'html', 'body', '#wpwrap', '#wpcontent', '#wpbody', '#wpbody-content', '.wrap', '.admin-title-cont h1', '.tab-header', '.wp-heading-inline', '.form-table th','.subsubsub .count', '#footer-thankyou', '#footer-upgrade' ];
+        for ( let fg = 0; fg < fg_elements.length; fg++ ) {
+            const currentStyle = $( fg_elements[fg] ).css( 'background-color' );
+            $( fg_elements[fg] ).attr( 'style', 'background-color: ' + currentStyle + ' !important; color: ' + this.value + ' !important' );
+        }
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>color_cl" ).on( "change", function() {
+        const cl_elements = [ '#wpbody-content a', '#footer-thankyou a', '#footer-upgrade a' ];
+        for ( let cl = 0; cl < cl_elements.length; cl++ ) {
+            const currentStyle = $( cl_elements[cl] ).css( 'background-color' );
+            $( cl_elements[cl] ).attr( 'style', 'background-color: ' + currentStyle + ' !important; color: ' + this.value + ' !important' );
+        }
+        saveReminder();
+    } )
+    $( "#<?php echo esc_attr( HELPDOCS_GO_PF ); ?>disable_user_prefs" ).change( function() {
+        saveReminder();
+    } )
+    function saveReminder() {
+        var div = jQuery( "#save-reminder" );
+        if ( div.css( "display" ) == "none" ) {
+            div.show( "slow" );
+            console.log( "Don't forget to save your preferences!" );
+        } else {
+            console.log( "Ooh, you're getting change happy! I love it!" );
+        }
+    } // End saveReminder()
+} );
+</script>
