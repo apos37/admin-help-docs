@@ -7,11 +7,11 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 <style>
 #documentation {
     display: flex;
-    height: 100vh;
+    /* height: 100vh; */
 }
 #doc-toc {
     width: 200px;
-    height: 100vh;
+    /* height: 100vh; */
     border-right: 1px solid #ccc;
 }
 .toc-item {

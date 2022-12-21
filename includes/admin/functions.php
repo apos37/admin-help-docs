@@ -88,6 +88,11 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         $value = '';
     }
 
+    // Make exception for Footer Right
+    if ( $option_name == 'footer_right' && str_starts_with( $value, 'Version ' ) ) {
+        $value = apply_filters( 'update_footer', '' );
+    }
+
     // Mark required?
     if ( !is_null( $args ) && isset( $args[ 'required' ] ) && $args[ 'required' ] == true ) {
         $required = ' required';
