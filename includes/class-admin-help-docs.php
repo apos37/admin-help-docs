@@ -92,6 +92,7 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_ADMIN_PATH . 'functions.php';
 
         // Classes
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-colors.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-documentation.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';

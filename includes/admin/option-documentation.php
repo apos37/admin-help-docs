@@ -1,9 +1,7 @@
 <?php
 // Get the colors
-$color_ac = get_option( HELPDOCS_GO_PF.'color_ac', '#1F9DAB' );
-$color_bg = get_option( HELPDOCS_GO_PF.'color_bg', '#FFFFFF' );
-$color_ti = get_option( HELPDOCS_GO_PF.'color_ti', '#1D2327' );
-$color_fg = get_option( HELPDOCS_GO_PF.'color_fg', '#1D2327' );
+$HELPDOCS_COLORS = new HELPDOCS_COLORS();
+$color_ti = $HELPDOCS_COLORS->get( 'ti' );
 ?>
 
 <style>
@@ -75,7 +73,7 @@ $posts = get_posts( $args );
 
 // Stop if no posts are found
 if ( !$posts ) {
-    echo 'No documentation found. <a href="/'.esc_url( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
+    echo 'No documentation found. <a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
     return;
 }
 

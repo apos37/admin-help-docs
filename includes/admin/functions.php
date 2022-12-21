@@ -824,5 +824,33 @@ function helpdocs_is_json( $string ) {
 
 
 /**
+ * Get the plugin title
+ *
+ * @return string
+ */
+function helpdocs_title() {
+    if ( get_option( HELPDOCS_GO_PF.'page_title' ) && get_option( HELPDOCS_GO_PF.'page_title' ) != '' ) {
+        return get_option( HELPDOCS_GO_PF.'page_title' );
+    } else {
+        return HELPDOCS_NAME;
+    }
+} // End helpdocs_title()
+
+
+/**
+ * Get the logo
+ *
+ * @return string
+ */
+function helpdocs_logo() {
+    if ( get_option( HELPDOCS_GO_PF.'logo' ) && get_option( HELPDOCS_GO_PF.'logo' ) != '' ) {
+        return get_option( HELPDOCS_GO_PF.'logo' );
+    } else {
+        return HELPDOCS_PLUGIN_IMG_PATH.'logo.png';
+    }
+} // End helpdocs_logo()
+
+
+/**
  * THE END
  */

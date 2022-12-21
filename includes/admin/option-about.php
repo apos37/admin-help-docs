@@ -1,7 +1,8 @@
 <?php 
 // Get the colors
-$color_bg = get_option( HELPDOCS_GO_PF.'color_bg', '#FFFFFF' );
-$color_cl = get_option( HELPDOCS_GO_PF.'color_cl', '#1F9DAB' ); 
+$HELPDOCS_COLORS = new HELPDOCS_COLORS();
+$color_bg = $HELPDOCS_COLORS->get( 'bg' );
+$color_cl = $HELPDOCS_COLORS->get( 'cl' );
 ?>
 
 <style>

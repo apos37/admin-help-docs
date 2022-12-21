@@ -102,6 +102,14 @@ if ( $reset = helpdocs_get( 'reset' ) ) {
 if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
     helpdocs_create_json_from_settings();
 }
+
+// Get the colors
+$HELPDOCS_COLORS = new HELPDOCS_COLORS();
+$color_ac = $HELPDOCS_COLORS->get( 'ac' );
+$color_bg = $HELPDOCS_COLORS->get( 'bg' );
+$color_ti = $HELPDOCS_COLORS->get( 'ti' );
+$color_fg = $HELPDOCS_COLORS->get( 'fg' );
+$color_cl = $HELPDOCS_COLORS->get( 'cl' );
 ?>
 
 <?php if ( is_network_admin() ) { ?>
@@ -515,15 +523,15 @@ if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
             ]; ?>
             <?php echo wp_kses( helpdocs_options_tr( 'edit_roles', 'Additional Roles That Can Add/Edit Help Sections', 'checkboxes', '', $edit_roles_args ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'color_ac', 'Accent Color', 'color', null, [ 'default' => '#1F9DAB' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'color_ac', 'Accent Color', 'color', null, [ 'default' => $color_ac ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'color_bg', 'Background Color', 'color', null, [ 'default' => '#FFFFFF' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'color_bg', 'Background Color', 'color', null, [ 'default' => $color_bg ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'color_ti', 'Document Title Color', 'color', null, [ 'default' => '#1D2327' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'color_ti', 'Document Title Color', 'color', null, [ 'default' => $color_ti ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'color_fg', 'Text Color', 'color', null, [ 'default' => '#1D2327' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'color_fg', 'Text Color', 'color', null, [ 'default' => $color_fg ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'color_cl', 'Link Color', 'color', null, [ 'default' => '#1F9DAB' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'color_cl', 'Link Color', 'color', null, [ 'default' => $color_cl ] ), $allowed_html ); ?>
 
             <?php echo wp_kses( helpdocs_options_tr( 'disable_user_prefs', 'Disable User Preferences', 'checkbox', '' ), $allowed_html ); ?>
 

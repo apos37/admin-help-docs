@@ -7,11 +7,7 @@
 include HELPDOCS_PLUGIN_ADMIN_PATH.'css/style.php';
 
 // The title
-if ( get_option( HELPDOCS_GO_PF.'page_title' ) && get_option( HELPDOCS_GO_PF.'page_title' ) != '' ) {
-    $title = get_option( HELPDOCS_GO_PF.'page_title' );
-} else {
-    $title = HELPDOCS_NAME;
-}
+$title = helpdocs_title();
 
 // Multisite header
 if ( get_option( HELPDOCS_GO_PF.'multisite_sfx' ) && get_option( HELPDOCS_GO_PF.'multisite_sfx' ) != '' ) {
@@ -32,17 +28,13 @@ if ( $current_screen->post_type == 'help-docs' ) {
 }
 
 // Get the logo
-if ( get_option( HELPDOCS_GO_PF.'logo' ) && get_option( HELPDOCS_GO_PF.'logo' ) != '' ) {
-    $logo = get_option( HELPDOCS_GO_PF.'logo' );
-} else {
-    $logo = HELPDOCS_PLUGIN_IMG_PATH.'logo.png';
-}
+$logo = helpdocs_logo();
 
 // Get the colors
-// $color_ac = get_option( HELPDOCS_GO_PF.'color_ac', '#1F9DAB' );
-$color_bg = get_option( HELPDOCS_GO_PF.'color_bg', '#FFFFFF' );
-$color_fg = get_option( HELPDOCS_GO_PF.'color_fg', '#1D2327' );
-$color_cl = get_option( HELPDOCS_GO_PF.'color_cl', '#1F9DAB' );
+$HELPDOCS_COLORS = new HELPDOCS_COLORS();
+$color_bg = $HELPDOCS_COLORS->get( 'bg' );
+$color_fg = $HELPDOCS_COLORS->get( 'fg' );
+$color_cl = $HELPDOCS_COLORS->get( 'cl' );
 ?>
 
 <style>

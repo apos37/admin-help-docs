@@ -12,7 +12,9 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-new HELPDOCS_MENU;
+if ( !is_network_admin() ) {
+    new HELPDOCS_MENU;
+}
 
 
 /**

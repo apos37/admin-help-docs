@@ -85,7 +85,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
         $this->register_group_settings( 'settings', $this->settings_general );
 
         // Settings Import/Export
-        $this->register_group_settings( 'settingsie', [ 'import_link', 'import_date' ] );
+        $this->register_group_settings( 'settingsie', [ 'import_link' ] );
     } // End register_settings()
 
 

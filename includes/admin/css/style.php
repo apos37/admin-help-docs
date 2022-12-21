@@ -18,25 +18,13 @@ if ( is_network_admin() ) {
 
 // Are we on the options page?
 if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type == 'help-docs' ) ) {
-
-    // Set default colors here
-    $bg_primary             = '#FBFBFB'; // Background primary
-    $bg_secondary           = '#FFFFFF'; // Background secondary
-    $bg_secondary_hover     = 'inherit'; // Background secondary hover
-
-    $text_primary           = 'inherit'; // Text primary
-    $text_secondary         = 'inherit'; // Text secondary
-    $text_secondary_hover   = 'inherit'; // Text secondary hover
-    $links                  = '#2F76DB'; // Links
-
-    $bg_accent              = '#2F76DB'; // Accent color background
-    $text_accent            = '#FBFBFB'; // Accent color text
-    $text_accent_hover      = 'inherit'; // Accent color text hover
-
-    $bg_warnings            = 'inherit'; // Warnings background
-    $text_warnings          = 'inherit'; // Warnings text
-
-    $borders_main           = 'inherit'; // Form field and table borders
+    // Get the colors
+    $HELPDOCS_COLORS = new HELPDOCS_COLORS();
+    $color_ac = $HELPDOCS_COLORS->get( 'ac' );
+    $color_bg = $HELPDOCS_COLORS->get( 'bg' );
+    $color_ti = $HELPDOCS_COLORS->get( 'ti' );
+    $color_fg = $HELPDOCS_COLORS->get( 'fg' );
+    $color_cl = $HELPDOCS_COLORS->get( 'cl' );
     ?>
     <style>
 
@@ -69,7 +57,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
 
         .wrap.<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> {
             margin-left: 4px !important;
-            background: <?php echo esc_attr( $bg_primary ); ?> !important;
+            background: <?php echo esc_attr( $color_bg ); ?> !important;
         }
         .wp-heading-inline {
             font-size: 1.3em !important;
@@ -109,7 +97,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         #wpbody,
         #wpbody-content,
         .wrap {
-            background: <?php echo esc_attr( $bg_primary ); ?> !important;
+            background: <?php echo esc_attr( $color_bg ); ?> !important;
         }
 
         /* HR */
@@ -122,7 +110,8 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         .full_width_container,
         .half_width_container,
         .snippet_container {
-            background-color: <?php echo esc_attr( $bg_secondary ); ?>;
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
+            filter: brightness( 95% );
             padding: 15px;
             border-radius: 4px;
             height: auto;
@@ -147,21 +136,21 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         .admin-large-table,
         .admin-large-table th,
         .admin-large-table td {
-            border: 1px solid <?php echo esc_attr( $borders_main ); ?>;
+            border: 1px solid <?php echo esc_attr( $color_fg ); ?>;
         }
         .admin-large-table th,
         .admin-large-table td {
-            color: <?php echo esc_attr( $text_primary ); ?> !important;
+            color: <?php echo esc_attr( $color_fg ); ?> !important;
             padding: 10px;
         }
         .admin-large-table td {
             word-break:break-all;
         }
         .admin-large-table tr:nth-child(even) {
-            background: <?php echo esc_attr( $bg_primary ); ?> !important;
+            background: <?php echo esc_attr( $color_bg ); ?> !important;
         }
         table.alternate-row tr:nth-child(even) {
-            background: <?php echo esc_attr( $bg_primary ); ?> !important;
+            background: <?php echo esc_attr( $color_bg ); ?> !important;
         }
         .form-table tr td:last-child {
             padding-right: 0;
@@ -186,7 +175,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         /* Click to copy */
         .click-to-copy {
             background: transparent;
-            color: <?php echo esc_attr( $links ); ?>;
+            color: <?php echo esc_attr( $color_cl ); ?>;
             padding: 0;
             border-radius: 0;
         }
@@ -198,8 +187,9 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         /* Checkboxes and Radios */
         input[type="checkbox"],
         input[type="radio"] {
-            background-color: <?php echo esc_attr( $bg_secondary ); ?>;
-            border: 1px solid <?php echo esc_attr( $bg_accent ); ?>;
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
+            filter: brightness( 95% );
+            border: 1px solid <?php echo esc_attr( $color_ac ); ?>;
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -210,22 +200,22 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
             transition: all 1s ease;
         }
         input[type="checkbox"]:checked:before {
-            color: <?php echo esc_attr( $text_accent ); ?>;
+            color: <?php echo esc_attr( $color_bg ); ?>;
             content: '\2713';
             margin: 15px 3px !important;
             font-size: 16px;
             font-weight: bold;
         }
         input[type="radio"]:checked:before {
-            color: <?php echo esc_attr( $text_accent ); ?>;
-            background-color: <?php echo esc_attr( $text_accent ); ?>;
+            color: <?php echo esc_attr( $color_bg ); ?>;
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
             margin: 4px 4px !important;
             width: 20px;
             height: 20px;
         }
         input[type="checkbox"]:checked,
         input[type="radio"]:checked {
-            background: <?php echo esc_attr( $bg_accent ); ?>
+            background: <?php echo esc_attr( $color_ac ); ?>
         }
         .gfield_radio div,
         .update_choice {
@@ -242,8 +232,9 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php input[type=number],
         .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php textarea,
         .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php select {
-            background-color: <?php echo esc_attr( $bg_secondary ); ?> !important;
-            color: <?php echo esc_attr( $text_primary ); ?> !important;
+            background-color: <?php echo esc_attr( $color_bg ); ?> !important;
+            filter: brightness( 95% );
+            color: <?php echo esc_attr( $color_fg ); ?> !important;
             padding: 8px 12px !important;
             width: 43.75rem;
             max-width: 43.75rem;
@@ -262,7 +253,8 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
             appearance: menulist !important;
         }
         .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php input[type=color] {
-            background-color: <?php echo esc_attr( $bg_secondary ); ?> !important;
+            background-color: <?php echo esc_attr( $color_bg ); ?> !important;
+            filter: brightness( 95% );
             height: 4rem;
         }
 

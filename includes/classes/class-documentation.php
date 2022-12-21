@@ -1246,11 +1246,12 @@ class HELPDOCS_DOCUMENTATION {
      */
     public function add_to_other_pages() {
         // Get the colors
-        $color_ac = get_option( HELPDOCS_GO_PF.'color_ac', '#1F9DAB' );
-        $color_bg = get_option( HELPDOCS_GO_PF.'color_bg', '#FFFFFF' );
-        $color_ti = get_option( HELPDOCS_GO_PF.'color_ti', '#1D2327' );
-        $color_fg = get_option( HELPDOCS_GO_PF.'color_fg', '#1D2327' );
-        $color_cl = get_option( HELPDOCS_GO_PF.'color_fg', '#1F9DAB' );
+        $HELPDOCS_COLORS = new HELPDOCS_COLORS();
+        $color_ac = $HELPDOCS_COLORS->get( 'ac' );
+        $color_bg = $HELPDOCS_COLORS->get( 'bg' );
+        $color_ti = $HELPDOCS_COLORS->get( 'ti' );
+        $color_fg = $HELPDOCS_COLORS->get( 'fg' );
+        $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
         // Do not add to dashboard
         global $current_screen;
@@ -1569,9 +1570,11 @@ class HELPDOCS_DOCUMENTATION {
             $content = nl2br( $content );                                       // Convert the rest of the line breaks
 
             // Get the colors
-            $color_bg = get_option( HELPDOCS_GO_PF.'color_bg', '#FFFFFF' );
-            $color_ti = get_option( HELPDOCS_GO_PF.'color_ti', '#1D2327' );
-            $color_fg = get_option( HELPDOCS_GO_PF.'color_fg', '#1D2327' );
+            $HELPDOCS_COLORS = new HELPDOCS_COLORS();
+            $color_bg = $HELPDOCS_COLORS->get( 'bg' );
+            $color_ti = $HELPDOCS_COLORS->get( 'ti' );
+            $color_fg = $HELPDOCS_COLORS->get( 'fg' );
+            $color_cl = $HELPDOCS_COLORS->get( 'cl' );
             ?>
             <script>
             // Load JavaScript after the page has loaded
@@ -1630,9 +1633,9 @@ class HELPDOCS_DOCUMENTATION {
                         button.setAttribute( 'class', 'components-button is-primary' );
                         button.innerHTML = 'Help';
 
-                        button.style.backgroundColor = '<?php echo esc_attr( $color_bg ); ?>';
-                        button.style.color = '<?php echo esc_attr( $color_fg ); ?>';
-                        button.style.padding = '20px';
+                        button.style.backgroundColor = '<?php echo esc_attr( $color_cl ); ?>';
+                        button.style.color = '<?php echo esc_attr( $color_bg ); ?>';
+                        button.style.padding = '16px';
 
                         // Add the button to the toolbar
                         const toolbarSettings = document.querySelector( '.edit-post-header__settings' );
