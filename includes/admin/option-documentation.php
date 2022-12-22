@@ -37,6 +37,13 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
     margin-left: 1rem;
     display: inline-block;
 }
+ul {
+    list-style: square;
+    padding: revert;
+}
+ul li {
+    padding-inline-start: 1ch;
+}
 </style>
 
 <?php include 'header-page.php'; ?>

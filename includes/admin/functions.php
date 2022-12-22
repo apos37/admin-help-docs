@@ -800,11 +800,39 @@ function helpdocs_import_settings_from_json( $file ) {
     $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
     $keys = $HELPDOCS_GLOBAL_OPTIONS->settings_general;
 
+    // Bools
+    $bools = [
+        'admin_bar',
+        'hide_version',
+        'disable_user_prefs'
+    ];
+
+    // Numbers
+    $nums = [
+        'menu_position'
+    ];
+
+    // URLs
+    $urls = [
+        'logo'
+    ];
+
     // Iter the items
     foreach ( $settings as $setting => $value ) {
 
         // validate the key
         if ( in_array( $setting, $keys ) && $setting !== 'edit_roles' ) {
+
+            // Sanitize
+            if ( in_array( $setting, $bools ) ) {
+                $value = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+            } elseif ( in_array( $setting, $nums ) ) {
+                $value = absint( $value );
+            } elseif ( in_array( $setting, $urls ) ) {
+                $value = esc_url_raw( $value );
+            } else {
+                $value = sanitize_text_field( $value );
+            }
 
             // Update
             update_option( HELPDOCS_GO_PF.$setting, $value );
