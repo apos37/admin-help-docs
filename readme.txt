@@ -1,4 +1,4 @@
-=== Developer Debug Tools ===
+=== Admin Help Docs ===
 Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
