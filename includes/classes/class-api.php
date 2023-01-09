@@ -73,13 +73,14 @@ class HELPDOCS_API {
         register_rest_route( $namespace, self::$base, [
             'methods'   => WP_REST_Server::READABLE,
             'callback'  => [ $this, 'get_all' ],
+            'permission_callback' => '__return_true'
         ] );
 
         // Single docs
         register_rest_route( $namespace, self::$base.'/(?P<doc_id>[\d]+)', [
             'methods'   => WP_REST_Server::READABLE,
             'callback'  => [ $this, 'get_single' ],
-            // 'permission_callback' => function() { return ''; }
+            'permission_callback' => '__return_true'
         ] );
 	} // End register_routes()
 	
