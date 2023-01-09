@@ -65,4 +65,4 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 
 == Changelog ==
 = 1.0.0 =
-* Created this plugin on November 21, 2022
+* Created this plugin on November 14, 2022
