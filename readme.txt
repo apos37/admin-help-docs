@@ -20,15 +20,15 @@ Site developers and operators can easily create help documentation for the WordP
 * Change the admin footer text to admin contact information or whatever you want
 * Easily import settings from another site
 * Users can reset meta box and admin list column preferences from profile page
-* Use it for reminders, too
+* Use it for notices and reminders, too!
 
 = Site Locations =
-* Main help page
+* Main documentation page
 * Admin bar
 * Dashboard
 * Post/page edit screen
 * Post/page admin list screen
-* All other admin pages that are listed on admin menu
+* All other pages that are listed on admin menu
 
 = Page Locations =
 * Contextual help (even on Gutenberg)
@@ -45,8 +45,8 @@ Site developers and operators can easily create help documentation for the WordP
 = Who can add a help section? =
 Anyone that has the Administrator role, or other roles that you specify.
 
-= How do I use the same documentation across multiple sites? =
-We are working on adding easier functionality for this, but for now you can export/import them just like you would any other post type.
+= Can I use the same documentation across multiple sites? =
+Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin.
 
 = Where can I request features and get further support? =
 Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
@@ -61,8 +61,8 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 7. Classic contextual help and meta box
 8. Dashboard meta box
 9. Bottom page documentation
-10. Admin bar documentation
+10. Import documents from another site
 
 == Changelog ==
 = 1.0.0 =
-* Created this plugin on December 21, 2022
+* Created this plugin on November 21, 2022

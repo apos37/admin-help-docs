@@ -40,6 +40,8 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 ul {
     list-style: square;
     padding: revert;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 ul li {
     padding-inline-start: 1ch;
@@ -76,23 +78,35 @@ if ( $tag = sanitize_text_field( helpdocs_get( 'tag' ) ) ) {
 }
 
 // Get the posts
-$posts = get_posts( $args );
+$docs = get_posts( $args );
+
+// Also get the imports
+$imports = helpdocs_get_imports( $args );
+
+// Merge them together
+if ( !empty( $imports ) ) {
+    $docs = array_merge( $docs, $imports );
+}
 
 // Stop if no posts are found
-if ( !$posts ) {
+if ( !$docs ) {
     echo 'No documentation found. <a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
     return;
 }
 
 // First we sort by the doc order
-usort( $posts, function( $a, $b ) { return strcmp( $a->helpdocs_order, $b->helpdocs_order ) ; } );
+usort( $docs, function( $a, $b ) { return strcmp( $a->helpdocs_order, $b->helpdocs_order ) ; } );
 
 // Check if we are viewing a doc
 if ( helpdocs_get( 'id' ) ) {
     $current_doc_id = absint( helpdocs_get( 'id' ) );
 } else {
-    $current_doc_id = $posts[0]->ID;
+    $current_doc_id = $docs[0]->ID;
 }
+
+// Store the current doc here
+$current_doc = (Object)[];
+$feed = false;
 
 // Start the full page container
 echo '<div id="documentation">';
@@ -106,17 +120,26 @@ echo '<div id="documentation">';
     echo '<div id="doc-toc">';
 
         // Loop through each post
-        foreach ( $posts as $post ) {
+        foreach ( $docs as $doc ) {
 
             // Highlight
-            if ( $post->ID == $current_doc_id ) {
+            if ( $doc->ID == $current_doc_id ) {
                 $active = ' active';
+                $current_doc = $doc;
             } else {
                 $active = '';
             }
 
+            // If imported
+            if ( isset( $doc->auto_feed ) && $doc->auto_feed != '' ) {
+                $incl_feed = '&feed=true';
+                $feed = $doc->ID;
+            } else {
+                $incl_feed = '';
+            }
+
             // Add the item
-            echo '<span class="toc-item'.esc_attr( $active ).'">&#10551; <a href="'.esc_url( $current_url ).'&id='.absint( $post->ID ).'">'.esc_html( $post->post_title ).'</a></span> ';
+            echo '<span class="toc-item'.esc_attr( $active ).'">&#10551; <a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'">'.esc_html( $doc->post_title ).'</a></span> ';
         }
 
     // End the toc container
@@ -127,43 +150,75 @@ echo '<div id="documentation">';
      * Now load the document in the viewer
      */
 
-    // Start the toc container
-    echo '<div id="doc-viewer">';
+    // Make sure the current doc is set
+    
+    $current_doc_as_array = (array)$current_doc;
+    if ( !empty( $current_doc_as_array ) ) {
 
-        // Get the doc
-        $doc = get_post( $current_doc_id );
+        // Start the toc container
+        echo '<div id="doc-viewer">';
 
-        // Get the author
-        $created_by = get_userdata( $doc->post_author );
+            // Get the author
+            if ( is_numeric( $current_doc->post_author ) ) {
+                $created_by = get_userdata( $current_doc->post_author );
+                $created_by = $created_by->display_name;
+            } else {
+                $created_by = $current_doc->post_author;
+            }
 
-        // Get the modified by
-        if ( $doc->_edit_last ) {
-            $modified_by = get_userdata( $doc->_edit_last );
-            $incl_modified = '<br>Last modified: '.helpdocs_convert_timezone( $doc->post_modified ).' by '.esc_attr( $modified_by->display_name );
-        } else {
-            $incl_modified = '';
-        }
+            // Get the modified by
+            if ( $current_doc->_edit_last ) {
 
-        // The edit link
-        if ( helpdocs_user_can_edit() ) {
-            $incl_edit = ' <span id="edit-link">[<a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/post.php?post='.absint( $current_doc_id ).'&action=edit">edit</a>]</span>';
-        } else {
-            $incl_edit = '';
-        }
+                // Modified by
+                if ( is_numeric( $current_doc->_edit_last ) ) {
+                    $modified_by = get_userdata( $current_doc->_edit_last );
+                    $modified_by = $modified_by->display_name;
+                } else {
+                    $modified_by = $current_doc->_edit_last;
+                }
+                
+                $incl_modified = '<br>Last modified: '.helpdocs_convert_timezone( $current_doc->post_modified ).' by '.esc_attr( $modified_by );
+            } else {
+                $incl_modified = '';
+            }
 
-        // Add the header
-        echo '<div id="doc-header">
-            <h2>'.esc_html( $doc->post_title ).'</h2>'.wp_kses_post( $incl_edit ).'
-            <br><em>Created: '.helpdocs_convert_timezone( $doc->post_date ).' by '.esc_attr( $created_by->display_name ).'
-            '.wp_kses_post( $incl_modified ).'</em>
-        </div>';
+            // The edit link
+            if ( helpdocs_user_can_edit() ) {
+                if ( $imported == $current_doc_id ) {
+                    $post_id = $current_doc->feed_id;
+                } else {
+                    $post_id = $current_doc_id;
+                }
+                $incl_edit = ' <span id="edit-link">[<a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/post.php?post='.absint( $post_id ).'&action=edit">edit</a>]</span>';
+            } else {
+                $incl_edit = '';
+            }
 
-        // Add the content
-        echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $doc->post_content ) ).'</div>';
+            // If imported, say so
+            if ( $feed == $current_doc_id ) {
+                $incl_feed = '<br>Content feed: '.$current_doc->auto_feed;
+            } else {
+                $incl_feed = '';
+            }
 
-    // End the toc container
-    echo '</div>';
+            // Add the header
+            echo '<div id="doc-header">
+                <h2>'.esc_html( $current_doc->post_title ).'</h2>'.wp_kses_post( $incl_edit ).'
+                <br><em>Created: '.esc_html( helpdocs_convert_timezone( $current_doc->post_date ) ).' by '.esc_attr( $created_by ).'
+                '.wp_kses_post( $incl_modified ).'
+                '.wp_kses_post( $incl_feed ).'</em>
+            </div>';
 
+            // Add the content
+            echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $current_doc->post_content ) ).'</div>';
+
+        // End the toc container
+        echo '</div>';
+    
+    // Otherwise redirect to page without doc id
+    } else {
+        wp_safe_redirect( $current_url );
+    }
 
 // End the full page container
 echo '</div>';

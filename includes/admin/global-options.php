@@ -25,7 +25,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      * 
      * @var array
      */
-    public $colors = [];
+    public static $colors = [];
 
 
     /**
@@ -33,7 +33,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      *
      * @var array
      */
-    public $settings_general = [];
+    public static $settings_general = [];
 
 
     /**
@@ -42,7 +42,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
 	public function __construct() {
 
         // Define the color keys
-        $this->colors = [
+        self::$colors = [
             'color_ac',
             'color_bg',
             'color_ti',
@@ -51,7 +51,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
         ];
 
         // Define the other keys
-        $this->settings_general = [
+        self::$settings_general = [
             'admin_bar',
             'dashicon',
             'logo',
@@ -63,10 +63,11 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'footer_left',
             'footer_right',
             'edit_roles',
+            'api',
             'disable_user_prefs',
-            'copy_from'
+            'copy_from'            
         ];
-        $this->settings_general = array_merge( $this->settings_general, $this->colors );
+        self::$settings_general = array_merge( self::$settings_general, self::$colors );
 
         // Call register settings function
         add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -82,7 +83,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      */
     public function register_settings() {
         // General Settings
-        $this->register_group_settings( 'settings', $this->settings_general );
+        $this->register_group_settings( 'settings', self::$settings_general );
 
         // Settings Import/Export
         $this->register_group_settings( 'settingsie', [ 'import_link' ] );

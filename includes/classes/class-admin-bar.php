@@ -74,6 +74,14 @@ class HELPDOCS_ADMIN_BAR {
         // Get the posts
         $docs = get_posts( $args );
 
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
+
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
+
         // Check if we found docs
         if ( !empty( $docs ) ) {
 

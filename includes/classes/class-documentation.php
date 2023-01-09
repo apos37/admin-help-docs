@@ -64,6 +64,9 @@ class HELPDOCS_DOCUMENTATION {
         // Register the post type
         $this->register_post_type();
 
+        // Disable block editor
+        add_filter( 'use_block_editor_for_post_type', [ $this, 'disable_gutenberg' ], 10, 2 );
+
         // Get the page title
         if ( get_option( HELPDOCS_GO_PF.'page_title' ) && get_option( HELPDOCS_GO_PF.'page_title' ) != '' ) {
             $title = get_option( HELPDOCS_GO_PF.'page_title' );
@@ -176,8 +179,8 @@ class HELPDOCS_DOCUMENTATION {
         ];
 
         // Allow filter for supports and taxonomies
-        $supports = apply_filters( HELPDOCS_GO_PF.'post_type_supports', [ 'title', 'editor', 'thumbnail', 'author', 'revisions', 'excerpt' ] );
-        $taxonomies = apply_filters( HELPDOCS_GO_PF.'post_type_taxonomies', [ 'category', 'post_tag' ] );
+        $supports = apply_filters( HELPDOCS_GO_PF.'post_type_supports', [ 'title', 'editor', 'author', 'revisions', 'excerpt' ] );
+        $taxonomies = apply_filters( HELPDOCS_GO_PF.'post_type_taxonomies', [] );
     
         // Set the CPT args
         $args = [
@@ -197,12 +200,33 @@ class HELPDOCS_DOCUMENTATION {
             'publicly_queryable'    => false,
             'query_var'             => self::$post_type,
             'capability_type'       => 'post',
-            'show_in_rest'          => false,
+            'show_in_rest'          => true,
         ];
     
         // Register the CPT
         register_post_type( self::$post_type, $args );
     } // End register_post_type()
+
+
+    /**
+     * Disable Gutenberg while allowing rest
+     *
+     * @param [type] $current_status
+     * @param [type] $post_type
+     * @return void
+     */
+    public function disable_gutenberg( $current_status, $post_type ) {
+
+        // Disabled post types
+        $disabled_post_types = [ self::$post_type ];
+    
+        // Change $can_edit to false for any post types in the disabled post types array
+        if ( in_array( $post_type, $disabled_post_types, true ) ) {
+            $current_status = false;
+        }
+    
+        return $current_status;
+    } // End disable_gutenberg()
 
 
     /**
@@ -307,6 +331,14 @@ class HELPDOCS_DOCUMENTATION {
         // Get the posts
         $docs = get_posts( $args );
 
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
+
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
+
         // Iter the docs
         foreach ( $docs as $doc ) {
 
@@ -395,6 +427,7 @@ class HELPDOCS_DOCUMENTATION {
         $post_types = unserialize( get_post_meta( $post->ID, HELPDOCS_GO_PF.'post_types', true ) );
         $order = get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ), FILTER_SANITIZE_NUMBER_INT ) : 0;
         $priority = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'priority', true ) );
+        $api = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'api', true ) );
 
         // Get all choices
         $all_site_locations = self::$site_location;
@@ -439,6 +472,9 @@ class HELPDOCS_DOCUMENTATION {
                 $site_location_name = $m[0];
             }
 
+            // Strip html
+            $site_location_name = strip_tags( $site_location_name );
+
             // Add the parent location
             if ( !array_key_exists( $m[2], $submenu ) ) {
 
@@ -469,6 +505,9 @@ class HELPDOCS_DOCUMENTATION {
                         } else {
                             $sublocation_name = $s[0];
                         }
+
+                        // Strip html
+                        $sublocation_name = strip_tags( $sublocation_name );
 
                         // Get the url
                         $url = $this->get_admin_menu_item_url( $s[2] );
@@ -610,18 +649,25 @@ class HELPDOCS_DOCUMENTATION {
 
                 foreach ( $all_post_types as $pt ) {
 
-                    // Should it be checked?
-                    $checked = '';
-                    if ( $post_types && in_array( $pt, $post_types ) ) {
-                        $checked = 'checked';
+                    // Get the post type object
+                    $post_type_obj = get_post_type_object( $pt );
+
+                    // Skip if post type does not generate and allow a UI for managing the post type in the admin
+                    if ( !$post_type_obj->show_ui ) {
+                        continue;
                     }
 
                     // Get the name of the post type
-                    $post_type_obj = get_post_type_object( $pt );
                     if ( $post_type_obj ) {
                         $post_type_name = esc_html( $post_type_obj->labels->name );
                     } else {
                         $post_type_name = $pt;
+                    }
+
+                    // Should it be checked?
+                    $checked = '';
+                    if ( $post_types && in_array( $pt, $post_types ) ) {
+                        $checked = 'checked';
                     }
 
                     // Add the checkbox
@@ -634,6 +680,47 @@ class HELPDOCS_DOCUMENTATION {
                 }
 
             echo '</div>';
+
+            // Add to rest api?
+            echo '<br><br><div id="doc-api" class="help-docs-select-cont">
+                <label for="doc-api-select" class="doc-api-select-label">Allow Public:</label>
+                <select name="'.esc_attr( HELPDOCS_GO_PF ).'api" id="doc-api-select">';
+
+                    // Get the default
+                    if ( get_option( HELPDOCS_GO_PF.'api' ) && get_option( HELPDOCS_GO_PF.'api' ) != '' ) {
+                        $default_api_choice = get_option( HELPDOCS_GO_PF.'api' );
+                    } else {
+                        $default_api_choice = 'no';
+                    }
+
+                    // Choices
+                    $api_choices = [
+                        'default'   => 'Default ('.ucwords( $default_api_choice ).')',
+                        'no'        => 'No',
+                        'yes'       => 'Yes'
+                    ];
+
+                    // Iter the priorities
+                    foreach ( $api_choices as $key_api => $a ) {
+
+                        // Check if it's selected
+                        if ( $key_api == $api || ( !$api && $key_api == 'default' ) ) {
+                            $api_selected = ' selected';
+                        } else {
+                            $api_selected = '';
+                        }
+
+                        // Add the option
+                        echo '<option value="'.esc_attr( $key_api ).'"'.esc_attr( $api_selected ).' class="lop-option-'.esc_attr( $key_api ).'">'.esc_attr( $a ).'</option>';
+                    }
+
+            echo '</select>';
+
+            // Get the end-point url
+            $api_url = help_get_api_path();
+
+            echo '<p><em>Allowing this document to be public adds it to a <a href="'.esc_url( $api_url ).'" target="_blank">publicly accessible custom rest api end-point</a>, which can then be pulled in from other sites you manage. If allowed, make sure no sensitive information is included in your content above.</em></p>
+            </div>';
     
         // End the form
         echo '</form>';
@@ -870,7 +957,7 @@ class HELPDOCS_DOCUMENTATION {
     public function get_admin_page_title_from_url( $url ) {
         // Return main, index.php, post.php, edit.php
         if ( $url == base64_encode( 'main' ) ) {
-            return 'Admin Help Documents';
+            return 'Main Documentation Area';
         } elseif ( $url == base64_encode( 'admin_bar' ) ) {
             return 'Admin Bar';
         } elseif ( $url == base64_encode( 'index.php' ) ) {
@@ -1043,9 +1130,7 @@ class HELPDOCS_DOCUMENTATION {
         }
      
         // Check the user's permissions.
-        if ( isset( $_POST[ 'post_type' ] ) && 'page' == $_POST[ 'post_type' ] && !current_user_can( 'edit_page', $post_id ) ) {
-            return;
-        } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
+        if ( isset( $_POST[ 'post_type' ] ) && $_POST[ 'post_type' ] != self::$post_type ) {
             return;
         }
      
@@ -1080,6 +1165,9 @@ class HELPDOCS_DOCUMENTATION {
             $order = false;
         }
 
+        // API
+        $api = isset( $_POST[ HELPDOCS_GO_PF.'api' ] ) ? sanitize_text_field( $_POST[ HELPDOCS_GO_PF.'api' ] ) : false;
+
         // Values
         $values = [
             HELPDOCS_GO_PF.'site_location'  => $site_location,
@@ -1087,15 +1175,16 @@ class HELPDOCS_DOCUMENTATION {
             HELPDOCS_GO_PF.'post_types'     => $post_types,
             HELPDOCS_GO_PF.'order'          => $order,
             HELPDOCS_GO_PF.'priority'       => $priority,
+            HELPDOCS_GO_PF.'api'            => $api,
         ];
 
         // Update the meta field in the database.
         foreach ( $values as $k => $v ) {
             update_post_meta( $post_id, $k, $v );
         }
-     } // End save_post()
+    } // End save_post()
 
-
+    
     /**
      * Admin columns
      *
@@ -1205,6 +1294,14 @@ class HELPDOCS_DOCUMENTATION {
         ];
         $docs = get_posts( $args );
 
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
+
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
+
         // Did we find any?
         if ( !empty( $docs ) ) {
 
@@ -1213,7 +1310,12 @@ class HELPDOCS_DOCUMENTATION {
 
                 // The edit link
                 if ( helpdocs_user_can_edit() ) {
-                    $incl_edit = ' <span>[<a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/post.php?post='.absint( $doc->ID ).'&action=edit" style="display: contents;">edit</a>]</span>';
+                    if ( isset( $doc->feed_id ) && $doc->feed_id != '' ) {
+                        $post_id = $doc->feed_id;
+                    } else {
+                        $post_id = $doc->ID;
+                    }
+                    $incl_edit = ' <span>[<a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/post.php?post='.absint( $post_id ).'&action=edit" style="display: contents;">edit</a>]</span>';
                 } else {
                     $incl_edit = '';
                 }
@@ -1295,6 +1397,14 @@ class HELPDOCS_DOCUMENTATION {
         ];
         $docs = get_posts( $args );
 
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
+
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
+
         // Did we find any?
         if ( !empty( $docs ) ) {
 
@@ -1307,7 +1417,7 @@ class HELPDOCS_DOCUMENTATION {
                 // Site location
                 $site_location_var = HELPDOCS_GO_PF.'site_location';
                 $site_location = base64_decode( esc_attr( $doc->$site_location_var ) );
-                $site_location = preg_replace('/[^A-Za-z0-9 ._\-\+\&\=\?]/', '', $site_location);
+                $site_location = preg_replace( '/[^A-Za-z0-9 ._\-\+\&\=\?]/', '', $site_location );
                 $site_location = str_replace( '&038', '&', $site_location );
 
                 // Post types
@@ -1521,6 +1631,8 @@ class HELPDOCS_DOCUMENTATION {
 
     /**
      * Post/page edit screen content for gutenberg only
+     * Top, Bottom, and Contextual view only
+     * Side is added via meta_boxes()
      *
      * @return void
      */
@@ -1543,6 +1655,14 @@ class HELPDOCS_DOCUMENTATION {
 
         // Get the posts
         $docs = get_posts( $args );
+
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
+
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
 
         // Iter the docs
         foreach ( $docs as $doc ) {
@@ -1581,7 +1701,7 @@ class HELPDOCS_DOCUMENTATION {
             window.addEventListener( 'load', function () {
 
                 // Get the editor wrapper
-                var editorWrapper = document.querySelector( '.editor-styles-wrapper' );
+                var editorWrapper = document.querySelector( '.interface-interface-skeleton__content' );
 
                 // Make sure the editor exists
                 if ( editorWrapper ) {
@@ -1617,8 +1737,8 @@ class HELPDOCS_DOCUMENTATION {
 
                     // Bottom
                     } else if ( pageLocation == 'bottom' ) {
-                        const editor = document.querySelector( '.edit-post-visual-editor' );
-                        editor.appendChild( div, editor );
+                        // const editor = document.querySelector( '.edit-post-visual-editor' );
+                        editorWrapper.appendChild( div, editor );
 
                     // Contextual
                     } else {

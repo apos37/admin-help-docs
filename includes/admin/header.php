@@ -23,7 +23,9 @@ $menu_items = helpdocs_plugin_menu_items();
 global $current_screen;
 if ( $current_screen->post_type == 'help-docs' ) {
     $tab = 'manage';
-} else {
+} elseif ( $current_screen->post_type == 'help-doc-imports' ) {
+    $tab = 'imports';
+}  else {
     $tab = helpdocs_get( 'tab' ) ?? 'documentation';
 }
 

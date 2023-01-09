@@ -73,13 +73,13 @@ if ( $reset = helpdocs_get( 'reset' ) ) {
 
             // Get the color keys
             $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
-            $reset_keys = $HELPDOCS_GLOBAL_OPTIONS->colors;
+            $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$colors;
 
         } elseif ( $reset == 'all' ) {
 
             // Get all keys
             $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
-            $reset_keys = $HELPDOCS_GLOBAL_OPTIONS->settings_general;
+            $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
         }
 
         // If we are resetting something legit
@@ -522,6 +522,24 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
                 'class'   => HELPDOCS_GO_PF.'role_checkbox'
             ]; ?>
             <?php echo wp_kses( helpdocs_options_tr( 'edit_roles', 'Additional Roles That Can Add/Edit Help Sections', 'checkboxes', '', $edit_roles_args ), $allowed_html ); ?>
+
+            <?php $api_choices = [
+                'options' => [
+                    [ 
+                        'label' => 'No',
+                        'value' => 'no' 
+                    ],
+                    [ 
+                        'label' => 'Yes',
+                        'value' => 'yes' 
+                    ]
+                ],
+                'width' => '10rem',
+            ];
+            
+            $api_url = help_get_api_path();
+            ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'api', 'Allow Public by Default', 'select', '<br>Allowing documents to be public adds them to a <a href="'.$api_url.'" target="_blank">publicly accessible custom rest api end-point</a>, which can then be pulled in from other sites you manage.', $api_choices ), $allowed_html ); ?>
 
             <?php echo wp_kses( helpdocs_options_tr( 'color_ac', 'Accent Color', 'color', null, [ 'default' => $color_ac ] ), $allowed_html ); ?>
 

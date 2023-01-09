@@ -339,6 +339,7 @@ function helpdocs_wp_kses_allowed_html() {
             'class' => []
         ],
         'span' => [
+            'id' => [],
             'class' => [],
             'style' => []
         ],
@@ -607,6 +608,9 @@ function helpdocs_plugin_card( $slug ) {
                 color: #CBB8AD !important;
                 border-color: #CBB8AD !important;
             }
+            .plugin-action-buttons {
+                list-style: none !important;   
+            }
             </style>
             <div class="plugin-card plugin-card-<?php echo esc_attr( $slug ); ?>">
                 <div class="plugin-card-top">
@@ -622,7 +626,7 @@ function helpdocs_plugin_card( $slug ) {
                         <ul class="plugin-action-buttons">
                             <li><a class="install-now button" data-slug="<?php echo esc_attr( $slug ); ?>" <?php echo wp_kses_post( $install_link ); ?> aria-label="<?php echo esc_attr( $install_text );?>" data-name="<?php echo esc_html( $returned_object->name ); ?> <?php echo esc_html( $returned_object->version ); ?>"><?php echo esc_attr( $install_text );?></a></li>
                             <li><a <?php echo wp_kses_post( $link_guts ); ?>>More Details</a></li>
-                        </ul>				
+                        </ul>
                     </div>
                     <div class="desc column-description">
                         <p><?php echo wp_kses_post( $desc ); ?></p>
@@ -730,8 +734,7 @@ function helpdocs_get_five_point_rating ( $r1, $r2, $r3, $r4, $r5 ) {
  */
 function helpdocs_create_json_from_settings() {
     // Get all of the settings
-    $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
-    $keys = $HELPDOCS_GLOBAL_OPTIONS->settings_general;
+    $keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
 
     // Store the values here
     $values = [];
@@ -777,7 +780,7 @@ function helpdocs_create_json_from_settings() {
  */
 function helpdocs_import_settings_from_json( $file ) {
     // Fetch the file
-    $request = wp_remote_get( $file );
+    $request = wp_remote_get( $file.'?time=' . time() );
 
     // Is there an error?
     if ( is_wp_error( $request ) || $request[ 'response' ][ 'code' ] == 404 ) {
@@ -797,8 +800,7 @@ function helpdocs_import_settings_from_json( $file ) {
 
     // Get our setting meta keys for validation
     // Get all of the settings
-    $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
-    $keys = $HELPDOCS_GLOBAL_OPTIONS->settings_general;
+    $keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
 
     // Bools
     $bools = [
@@ -819,6 +821,12 @@ function helpdocs_import_settings_from_json( $file ) {
 
     // Iter the items
     foreach ( $settings as $setting => $value ) {
+
+        // Don't import multisite setting if it's not a multisite
+        if ( !is_multisite() && $setting == 'multisite_sfx' ) {
+            delete_option( HELPDOCS_GO_PF.$setting );
+            continue;
+        }
 
         // validate the key
         if ( in_array( $setting, $keys ) && $setting !== 'edit_roles' ) {
@@ -868,6 +876,20 @@ function helpdocs_title() {
         return HELPDOCS_NAME;
     }
 } // End helpdocs_title()
+
+
+/**
+ * Get the plugin menu title
+ *
+ * @return string
+ */
+function helpdocs_menu_title() {
+    if ( get_option( HELPDOCS_GO_PF.'menu_title' ) && get_option( HELPDOCS_GO_PF.'menu_title' ) != '' ) {
+        return get_option( HELPDOCS_GO_PF.'menu_title' );
+    } else {
+        return 'Help Docs';
+    }
+} // End helpdocs_menu_title()
 
 
 /**

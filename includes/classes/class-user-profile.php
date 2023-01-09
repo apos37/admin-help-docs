@@ -28,7 +28,7 @@ class HELPDOCS_USER_PROFILE {
 	public function __construct() {
 
         // Add user options to other users' profiles
-        add_action( 'edit_user_profile', [ $this, 'options' ], 1 );
+        add_action( 'edit_user_profile', [ $this, 'options' ], 999 );
 
         // Add user options to own profile
         add_action( 'show_user_profile', [ $this, 'options' ] );

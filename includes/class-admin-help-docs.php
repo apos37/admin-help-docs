@@ -76,6 +76,9 @@ class HELPDOCS_MAIN {
         
         // Miscellaneous functions
         require_once HELPDOCS_PLUGIN_INCLUDES_PATH . 'functions.php';
+        
+        // Rest API end-point
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-api.php';
     } // End load_dependencies()
 
 
@@ -94,6 +97,7 @@ class HELPDOCS_MAIN {
         // Classes
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-colors.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-documentation.php';
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-imports.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
     } // End load_admin_dependencies()

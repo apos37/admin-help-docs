@@ -30,7 +30,7 @@ $json_path = $upload_dir[ 'baseurl' ].'/'.HELPDOCS_TEXTDOMAIN.'/settings.json';
 
         <tr>
             <th>My Settings Link</th>
-            <td><strong>Click to Copy:</strong> <?php echo helpdocs_click_to_copy( 'export_link', $json_path, null, $json_path, true ); ?></td>
+            <td><strong>Click to Copy:</strong> <?php echo wp_kses( helpdocs_click_to_copy( 'export_link', $json_path, null, $json_path, true ), $allowed_html ); ?></td>
         </tr>
 
         <?php echo wp_kses( helpdocs_options_tr( 'import_link', 'Paste Settings Link Here', 'text', '<br>Filename: <strong>settings.json</strong>.', [ 'pattern' => '^https?:\/\/.+settings\.json$' ] ), $allowed_html ); ?>

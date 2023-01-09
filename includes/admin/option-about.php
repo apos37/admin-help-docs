@@ -11,13 +11,18 @@ a.button {
     filter: brightness(95%);
     color: <?php echo esc_attr( $color_cl ); ?> !important;
 }
+ul {
+    list-style: square;
+    padding: revert;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+ul li {
+    padding-inline-start: 1ch;
+}
 </style>
 
 <?php include 'header-page.php'; ?>
-
-<br><br>
-<h3>Try Our Other Plugin</h3>
-<?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>
 
 <br><br>
 <h3>Plugin Support</h3>
@@ -42,3 +47,18 @@ $coffee_filter = false; /// REMOVE AFTER DEVELOPMENT
 if ( $coffee_filter ) {
     echo wp_kses_post( $buy_me_coffee );
 }
+?>
+
+<br><br><br>
+<h3>Planned Features</h3>
+<p>The following features are currently planned, but are not necessarily in order. If you would like to request a feature or encourage priority of one the following items, please do so on Discord at the link above.</p>
+<ul>
+    <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
+    <li>Folders: adding folders for the main documentation page. So far I haven't needed to add so much documentation on this page, but I can see how some people might want it.</li>
+    <li>Themes: add a collection of themes that you can choose from. I just don't have any great ideas yet, so if you have an awesome look for your documents, please submit them.</li>
+    <li>More site locations: possibly add a fixed area at the top or bottom of all screens, or a floating help button on the bottom right?</li>
+</ul>
+
+<br><br>
+<h3>Try My Other Plugin</h3>
+<?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>

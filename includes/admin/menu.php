@@ -82,11 +82,7 @@ class HELPDOCS_MENU {
         // $icon = 'data:image/svg+xml;base64,' . $icon_base64;
 
         // Get the menu title
-        if ( get_option( HELPDOCS_GO_PF.'menu_title' ) && get_option( HELPDOCS_GO_PF.'menu_title' ) != '' ) {
-            $menu_title = get_option( HELPDOCS_GO_PF.'menu_title' );
-        } else {
-            $menu_title = 'Help Docs';
-        }
+        $menu_title = helpdocs_menu_title();
 
         // Get the menu title
         if ( get_option( HELPDOCS_GO_PF.'menu_position' ) && get_option( HELPDOCS_GO_PF.'menu_position' ) != '' ) {
@@ -179,9 +175,12 @@ class HELPDOCS_MENU {
             $tab = helpdocs_get( 'tab' ) ?? '';
             $submenu_file = 'admin.php?page='.HELPDOCS_TEXTDOMAIN.'&tab='.$tab;
 
-        // Post Type Submenu
+        // Post Type Submenus
         } elseif ( $current_screen->post_type == 'help-docs' ) {
             $submenu_file = 'edit.php?post_type=help-docs';
+            $parent_file = helpdocs_plugin_options_short_path();
+        } elseif ( $current_screen->post_type == 'help-doc-imports' ) {
+            $submenu_file = 'edit.php?post_type=help-doc-imports';
             $parent_file = helpdocs_plugin_options_short_path();
         }
         return $parent_file;
@@ -203,6 +202,7 @@ function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
     $items = [
         'documentation'     => [ __( 'Documentation', 'admin-help-docs' ), '' ],
         'manage'            => [ __( 'Manage', 'admin-help-docs' ), '', true, false, 'edit.php?post_type=help-docs' ],
+        'imports'           => [ __( 'Imports', 'admin-help-docs' ), __( 'You can easily import documents from another site.' ), true, false, 'edit.php?post_type=help-doc-imports' ],
         'faq'               => [ __( 'FAQ', 'admin-help-docs' ), __( 'Frequently Asked Questions', 'admin-help-docs' ), true ],
         'settings'          => [ __( 'Settings', 'admin-help-docs' ), '', true ],
         'settingsie'        => [ __( 'Import/Export Settings', 'admin-help-docs' ), __( 'You can easily import settings from another site. Just copy the settings link from the other site and paste it in the field below.' ), false, true ],
