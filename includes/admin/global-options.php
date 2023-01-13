@@ -64,7 +64,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'footer_right',
             'edit_roles',
             'api',
-            'disable_user_prefs',
+            'user_prefs',
             'copy_from'            
         ];
         self::$settings_general = array_merge( self::$settings_general, self::$colors );

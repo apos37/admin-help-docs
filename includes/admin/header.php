@@ -66,6 +66,18 @@ html, body, #wpwrap, #wpcontent, #wpbody, #wpbody-content, .wrap {
     border-bottom: 1px solid <?php echo esc_attr( $color_bg ); ?>;
     background-color: transparent !important;
 }
+.tab-content {
+    padding-top: 19px;
+}
+.tab-header {
+    display: inline-block;
+    margin: 0 5px 0 0 !important;
+    padding-bottom: 4px;
+    line-height: 1.3;
+}
+.tab-header-hr {
+    margin-top: 8px;
+}
 </style>
 
 <div class="wrap <?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>" style="background: <?php echo esc_attr( $color_bg ); ?> !important;">

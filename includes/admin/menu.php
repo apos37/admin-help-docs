@@ -196,19 +196,22 @@ class HELPDOCS_MENU {
  * @return string|array
  */
 function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
+    // Get add new link
+    $add_new_link = home_url( HELPDOCS_ADMIN_URL.'/post-new.php?post_type='.HELPDOCS_DOCUMENTATION::$post_type );
+
     // The menu items
     // Set 3rd param to true if the item should only be visible to admins
     // Set 4th param to true if the item should not be added to the menu or tabs, but is a hidden subpage
     $items = [
-        'documentation'     => [ __( 'Documentation', 'admin-help-docs' ), '' ],
+        'documentation'     => [ __( 'Documentation', 'admin-help-docs' ), '<a href="'.esc_url( $add_new_link ).'" class="page-title-action">Add New</a>' ],
         'manage'            => [ __( 'Manage', 'admin-help-docs' ), '', true, false, 'edit.php?post_type=help-docs' ],
-        'imports'           => [ __( 'Imports', 'admin-help-docs' ), __( 'You can easily import documents from another site.' ), true, false, 'edit.php?post_type=help-doc-imports' ],
-        'faq'               => [ __( 'FAQ', 'admin-help-docs' ), __( 'Frequently Asked Questions', 'admin-help-docs' ), true ],
+        'imports'           => [ __( 'Imports', 'admin-help-docs' ), '<p>'.__( 'You can easily import documents from another site.' ).'</p>', true, false, 'edit.php?post_type=help-doc-imports' ],
+        'faq'               => [ __( 'FAQ', 'admin-help-docs' ), '<p>'.__( 'Frequently Asked Questions', 'admin-help-docs' ).'</p>', true ],
         'settings'          => [ __( 'Settings', 'admin-help-docs' ), '', true ],
-        'settingsie'        => [ __( 'Import/Export Settings', 'admin-help-docs' ), __( 'You can easily import settings from another site. Just copy the settings link from the other site and paste it in the field below.' ), false, true ],
+        'settingsie'        => [ __( 'Import/Export Settings', 'admin-help-docs' ), '<p>'.__( 'You can easily import settings from another site. Just copy the settings link from the other site and paste it in the field below.' ).'</p>', false, true ],
         // 'developer'         => [ __( 'Developer', 'admin-help-docs' ), __( 'Action and filters available for developers.', 'admin-help-docs' ), true ],
-        'about'             => [ __( 'About', 'admin-help-docs' ), __( 'Version', 'admin-help-docs' ).' '.esc_attr( HELPDOCS_VERSION ).' - <a href="'.helpdocs_plugin_options_path( 'changelog' ).'">View the Changelog</a>', false ],
-        'changelog'         => [ __( 'Changelog', 'admin-help-docs' ), __( 'Updates to this plugin.', 'admin-help-docs' ), false, true ],
+        'about'             => [ __( 'About', 'admin-help-docs' ), '<p>'.__( 'Version', 'admin-help-docs' ).' '.esc_attr( HELPDOCS_VERSION ).' - <a href="'.helpdocs_plugin_options_path( 'changelog' ).'">View the Changelog</a>'.'</p>', false ],
+        'changelog'         => [ __( 'Changelog', 'admin-help-docs' ), '<p>'.__( 'Updates to this plugin.', 'admin-help-docs' ).'</p>', false, true ],
     ];
 
     if ( !is_null( $slug ) ) {

@@ -551,7 +551,7 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
             <?php echo wp_kses( helpdocs_options_tr( 'color_cl', 'Link Color', 'color', null, [ 'default' => $color_cl ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'disable_user_prefs', 'Disable User Preferences', 'checkbox', '' ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', ' Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
 
         </table>
         

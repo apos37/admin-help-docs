@@ -323,7 +323,7 @@ function helpdocs_click_to_copy( $unique_link_id, $link_text, $unique_copy_id = 
     
     // Are we including the "- Copied" span?
     if ( $include_copied_span ) {
-        $incl_copied_span = ' <span id="copied_'.$unique_link_id.'" class="click-to-copy" style="display: none; background: yellow; padding: 0 4px; margin-left: 5px;"><strong>- Copied!</strong></span>';
+        $incl_copied_span = ' <span id="copied_'.$unique_link_id.'" class="click-to-copy"><strong>- Copied!</strong></span>';
     } else {
         $incl_copied_span = '';
     }

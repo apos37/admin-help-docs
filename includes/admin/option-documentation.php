@@ -7,22 +7,25 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 <style>
 #documentation {
     display: flex;
-    /* height: 100vh; */
+    border-top: 1px solid #ccc;
+    margin-top: 26px;
 }
 #doc-toc {
-    width: 200px;
-    /* height: 100vh; */
+    width: 14rem;
     border-right: 1px solid #ccc;
 }
 .toc-item {
     display: block;
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid #ccc;
 }
 .toc-item.active {
     font-weight: bold;
 }
 #doc-viewer {
     flex: 1 0 auto;
-    padding: 0 2rem;
+    padding: 2rem;
+    max-width: calc( 100% - 18rem );
 }
 #doc-header {
     margin-bottom: 2rem;
@@ -31,20 +34,39 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
     color: <?php echo esc_attr( $color_ti ); ?>;
     font-size: 2rem;
     margin-bottom: 1.5rem;
-    display: inline-block;
+    display: inline;
+    line-height: 1.2;
 }
 #edit-link {
     margin-left: 1rem;
     display: inline-block;
 }
+#doc-meta {
+    display: block;
+    margin-top: 1rem;
+    font-style: italic;
+}
 ul {
     list-style: square;
     padding: revert;
-    padding-top: 10px;
-    padding-bottom: 5px;
 }
 ul li {
     padding-inline-start: 1ch;
+}
+ul, ol {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+ol.lower-alpha {
+    list-style-type: lower-alpha;
+}
+ol.lower-roman {
+    list-style-type: lower-roman;
+}
+#doc-viewer img {
+    max-width:100%;
+    height: auto;
+    object-fit: contain;
 }
 </style>
 
@@ -139,7 +161,7 @@ echo '<div id="documentation">';
             }
 
             // Add the item
-            echo '<span class="toc-item'.esc_attr( $active ).'">&#10551; <a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'">'.esc_html( $doc->post_title ).'</a></span> ';
+            echo '<span class="toc-item'.esc_attr( $active ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'">'.esc_html( $doc->post_title ).'</a></span> ';
         }
 
     // End the toc container
@@ -204,9 +226,9 @@ echo '<div id="documentation">';
             // Add the header
             echo '<div id="doc-header">
                 <h2>'.esc_html( $current_doc->post_title ).'</h2>'.wp_kses_post( $incl_edit ).'
-                <br><em>Created: '.esc_html( helpdocs_convert_timezone( $current_doc->post_date ) ).' by '.esc_attr( $created_by ).'
+                <span id="doc-meta">Created: '.esc_html( helpdocs_convert_timezone( $current_doc->post_date ) ).' by '.esc_attr( $created_by ).'
                 '.wp_kses_post( $incl_modified ).'
-                '.wp_kses_post( $incl_feed ).'</em>
+                '.wp_kses_post( $incl_feed ).'</span>
             </div>';
 
             // Add the content

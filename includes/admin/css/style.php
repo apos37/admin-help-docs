@@ -52,7 +52,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
     <?php if ( $current_screen->post_type == 'help-docs' || $current_screen->post_type == 'help-doc-imports' ) { ?>
 
         /* ---------------------------------------------
-                       HELP DOCUMENTATION
+            POST TYPES ( HELP-DOCS/HELP-DOC-IMPORTS )
         --------------------------------------------- */
 
         .wrap.<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> {
@@ -174,10 +174,12 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
 
         /* Click to copy */
         .click-to-copy {
-            background: transparent;
+            background: yellow;
             color: <?php echo esc_attr( $color_cl ); ?>;
-            padding: 0;
+            padding: 0 4px;
+            margin-left: 5px;
             border-radius: 0;
+            display: none;
         }
 
         /* ---------------------------------------------

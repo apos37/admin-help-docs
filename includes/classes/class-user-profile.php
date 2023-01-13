@@ -12,7 +12,7 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-if ( get_option( HELPDOCS_GO_PF.'disable_user_prefs' ) != 1 ) {
+if ( get_option( HELPDOCS_GO_PF.'user_prefs' ) == 1 ) {
     new HELPDOCS_USER_PROFILE;
 }
 

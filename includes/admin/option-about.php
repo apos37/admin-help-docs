@@ -50,12 +50,15 @@ if ( $coffee_filter ) {
 ?>
 
 <br><br><br>
-<h3>Planned Features</h3>
-<p>The following features are currently planned, but are not necessarily in order. If you would like to request a feature or encourage priority of one the following items, please do so on Discord at the link above.</p>
+<h3>Planned Updates</h3>
+<p>The following items are currently planned, not necessarily in order. If you would like to request a feature or encourage priority of one them, please do so on Discord at the link above.</p>
 <ul>
-    <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
+    <li>Site-specific feeds: add a field underneath "Allow Public" to specify site addresses so only those sites will auto-feed the document</li>
+    <li>Add the WordPress Updates page to site locations. The dashboard was initially removed to add a meta box instead of a notice, but it also removed the updates page in the process.</li>
+    <li>Disable profile settings by default?</li>
     <li>Folders: adding folders for the main documentation page. So far I haven't needed to add so much documentation on this page, but I can see how some people might want it.</li>
     <li>Themes: add a collection of themes that you can choose from. I just don't have any great ideas yet, so if you have an awesome look for your documents, please submit them.</li>
+    <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
     <li>More site locations: possibly add a fixed area at the top or bottom of all screens, or a floating help button on the bottom right?</li>
 </ul>
 
