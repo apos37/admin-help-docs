@@ -14,9 +14,18 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
     width: 14rem;
     border-right: 1px solid #ccc;
 }
+#draggable-items {
+    width: 100% !important;
+    list-style: none;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+#draggable-items li {
+    margin: 0 !important;
+}
 .toc-item {
     display: block;
-    padding: 10px 10px 10px 0;
+    padding: 10px 0 10px 0;
     border-bottom: 1px solid #ccc;
 }
 .toc-item.active {
@@ -124,6 +133,7 @@ if ( helpdocs_get( 'id' ) ) {
     $current_doc_id = absint( helpdocs_get( 'id' ) );
 } else {
     $current_doc_id = $docs[0]->ID;
+    helpdocs_add_qs_without_refresh( 'id', $current_doc_id );
 }
 
 // Store the current doc here
@@ -138,8 +148,13 @@ echo '<div id="documentation">';
      * Let's add a table of contents
      */
 
+
+    // Create a nonce
+    $nonce = wp_create_nonce( 'drag-doc-toc' );
+
     // Start the toc container
-    echo '<div id="doc-toc">';
+    echo '<div id="doc-toc">
+        <ul id="draggable-items" data-nonce="'.esc_attr( $nonce ).'">';
 
         // Loop through each post
         foreach ( $docs as $doc ) {
@@ -161,11 +176,12 @@ echo '<div id="documentation">';
             }
 
             // Add the item
-            echo '<span class="toc-item'.esc_attr( $active ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'">'.esc_html( $doc->post_title ).'</a></span> ';
+            echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item'.esc_attr( $active ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'">'.esc_html( $doc->post_title ).'</a></li> ';
         }
 
     // End the toc container
-    echo '</div>';
+    echo '</ul>
+    </div>';
 
 
     /**
@@ -206,7 +222,7 @@ echo '<div id="documentation">';
 
             // The edit link
             if ( helpdocs_user_can_edit() ) {
-                if ( $imported == $current_doc_id ) {
+                if ( $feed == $current_doc_id ) {
                     $post_id = $current_doc->feed_id;
                 } else {
                     $post_id = $current_doc_id;
@@ -244,3 +260,4 @@ echo '<div id="documentation">';
 
 // End the full page container
 echo '</div>';
+?>

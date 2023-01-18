@@ -166,7 +166,6 @@ function helpdocs_base64url_decode( $data ) {
 } // End helpdocs_base64url_decode()
 
 
-
 /**
  * Remove query strings from url without refresh
  */
@@ -214,6 +213,45 @@ function helpdocs_remove_qs_without_refresh( $qs = null, $is_admin = true ) {
     // Return
     return;
 } // End helpdocs_remove_qs_without_refresh()
+
+
+/**
+ * Add a query string from url without refresh
+ */
+function helpdocs_add_qs_without_refresh( $qs, $value, $is_admin = true ) {
+    // Get the current title
+    $page_title = get_the_title();
+
+    // Get the current url with the qs added
+    $new_url = add_query_arg( $qs, $value, helpdocs_get_current_url() );
+
+    // Write the script
+    $args = [ 
+        'title' => $page_title,
+        'url' => $new_url
+    ];
+
+    // Admin or not
+    if ( $is_admin ) {
+        $hook = 'admin_footer';
+    } else {
+        $hook = 'wp_footer';
+    }
+
+    // Add the script to the admin footer
+    add_action( $hook, function() use ( $args ) {
+        echo '<script id="helpdocs_remove_qs_without_refresh">
+        if ( history.pushState ) { 
+            var url = window.location.href; 
+            var obj = { Title: "'.esc_html( $args[ 'title' ] ).'", Url: "'.esc_url_raw( $args[ 'url' ] ).'"}; 
+            window.history.pushState( obj, obj.Title, obj.Url ); 
+        }
+        </script>';
+    } );
+
+    // Return
+    return;
+} // End helpdocs_add_qs_without_refresh()
 
 
 /**

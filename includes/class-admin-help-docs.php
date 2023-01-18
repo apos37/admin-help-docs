@@ -31,7 +31,7 @@ class HELPDOCS_MAIN {
         // Add "Settings" link to plugins page
         add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), [ $this, 'settings_link' ] );
 
-        // Load dependencies.
+        // Load other dependencies.
         if ( is_admin() ) {
 			$this->load_admin_dependencies();
 		}
@@ -100,6 +100,9 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-imports.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
+
+        // Enqueue scripts
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     } // End load_admin_dependencies()
 
 
@@ -121,7 +124,7 @@ class HELPDOCS_MAIN {
      * @return void
      */
     public function footer_left() {
-        echo __( get_option( HELPDOCS_GO_PF.'footer_left' ), 'admin-help-docs' );
+        echo wp_kses_post( get_option( HELPDOCS_GO_PF.'footer_left' ) );
     } // End footer_left()
 
 
@@ -131,6 +134,37 @@ class HELPDOCS_MAIN {
      * @return void
      */
     public function footer_right() {
-        return __( get_option( HELPDOCS_GO_PF.'footer_right' ), 'admin-help-docs' );
+        return wp_kses_post( get_option( HELPDOCS_GO_PF.'footer_right' ) );
     } // End footer_right()
+
+
+    /**
+     * Enqueue scripts
+     *
+     * @param string $hook
+     * @return void
+     */
+    public function enqueue_scripts( $screen ) {
+        
+        // Get the options page slug
+        $options_page = 'toplevel_page_'.HELPDOCS_TEXTDOMAIN;
+
+        // Allow for multisite
+        if ( is_network_admin() ) {
+            $options_page .= '-network';
+        }
+
+        // Are we on the options page?
+        if ( $screen != $options_page || ( $screen == $options_page && helpdocs_get( 'tab', '!=', 'settings' ) ) ) {
+            return;
+        }
+
+        // Handle
+        $handle = HELPDOCS_GO_PF.'script';
+
+        // Sorting draggable docs
+        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ] );
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( $handle );
+    }
 }

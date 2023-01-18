@@ -618,7 +618,7 @@ function helpdocs_plugin_card( $slug ) {
                         <h3>
                             <a <?php echo wp_kses_post( $link_guts ); ?>>
                                 <?php echo esc_html( $returned_object->name ); ?> 
-                                <img src="https://plugins.trac.wordpress.org/export/2834721/<?php echo esc_attr( $slug ); ?>/assets/icon-128x128.png" class="plugin-icon" alt="<?php echo esc_html( $returned_object->name ); ?> Thumbnail">
+                                <img src="<?php echo esc_url( HELPDOCS_PLUGIN_IMG_PATH ).esc_attr( $slug  ); ?>.png" class="plugin-icon" alt="<?php echo esc_html( $returned_object->name ); ?> Thumbnail">
                             </a>
                         </h3>
                     </div>

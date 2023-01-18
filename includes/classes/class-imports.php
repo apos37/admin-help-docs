@@ -15,9 +15,7 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-add_action( 'init', function() {
-    new HELPDOCS_IMPORTS;
-} );
+new HELPDOCS_IMPORTS;
 
 
 /**
@@ -39,8 +37,8 @@ class HELPDOCS_IMPORTS {
         // The post type
         self::$post_type = 'help-doc-imports';
 
-        // Register the post type
-        $this->register_post_type();
+        // Initialize on init
+        add_action( 'init', [ $this, 'init' ] );
 
         // Add the header to the top of the admin list page
         add_action( 'load-edit.php', [ $this, 'add_header' ] );
@@ -56,6 +54,19 @@ class HELPDOCS_IMPORTS {
         add_action( 'manage_'.self::$post_type.'_posts_custom_column', [ $this, 'admin_column_content' ], 10, 2 );
 
 	} // End __construct()
+
+
+    /**
+     * Load on init
+     *
+     * @return void
+     */
+    public function init() {
+
+        // Register the post type
+        $this->register_post_type();
+
+    } // End init()
 
 
     /**
@@ -473,10 +484,10 @@ class HELPDOCS_IMPORTS {
 
             // Otherwise say it isn't so
             } else {
-                echo $err_msg;
+                echo wp_kses_post( $err_msg );
             }
         } else {
-            echo $err_msg;
+            echo wp_kses_post( $err_msg );
         }
 
         // Add some JS to make checkboxes appear

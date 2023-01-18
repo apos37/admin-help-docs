@@ -83,7 +83,7 @@ define( 'HELPDOCS_PLUGIN_IMG_PATH', HELPDOCS_PLUGIN_DIR.'includes/admin/img/' );
 define( 'HELPDOCS_PLUGIN_INCLUDES_PATH', HELPDOCS_PLUGIN_ROOT.'includes/' );                                //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/
 define( 'HELPDOCS_PLUGIN_ADMIN_PATH', HELPDOCS_PLUGIN_INCLUDES_PATH.'admin/' );                             //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/admin/
 define( 'HELPDOCS_PLUGIN_CLASSES_PATH', HELPDOCS_PLUGIN_INCLUDES_PATH.'classes/' );                         //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/classes/
-define( 'HELPDOCS_PLUGIN_JS_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/js/' );                              //: /wp-content/plugins/admin-help-docs/includes/js/
+define( 'HELPDOCS_PLUGIN_JS_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/admin/js/' );                        //: /wp-content/plugins/admin-help-docs/includes/admin/js/
 define( 'HELPDOCS_PLUGIN_FILES_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/files/' );                        //: /wp-content/plugins/admin-help-docs/includes/files/
 
 //: https://domain.com/wp-admin/admin.php?page=admin-help-docs%2Fincludes%2Fadmin%2Foptions.php

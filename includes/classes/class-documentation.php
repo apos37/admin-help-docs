@@ -10,11 +10,9 @@ if ( !defined( 'ABSPATH' ) ) {
 
 
 /**
- * Initiate the class, but after init
+ * Initiate the class
  */
-add_action( 'init', function() {
-    new HELPDOCS_DOCUMENTATION;
-} );
+new HELPDOCS_DOCUMENTATION;
 
 
 /**
@@ -61,12 +59,6 @@ class HELPDOCS_DOCUMENTATION {
         // Use dashes for spaces
         self::$post_type = 'help-docs';
 
-        // Register the post type
-        $this->register_post_type();
-
-        // Disable block editor
-        add_filter( 'use_block_editor_for_post_type', [ $this, 'disable_gutenberg' ], 10, 2 );
-
         // Get the page title
         if ( get_option( HELPDOCS_GO_PF.'page_title' ) && get_option( HELPDOCS_GO_PF.'page_title' ) != '' ) {
             $title = get_option( HELPDOCS_GO_PF.'page_title' );
@@ -99,8 +91,11 @@ class HELPDOCS_DOCUMENTATION {
             'low'               => 'Low'
         ];
 
-        // Register taxonomy
-        // $this->register_taxonomy( 'help-location', [ self::$post_type ] );
+        // Initialize on init
+        add_action( 'init', [ $this, 'init' ] );
+
+        // Disable block editor
+        add_filter( 'use_block_editor_for_post_type', [ $this, 'disable_gutenberg' ], 10, 2 );
 
         // Add the header to the top of the admin list page
         add_action( 'load-edit.php', [ $this, 'add_header' ] );
@@ -130,7 +125,27 @@ class HELPDOCS_DOCUMENTATION {
         // Gutenberg
         add_action( 'admin_footer', [ $this, 'gutenberg_content' ] );
 
+        // Update order of documentation with Ajax
+        add_action( 'wp_ajax_'.HELPDOCS_GO_PF.'update_order', [ $this, 'update_order' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
 	} // End __construct()
+
+    
+    /**
+     * Load on init
+     *
+     * @return void
+     */
+    public function init() {
+
+        // Register the post type
+        $this->register_post_type();
+
+        // Register taxonomy
+        // $this->register_taxonomy( 'help-location', [ self::$post_type ] );
+
+    } // End init()
 
     
     /**
@@ -1832,5 +1847,90 @@ class HELPDOCS_DOCUMENTATION {
             </script>
             <?php
         }
+    }
+
+
+    /**
+     * Update order via Ajax
+     *
+     * @return void
+     */
+    public function update_order() {
+        // First verify the nonce
+        if ( !wp_verify_nonce( $_REQUEST[ 'nonce' ], 'drag-doc-toc' ) ) {
+            exit( 'No naughty business please' );
+        }
+
+        // Get the order
+        $order = isset( $_REQUEST[ 'order' ] ) ? $_REQUEST[ 'order' ] : false;
+
+        // If order exists
+        if ( $order ) {
+            
+            // Split
+            $orders = explode( '&', $order );
+
+            // Iter the ordered items
+            for ( $o = 0; $o < count( $orders ); $o++ ) {
+
+                // Get the doc id
+                $doc_id = str_replace( 'item[]=', '', $orders[$o] );
+
+                // Get the position
+                $position = $o;
+
+                // Update the doc
+                update_post_meta( $doc_id, HELPDOCS_GO_PF.'order', $position );
+            }
+
+            // Return success
+            $result[ 'type' ] = 'success';
+
+        // Otherwise return error
+        } else {
+            $result[ 'type' ] = 'error';
+        }
+
+        // Pass to ajax
+        if( !empty( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) == 'xmlhttprequest' ) {
+            echo json_encode( $result );
+        } else {
+            header( 'Location: '.$_SERVER[ 'HTTP_REFERER' ] );
+        }
+
+        // Stop
+        die();
+    } // End update_order()
+
+
+    /**
+     * Enqueue scripts
+     *
+     * @param string $hook
+     * @return void
+     */
+    public function enqueue_scripts( $screen ) {
+        // Get the options page slug
+        $options_page = 'toplevel_page_'.HELPDOCS_TEXTDOMAIN;
+
+        // Allow for multisite
+        if ( is_network_admin() ) {
+            $options_page .= '-network';
+        }
+
+        // Are we on the documentation page?
+        if ( $screen != $options_page || ( $screen == $options_page && helpdocs_get( 'tab', '!=', 'documentation' ) ) ) {
+            return;
+        }
+
+        // Handle
+        $handle = HELPDOCS_GO_PF.'script';
+
+        // Sorting draggable docs
+        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-sorting.js', [ 'jquery', 'jquery-ui-sortable' ] );
+        wp_localize_script( $handle, 'docSortingAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'jquery-ui-sortable' );
+        wp_enqueue_script( $handle );
     }
 }
