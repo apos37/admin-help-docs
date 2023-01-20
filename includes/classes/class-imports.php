@@ -593,8 +593,6 @@ class HELPDOCS_IMPORTS {
      * @return void
      */
     public function save_post( $post_id ) {
-        // ddtt_debug_form_post( 'gandy@eri-wi.org', 4 );
-
         // Check if our nonces are set.
         if ( !isset( $_POST[ 'help_imports_nonce' ] ) || !isset( $_POST[ 'help_imports_rest_nonce' ] ) ) {
             return;
