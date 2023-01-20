@@ -297,7 +297,8 @@ class HELPDOCS_IMPORTS {
         $url = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'url', true ) );
         $all = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) == 1 ) ? 1 : 0;
         $enabled = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) == 1 ) ? 1 : 0;
-        $selected_docs = unserialize( get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true ) );
+        $selected_docs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true );
+        // dpr( $selected_docs );
 
         // Get our api url
         if ( !$url || $url == '' ) {
@@ -626,9 +627,7 @@ class HELPDOCS_IMPORTS {
         $enabled = isset( $_POST[ HELPDOCS_GO_PF.'enabled' ] ) && $_POST[ HELPDOCS_GO_PF.'enabled' ] == 1 ? 1 : 0;
 
         // Docs
-        $docs = isset( $_POST[ HELPDOCS_GO_PF.'docs' ] ) ? (array) $_POST[ HELPDOCS_GO_PF.'docs' ] : [];
-        $docs = array_map( 'absint', $docs );
-        $docs = serialize( $docs );
+        $docs = isset( $_POST[ HELPDOCS_GO_PF.'docs' ] ) ? array_map( 'absint', (array) $_POST[ HELPDOCS_GO_PF.'docs' ] ) : [];
         
         // Values
         $values = [
@@ -759,7 +758,7 @@ function helpdocs_get_imports( $args = null ) {
                 if ( !empty( $docs ) ) {
 
                     // Get the selected docs
-                    $selected_docs = unserialize( get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true ) );
+                    $selected_docs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true );
 
                     // Iter the docs
                     foreach ( $docs as $doc ) {
