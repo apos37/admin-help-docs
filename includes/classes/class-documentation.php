@@ -68,7 +68,7 @@ class HELPDOCS_DOCUMENTATION {
 
         // Set the locations
         self::$site_location = [
-            'main'              => $title.' Documents',
+            'main'              => 'Main Documentation Page',
             'admin_bar'         => 'Admin Bar Menu (Must Be Enabled in Settings)',
             'index.php'         => 'Dashboard',
             'post.php'          => 'Post/Page Edit Screen',
@@ -972,7 +972,7 @@ class HELPDOCS_DOCUMENTATION {
     public function get_admin_page_title_from_url( $url ) {
         // Return main, index.php, post.php, edit.php
         if ( $url == base64_encode( 'main' ) ) {
-            return 'Main Documentation Area';
+            return 'Main Documentation Page';
         } elseif ( $url == base64_encode( 'admin_bar' ) ) {
             return 'Admin Bar';
         } elseif ( $url == base64_encode( 'index.php' ) ) {
@@ -1862,7 +1862,7 @@ class HELPDOCS_DOCUMENTATION {
         }
 
         // Get the order
-        $order = isset( $_REQUEST[ 'order' ] ) ? $_REQUEST[ 'order' ] : false;
+        $order = isset( $_REQUEST[ 'order' ] ) ? sanitize_text_field( $_REQUEST[ 'order' ] ) : false;
 
         // If order exists
         if ( $order ) {
@@ -1895,7 +1895,8 @@ class HELPDOCS_DOCUMENTATION {
         if( !empty( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) == 'xmlhttprequest' ) {
             echo json_encode( $result );
         } else {
-            header( 'Location: '.$_SERVER[ 'HTTP_REFERER' ] );
+            $referer = filter_input( INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL );
+            header( 'Location: '.$referer );
         }
 
         // Stop

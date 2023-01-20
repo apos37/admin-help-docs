@@ -619,7 +619,7 @@ class HELPDOCS_IMPORTS {
         /* OK, it's safe for us to save the data now. */
 
         // URL
-        $url = isset( $_POST[ HELPDOCS_GO_PF.'url' ] ) ? esc_url( $_POST[ HELPDOCS_GO_PF.'url' ] ) : '';
+        $url = isset( $_POST[ HELPDOCS_GO_PF.'url' ] ) ? filter_var( $_POST[ HELPDOCS_GO_PF.'url' ], FILTER_VALIDATE_URL ) : '';
 
         // All
         $all = isset( $_POST[ HELPDOCS_GO_PF.'all' ] ) && $_POST[ HELPDOCS_GO_PF.'all' ] == 1 ? 1 : 0;

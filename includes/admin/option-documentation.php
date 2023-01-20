@@ -61,6 +61,7 @@ ul {
 }
 ul li {
     padding-inline-start: 1ch;
+    cursor: row-resize;
 }
 ul, ol {
     padding-top: 10px;
@@ -121,7 +122,7 @@ if ( !empty( $imports ) ) {
 
 // Stop if no posts are found
 if ( !$docs ) {
-    echo 'No documentation found. <a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
+    echo '<br><br>No documentation found. <a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
     return;
 }
 

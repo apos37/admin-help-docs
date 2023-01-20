@@ -146,10 +146,9 @@ function helpdocs_get_current_url( $params = true, $domain = true ){
  * @return string
  */
 function helpdocs_get_current_admin_url( $params = true ) {
-    if ( $params ) {
-        $uri = $_SERVER[ 'REQUEST_URI' ];
-    } else {
-        $uri = strtok( $_SERVER[ 'REQUEST_URI' ], '?' );
+    $uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
+    if ( !$params ) {
+        $uri = strtok( $uri, '?' );
     }
     return admin_url( basename( $uri ) );
 } // End helpdocs_get_current_admin_url()

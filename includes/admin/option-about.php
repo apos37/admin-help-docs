@@ -60,6 +60,7 @@ if ( $coffee_filter ) {
     <li>Themes: add a collection of themes that you can choose from. I just don't have any great ideas yet, so if you have an awesome look for your documents, please submit them.</li>
     <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
     <li>More site locations: possibly add a fixed area at the top or bottom of all screens, or a floating help button on the bottom right?</li>
+    <li>If Dev Debug Tools is also installed, add visibility option for devs only so devs can have their own docs separate from everyone else.</li>
 </ul>
 
 <br><br>
