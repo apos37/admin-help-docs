@@ -5,20 +5,21 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-Site developers and operators can easily create help documentation for the admin area
+Site developers and operators can easily create help documentation and notices for the admin area.
 
 == Description ==
-Site developers and operators can easily create help documentation for the WordPress admin area. Include a help section with pages of instructions, or add a help box just about anywhere on the back-end (see site locations and page locations below).
+Site developers and operators can easily create help documentation and notices for the admin area. Include a help section with pages of instructions, or add a help box just about anywhere on the back-end (see site locations and page locations below).
 
 * Supports custom post types
 * Supports Gutenberg and Classic editors
 * Completely customizeable - colors, admin menu name, icon, logo, etc
 * Change the admin footer text to admin contact information or whatever you want
 * Easily import settings from another site
+* Import or auto-feed documents from another site
 * Users can reset meta box and admin list column preferences from profile page
 * Use it for notices and reminders, too!
 
@@ -64,5 +65,5 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 10. Import documents from another site
 
 == Changelog ==
-= 1.0.0 =
-* Created this plugin on November 14, 2022
+= 1.0.1 =
+* Initial release January 23, 2023
