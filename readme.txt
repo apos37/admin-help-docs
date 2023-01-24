@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -53,17 +53,17 @@ Yes, you can choose to automatically feed documents or import them locally from 
 Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 
 == Screenshots ==
-1. Main help page
-2. Manage help documentation
-3. Settings page
-4. Settings page continued
-5. Top page notification
-6. Gutenberg contextual help and meta box
-7. Classic contextual help and meta box
-8. Dashboard meta box
-9. Bottom page documentation
-10. Import documents from another site
+1. Main documentation page
+2. Add a doc to the top of any page as a notification 
+3. Bottom page placement
+4. Classic contextual help and side meta box 
+5. Gutenberg contextual help and side meta box
+6. Dashboard meta box with custom colors
+7. Manage the help docs like any other post
+8. Import documents from another site
+9. Settings page
+10. Settings page with colors changed
 
 == Changelog ==
-= 1.0.1 =
-* Initial release January 23, 2023
+= 1.0.2 =
+* Added feedback form to About tab

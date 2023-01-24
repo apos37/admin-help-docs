@@ -20,6 +20,43 @@ ul {
 ul li {
     padding-inline-start: 1ch;
 }
+#feedback-message {
+    margin-bottom: 10px;
+}
+#feedback-sending {
+    line-height: 2.25;
+    font-style: italic;
+    margin-left: 10px;
+    display: none;
+}
+#feedback-sending:after {
+    display: inline-block;
+    animation: dotty steps(1,end) 1s infinite;
+    content: '';
+}
+@keyframes dotty {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
+}
+#feedback-result {
+    color: white;
+    font-weight: 500;
+    width: fit-content;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+#feedback-result.success {
+    background-color: green;
+    display: inline-block;
+    margin-left: 10px;
+}
+#feedback-result.fail {
+    background-color: red;
+    margin-top: 10px;
+}
 </style>
 
 <?php include 'header-page.php'; ?>
@@ -48,6 +85,25 @@ if ( $coffee_filter ) {
     echo wp_kses_post( $buy_me_coffee );
 }
 ?>
+
+<br><br><br>
+<h3>How Can We Improve?</h3>
+<div id="feedback-form">
+    <div class="form-group">
+        <label for="message" style="display: block;">If there was one thing you would change about this plugin, what would it be?</label> 
+        <br><textarea id="feedback-message" name="message" class="form-control input-message" rows="6" style="width: 600px;" placeholder="Your feedback..."></textarea><br>
+    </div>
+    <?php 
+    $nonce = wp_create_nonce( HELPDOCS_GO_PF.'feedback' );
+    $user = get_userdata( get_current_user_id() ); 
+    $display_name = $user->display_name; 
+    $email = $user->user_email; 
+    ?>
+    <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>">Send Feedback</button>
+    <div id="feedback-sending">Sending</div>
+    <div id="feedback-result"></div>
+</div>
+
 
 <br><br><br>
 <h3>Planned Updates</h3>

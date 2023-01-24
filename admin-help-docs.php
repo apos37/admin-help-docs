@@ -3,7 +3,7 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://github.com/apos37/admin-help-docs
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             1.0.1
+ * Version:             1.0.2
  * Requires at least:   5.9.0
  * Tested up to:        6.1
  * Requires PHP:        7.4
@@ -32,9 +32,10 @@ define( 'HELPDOCS_GO_PF', 'helpdocs_' ); // Global options prefix
 define( 'HELPDOCS_NAME', 'Admin Help Docs' );
 define( 'HELPDOCS_TEXTDOMAIN', 'admin-help-docs' );
 define( 'HELPDOCS_AUTHOR', 'Apos37' );
+define( 'HELPDOCS_AUTHOR_EMAIL', 'apos37@pm.me' );
 
 // Versions
-define( 'HELPDOCS_VERSION', '1.0.1' );
+define( 'HELPDOCS_VERSION', '1.0.2' );
 define( 'HELPDOCS_MIN_PHP_VERSION', '7.4' );
 
 // Prevent loading the plugin if PHP version is not minimum

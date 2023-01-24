@@ -100,6 +100,7 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-imports.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-feedback.php';
 
         // Enqueue scripts
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -155,7 +156,7 @@ class HELPDOCS_MAIN {
         }
 
         // Are we on the options page?
-        if ( $screen != $options_page || ( $screen == $options_page && helpdocs_get( 'tab', '!=', 'settings' ) ) ) {
+        if ( $screen != $options_page ) {
             return;
         }
 
@@ -163,8 +164,19 @@ class HELPDOCS_MAIN {
         $handle = HELPDOCS_GO_PF.'script';
 
         // Sorting draggable docs
-        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ] );
-        wp_enqueue_script( 'jquery' );
-        wp_enqueue_script( $handle );
+        if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ] );
+
+        // Feedback form
+        } elseif ( helpdocs_get( 'tab', '==', 'about' ) ) {
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ] );
+            wp_localize_script( $handle, 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
+        }
+
+        // Run jQuery, et al
+        if ( helpdocs_get( 'tab', '==', 'settings' ) || helpdocs_get( 'tab', '==', 'about' ) ) {
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( $handle );
+        }
     }
 }
