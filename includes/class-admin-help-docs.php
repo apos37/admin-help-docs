@@ -141,6 +141,7 @@ class HELPDOCS_MAIN {
 
     /**
      * Enqueue scripts
+     * Reminder to bump version number during testing to avoid caching
      *
      * @param string $hook
      * @return void
@@ -165,11 +166,11 @@ class HELPDOCS_MAIN {
 
         // Sorting draggable docs
         if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ] );
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], '1.0.0' );
 
         // Feedback form
         } elseif ( helpdocs_get( 'tab', '==', 'about' ) ) {
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ] );
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], '1.0.2' );
             wp_localize_script( $handle, 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
         }
 

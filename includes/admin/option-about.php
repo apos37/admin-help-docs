@@ -6,7 +6,7 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 ?>
 
 <style>
-a.button {
+.button {
     background-color: <?php echo esc_attr( $color_bg ); ?> !important;
     filter: brightness(95%);
     color: <?php echo esc_attr( $color_cl ); ?> !important;
@@ -99,11 +99,10 @@ if ( $coffee_filter ) {
     $display_name = $user->display_name; 
     $email = $user->user_email; 
     ?>
-    <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>">Send Feedback</button>
+    <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>" disabled>Send Feedback</button>
     <div id="feedback-sending">Sending</div>
     <div id="feedback-result"></div>
 </div>
-
 
 <br><br><br>
 <h3>Planned Updates</h3>

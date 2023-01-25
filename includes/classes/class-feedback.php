@@ -59,7 +59,7 @@ class HELPDOCS_FEEDBACK {
             $to = HELPDOCS_AUTHOR_EMAIL;
 
             // Subject
-            $subject = 'Admin Help Docs Feedback | '.helpdocs_get_domain();
+            $subject = HELPDOCS_NAME.' Feedback | '.helpdocs_get_domain();
                     
             // The message
             $message = $msg;

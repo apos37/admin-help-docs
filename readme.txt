@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -65,5 +65,6 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 10. Settings page with colors changed
 
 == Changelog ==
-= 1.0.2 =
-* Added feedback form to About tab
+= 1.0.3 =
+* Changed author name from Apos37 to Aristocles
+* Other minor fixes

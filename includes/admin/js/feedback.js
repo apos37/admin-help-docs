@@ -1,4 +1,16 @@
 jQuery( $ => {
+    // The send feedback button
+    var btn = $( '#feedback-form .submit' );
+
+    // Check if the message field is blank
+    $( '#feedback-message' ).on( 'keyup', function( e ) {
+        if ( $( this ).val().length > 0 ) {
+            btn.attr( 'disabled', false );
+        } else {
+            btn.attr( 'disabled', 'disabled' );
+        }
+    } );
+
     // Get the id
     $( '#feedback-form .submit' ).on( 'click', function( e ) {
 
@@ -44,6 +56,7 @@ jQuery( $ => {
 
                         // Clear the message field
                         $( '#feedback-message' ).val( '' );
+                        btn.attr( 'disabled', 'disabled' );
 
                     } else {
                         result.addClass( 'fail' );
