@@ -560,5 +560,31 @@ function helpdocs_time_elapsed_string( $datetime, $full = false ) {
 
 
 /**
+ * Display video
+ * USAGE: [tajm6 cam="zelenica"]
+ * 
+ * @param array $atts
+ * @return string
+ */
+add_shortcode( 'tajm6', 'videojs_video_with_tajm6' );
+function videojs_video_with_tajm6( $atts ) {
+    // Get the params
+    $atts = shortcode_atts( [ 
+        'cam'       => 'plaz',
+        'seconds'   => 14400
+    ], $atts );
+
+    // Current timestamp
+    $timestamp = time() - $atts[ 'seconds' ];
+
+    // Get the results of the shortcode
+    $results = do_shortcode( '[videojs_video url="https://vpn.video2go.live:444/zelenica/'.$atts[ 'cam' ].'/playlist_dvr_range-'.$timestamp.'-21600.m3u8"]' );
+
+    // Return the dynamic results
+    return $results;
+} // End videojs_video_with_tamjm6()
+
+
+/**
  * THE END
  */

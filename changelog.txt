@@ -1,7 +1,11 @@
 == changelog.txt ==
-= 1.0.3 =
-* Changed author name from Apos37 to Aristocles
+= 1.0.4 =
+* Fixed nested ordered lists on main documentation page to show proper list types
+* Added settings link, website link, and discord support link to plugins list page
 * Other minor fixes
+
+= 1.0.3 =
+* Minor fixes
 
 = 1.0.2 =
 * Added feedback form to About tab

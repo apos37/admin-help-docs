@@ -67,12 +67,15 @@ ul, ol {
     padding-top: 10px;
     padding-bottom: 5px;
 }
-ol.lower-alpha {
-    list-style-type: lower-alpha;
-}
-ol.lower-roman {
-    list-style-type: lower-roman;
-}
+ol li ol { list-style-type: lower-alpha !important; }
+ol li ol li ol { list-style-type: lower-roman !important; }
+ol li ol li ol li ol { list-style-type: decimal !important; }
+ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+ol li ol li ol li ol li ol li ol li ol { list-style-type: decimal !important; }
+ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+
 #doc-viewer img {
     max-width:100%;
     height: auto;

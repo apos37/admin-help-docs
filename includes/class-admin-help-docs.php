@@ -93,6 +93,7 @@ class HELPDOCS_MAIN {
         
         // Options page functions such as form table rows
         require_once HELPDOCS_PLUGIN_ADMIN_PATH . 'functions.php';
+        require_once HELPDOCS_PLUGIN_ADMIN_PATH . 'admin-area.php';
 
         // Classes
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-colors.php';

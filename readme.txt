@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -65,6 +65,7 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 10. Settings page with colors changed
 
 == Changelog ==
-= 1.0.3 =
-* Changed author name from Apos37 to Aristocles
+= 1.0.4 =
+* Fixed nested ordered lists on main documentation page to show proper list types
+* Added settings link, website link, and discord support link to plugins list page
 * Other minor fixes

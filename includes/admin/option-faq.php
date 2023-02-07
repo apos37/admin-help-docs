@@ -74,9 +74,3 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <ul>
     <li>You can do so by dragging the menu items in the left column up or down.</li>
 </ul>
-
-<br><br>
-<h3>Can I reset the positions of meta boxes to the default to see how it will show up for all users?</h3>
-<ul>
-    <li>Yes, options for resetting your meta boxes have been added to <a href="/<?php echo esc_attr( HELPDOCS_ADMIN_URL ); ?>/profile.php#<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>">your profile</a>.</li>
-</ul>
