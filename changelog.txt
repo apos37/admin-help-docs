@@ -1,4 +1,8 @@
 == changelog.txt ==
+= 1.0.5 =
+* Added video to readme
+* When resetting settings, added a notice instead of attempting to refresh
+
 = 1.0.4 =
 * Fixed nested ordered lists on main documentation page to show proper list types
 * Added settings link, website link, and discord support link to plugins list page

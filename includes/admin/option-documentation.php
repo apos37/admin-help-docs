@@ -125,7 +125,7 @@ if ( !empty( $imports ) ) {
 
 // Stop if no posts are found
 if ( !$docs ) {
-    echo '<br><br>No documentation found. <a href="/'.esc_attr( HELPDOCS_ADMIN_URL ).'/edit.php?post_type='.esc_attr( $post_type ).'">Add some now!</a>';
+    echo '<br><br><br><em>No documentation found. Start by clicking "Add New" above!</em>';
     return;
 }
 

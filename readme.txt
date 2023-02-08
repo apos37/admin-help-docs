@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -52,6 +52,9 @@ Yes, you can choose to automatically feed documents or import them locally from 
 = Where can I request features and get further support? =
 Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 
+== Demo ==
+https://youtu.be/-V_vyBe6lv0
+
 == Screenshots ==
 1. Main documentation page
 2. Add a doc to the top of any page as a notification 
@@ -65,7 +68,6 @@ Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
 10. Settings page with colors changed
 
 == Changelog ==
-= 1.0.4 =
-* Fixed nested ordered lists on main documentation page to show proper list types
-* Added settings link, website link, and discord support link to plugins list page
-* Other minor fixes
+= 1.0.5 =
+* Added video to readme
+* When resetting settings, added a notice instead of attempting to refresh

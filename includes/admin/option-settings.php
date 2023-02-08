@@ -44,11 +44,11 @@ $current_url = helpdocs_plugin_options_path( $tab );
 // Are we resetting options?
 if ( $reset = helpdocs_get( 'reset' ) ) {
 
-    // Remove the query string
-    helpdocs_remove_qs_without_refresh( 'reset' );
-
     // Check if confirmed
     if ( !helpdocs_get( 'confirmed', '==', 'true' ) ) {
+
+        // Remove the query string
+        helpdocs_remove_qs_without_refresh( 'reset' );
 
         // Get the suffix
         if ( $reset == 'colors' ) {
@@ -68,33 +68,46 @@ if ( $reset = helpdocs_get( 'reset' ) ) {
 
     } else {
 
+        // Get the suffix
+        if ( $reset == 'colors' ) {
+            $what = 'all of the colors';
+        } elseif ( $reset == 'all' ) {
+            $what = 'all of the plugin settings';
+        } else {
+            return 'Nice try buddy!';
+        }
+
+        // Remove the query string
+        helpdocs_remove_qs_without_refresh( [ 'reset', 'confirmed' ] );
+
+        // Get the global options
+        $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
+
         // If colors
         if ( $reset == 'colors' ) {
 
             // Get the color keys
-            $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
             $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$colors;
 
         } elseif ( $reset == 'all' ) {
 
             // Get all keys
-            $HELPDOCS_GLOBAL_OPTIONS = new HELPDOCS_GLOBAL_OPTIONS();
             $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
         }
 
-        // If we are resetting something legit
-        if ( $reset == 'colors' || $reset == 'all' ) {
+        // Iter the options
+        foreach ( $reset_keys as $reset_key ) {
 
-            // Iter the colors
-            foreach ( $reset_keys as $reset_key ) {
-
-                // Delete the option
-                delete_option( HELPDOCS_GO_PF.$reset_key );
-
-                // Refresh page again so CSS will take
-                header( 'Refresh:0 url='.$current_url );
-            }
+            // Delete the option
+            delete_option( HELPDOCS_GO_PF.$reset_key );
         }
+
+        // Add a notice to confirm
+        ?>
+        <div class="notice notice-success is-dismissible">
+        <p><?php _e( 'You have successfully reset '.esc_html( $what ).'. Take one last look at what you will be missing out on thanks to your bold decision. Refresh the page to see your new changes.', 'admin-help-docs' ); ?></p>
+        </div>
+        <?php
     }
 }
 
