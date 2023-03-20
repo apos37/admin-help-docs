@@ -28,7 +28,7 @@ class HELPDOCS_ADMIN_BAR {
 	public function __construct() {
 
         // Customize the admin bar menu
-        add_action( 'admin_bar_menu', [ $this, 'admin_bar' ], 99999 );
+        add_action( 'admin_bar_menu', [ $this, 'admin_bar' ], 100 );
 
 	} // End __construct()
 

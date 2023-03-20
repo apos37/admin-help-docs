@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,7 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
-= 1.0.5 =
-* Added video to readme
-* When resetting settings, added a notice instead of attempting to refresh
+= 1.0.6 =
+* Added option for adding missing user meta merge tags to Gravity Forms dropdowns
+* Added missing index.php to classes and js folders
+* Fixed excerpt meta box from changing on other post types

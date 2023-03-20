@@ -416,6 +416,13 @@ class HELPDOCS_DOCUMENTATION {
      * @return string
      */
     public function excerpt_meta_box( $translation, $original ) {
+        // Make sure we are only looking at our post type
+        global $post_type;
+        if ( $post_type != self::$post_type ) {
+            return $translation;
+        }
+
+        // Update the box
         if ( 'Excerpt' == $original ) {
             return __( 'Description', 'admin-help-docs' );
         } elseif ( false !== strpos( $original, 'Excerpts are optional hand-crafted summaries of your' ) ) {

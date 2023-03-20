@@ -102,6 +102,7 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-feedback.php';
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-gf-mergetags.php';
 
         // Enqueue scripts
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );

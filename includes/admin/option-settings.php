@@ -566,6 +566,10 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
             <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', ' Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
 
+            <?php if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) { ?>
+                <?php echo wp_kses( helpdocs_options_tr( 'gf_merge_tags', 'Add Missing Gravity Form User Merge Tags', 'textarea', '<br>You can add additional user merge tags to Gravity Form field options, notifications, and confirmations.<br>Separate by commas using the following format: <strong>Label (user_meta_key)</strong>', [ 'default' => 'User First Name (first_name), User Last Name (last_name), User Date Registered (user_registered)', 'rows' => '6', 'cols' => '100' ] ), $allowed_html ); ?>
+            <?php } ?>
+
         </table>
         
         <?php submit_button(); ?>

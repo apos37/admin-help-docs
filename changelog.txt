@@ -1,4 +1,9 @@
 == changelog.txt ==
+= 1.0.6 =
+* Added option for adding missing user meta merge tags to Gravity Forms dropdowns
+* Added missing index.php to classes and js folders
+* Fixed excerpt meta box from changing on other post types
+
 = 1.0.5 =
 * Added video to readme
 * When resetting settings, added a notice instead of attempting to refresh

@@ -65,7 +65,8 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'edit_roles',
             'api',
             'user_prefs',
-            'copy_from'            
+            'gf_merge_tags',
+            'copy_from'
         ];
         self::$settings_general = array_merge( self::$settings_general, self::$colors );
 

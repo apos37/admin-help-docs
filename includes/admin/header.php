@@ -91,7 +91,7 @@ html, body, #wpwrap, #wpcontent, #wpbody, #wpbody-content, .wrap {
 
     <?php if ( helpdocs_get( 'settings-updated' ) ) { ?>
         <div id="message" class="updated">
-            <p><strong><?php _e( 'Settings saved.', 'dev_debug_tools' ) ?></strong></p>
+            <p><strong><?php _e( 'Settings saved.', 'admin-help-docs' ) ?></strong></p>
         </div>
     <?php } ?>
 
