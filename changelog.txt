@@ -1,6 +1,6 @@
 == changelog.txt ==
-= 1.0.8.2 =
-* Fix: Fatal error on Dashboard TOC for previously saved imports
+= 1.0.9 =
+* Tweak: Updated Discord support link
 
 = 1.0.8 =
 * Tweak: Added icons to dashboard TOC
