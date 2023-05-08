@@ -50,7 +50,7 @@ Anyone that has the Administrator role, or other roles that you specify.
 Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin.
 
 = Where can I request features and get further support? =
-Join my [WordPress Support Discord server](https://discord.gg/VeMTXRVkm5)
+Join my [WordPress Support Discord server](https://discord.gg/3HnzNEJVnR)
 
 == Demo ==
 https://youtu.be/-V_vyBe6lv0

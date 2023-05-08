@@ -71,7 +71,7 @@ class HELPDOCS_ADMIN_AREA {
             // Add the link
             $row_meta = [
                 'docs' => '<a href="'.esc_url( 'https://apos37.com/wordpress-admin-help-docs/' ).'" target="_blank" aria-label="'.esc_attr__( 'Plugin Website Link', 'admin-help-docs' ).'">'.esc_html__( 'Website', 'admin-help-docs' ).'</a>',
-                'discord' => '<a href="'.esc_url( 'https://discord.gg/VeMTXRVkm5' ).'" target="_blank" aria-label="'.esc_attr__( 'Plugin Support on Discord', 'admin-help-docs' ).'">'.esc_html__( 'Discord Support', 'admin-help-docs' ).'</a>'
+                'discord' => '<a href="'.esc_url( 'https://discord.gg/3HnzNEJVnR' ).'" target="_blank" aria-label="'.esc_attr__( 'Plugin Support on Discord', 'admin-help-docs' ).'">'.esc_html__( 'Discord Support', 'admin-help-docs' ).'</a>'
             ];
             return array_merge( $links, $row_meta );
         }
