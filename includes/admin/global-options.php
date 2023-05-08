@@ -53,6 +53,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
         // Define the other keys
         self::$settings_general = [
             'admin_bar',
+            'dashboard_toc',
             'dashicon',
             'logo',
             'page_title',

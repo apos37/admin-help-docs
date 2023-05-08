@@ -159,6 +159,8 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
             <?php echo wp_kses( helpdocs_options_tr( 'admin_bar', 'Enable Admin Bar Menu Quick Link', 'checkbox', '' ), $allowed_html ); ?>
 
+            <?php echo wp_kses( helpdocs_options_tr( 'dashboard_toc', 'Enable Dashboard TOC', 'checkbox', ' Adds a dashboard widget with a table of contents for the docs on the Main Documentation Page.' ), $allowed_html ); ?>
+
             <?php $di = 'dashicons-';
             $dashicons = [
                 $di.'menu',

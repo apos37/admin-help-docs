@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.8
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,7 +68,37 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.0.8 =
+* Tweak: Added icons to dashboard TOC
+* Tweak: Added ability to add imports/feeds to dashboard TOC
+* Fix: Hid "Add to Dashboard TOC" by default
+* Fix: Replaced early escapes with sanitizers
+
+= 1.0.7 =
+* Update: Added dashboard table of contents (props Chris MacLean#5505 for suggestion)
+* Tweak: Updated changelog to use commonly used prefixes (Fix, Tweak, and Update)
+
 = 1.0.6 =
-* Added option for adding missing user meta merge tags to Gravity Forms dropdowns
-* Added missing index.php to classes and js folders
-* Fixed excerpt meta box from changing on other post types
+* Update: Added optional setting for allowing the addition of missing user meta merge tags to Gravity Forms dropdowns
+* Update: Added missing `index.php` to `/classes/` and `/js/` folders
+* Fix: Excerpt meta box title changing on other post types
+
+= 1.0.5 =
+* Update: Added video to readme
+* Tweak: When resetting settings, added a notice instead of attempting to refresh
+
+= 1.0.4 =
+* Fix: Nested ordered lists on main documentation page not showing proper list types
+* Update: Added links to plugins list page
+
+= 1.0.3 =
+* Fix: Minor fixes
+
+= 1.0.2 =
+* Update: Added feedback form to About tab
+
+= 1.0.1 =
+* Initial release on WP.org January 23, 2023
+
+= 1.0.0 =
+* Created plugin on November 14, 2022

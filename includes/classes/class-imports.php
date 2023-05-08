@@ -294,11 +294,12 @@ class HELPDOCS_IMPORTS {
         wp_nonce_field( 'help_imports_rest_nonce', 'help_imports_rest_nonce' );
 
         // Get the current values
-        $url = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'url', true ) );
+        $url = get_post_meta( $post->ID, HELPDOCS_GO_PF.'url', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'url', true ), FILTER_SANITIZE_URL ) : '';
         $all = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) == 1 ) ? 1 : 0;
+        $all_tocs = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'all_tocs', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'all_tocs', true ) == 1 ) ? 1 : 0;
         $enabled = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) == 1 ) ? 1 : 0;
         $selected_docs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true );
-        // dpr( $selected_docs );
+        $selected_tocs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true );
 
         // Get our api url
         if ( !$url || $url == '' ) {
@@ -361,7 +362,15 @@ class HELPDOCS_IMPORTS {
                 }
 
                 // Instructions
-                echo '<p><em>You can choose to remotely feed documents from the other website, which will update automatically if they are changed on the other site. This is useful if you manage several sites and want to control them in one spot. You may also import them individually, which will clone them and add them to this website. The benefit of doing that is that you won\'t lose them if they get taken down on the other site. Note that if you import it, you will probably want to disable the local version or the remote feed so that you don\'t have two documents showing up at the same time.</em></p>';
+                echo '<p><em>You can choose to remotely feed documents from the other website, which will update automatically if they are changed on the other site. This is useful if you manage several sites and want to control them in one spot. You may also import them individually, which will clone them and add them to this website. The benefit of doing that is that you won\'t lose them if they get taken down on the other site. Note that if you import it, you will probably want to disable the local version or the remote feed so that you don\'t have two documents showing up at the same time.</em></p>
+                <p><em>The "TOC" option allows you to add it to the Dashboard Table of Contents, provided that you have enabled Dashboard TOC in your settings and the feed\'s site location is set to "Main Documentation Page."</em></p>';
+
+                // Are we displaying all TOC checkbox at load?
+                if ( $all ) {
+                    $disp_tocs = 'inline-block';
+                } else {
+                    $disp_tocs = 'none';
+                }
 
                 // Add some CSS
                 echo '<style>
@@ -371,6 +380,9 @@ class HELPDOCS_IMPORTS {
                 }
                 .help-docs-checkbox-cont input {
                     vertical-align: bottom;
+                }
+                #all-tocs-cont {
+                    display: '.esc_attr( $disp_tocs ).';
                 }
                 .help-docs-doc-table {
                     margin-top: 1rem;
@@ -425,6 +437,14 @@ class HELPDOCS_IMPORTS {
                     </div>';
 
                     // Add the checkbox
+                    echo '<div id="all-tocs-cont" class="help-docs-checkbox-cont">
+                        <input type="checkbox" id="doc_all_tocs" name="'.esc_attr( HELPDOCS_GO_PF ).'all_tocs" value="1" '.checked( 1, $all_tocs, false ).'> 
+                        <span id="doc_label-all-tocs" class="doc_labels">
+                            <label for="doc_all_tocs">Add All to Dashboard Table of Contents</label>
+                        </span>
+                    </div>';
+
+                    // Add the checkbox
                     echo '<div class="help-docs-checkbox-cont">
                         <input type="checkbox" id="doc_enabled" name="'.esc_attr( HELPDOCS_GO_PF ).'enabled" value="1" '.checked( 1, $enabled, false ).'> 
                         <span id="doc_label-enabled" class="doc_labels">
@@ -450,16 +470,24 @@ class HELPDOCS_IMPORTS {
                     <th>Publish Date</th>
                     <th>Created By</th>
                     <th>Site Location</th>
+                    <th class="toc-col">TOC</th>
                 </tr>';
 
                 // Iter the docs
                 foreach ( $docs as $doc ) {
 
-                    // Checked?
+                    // Feed Checked?
                     if ( in_array( $doc->ID, $selected_docs ) ) {
-                        $checked = ' checked';
+                        $feed_checked = ' checked';
                     } else {
-                        $checked = '';
+                        $feed_checked = '';
+                    }
+
+                    // TOC Checked?
+                    if ( in_array( $doc->ID, $selected_tocs ) ) {
+                        $toc_checked = ' checked';
+                    } else {
+                        $toc_checked = '';
                     }
 
                     // Check for an excerpt/description
@@ -472,11 +500,12 @@ class HELPDOCS_IMPORTS {
                     // Start the field
                     echo '<tr>
                         <td><a href="'.esc_url( $current_url ).'&imp='.absint( $doc->ID ).'">Import Now</a></td>
-                        <td><input type="checkbox" id="doc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'docs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $checked ).'></td>
+                        <td><input type="checkbox" id="doc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'docs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $feed_checked ).'></td>
                         <td><label for="doc_'.absint( $doc->ID ).'">'.esc_attr( $doc->title ).'</label>'.$incl_desc.'</td>
                         <td>'.date( 'F j, Y', strtotime( $doc->publish_date ) ).'</td>
                         <td>'.esc_attr( $doc->created_by ).'</td>
                         <td>'.wp_kses_post( $HELPDOCS_DOCUMENTATION->get_admin_page_title_from_url( $doc->site_location ) ).'</td>
+                        <td><input type="checkbox" id="toc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'tocs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $toc_checked ).' aria-label="Add to Dashboard Table of Contents"></td>
                     </tr>';
                 }
 
@@ -495,6 +524,9 @@ class HELPDOCS_IMPORTS {
         echo "<script>
         // Get the import all checkbox
         const importAllCheckbox = document.getElementById( 'doc_all' );
+
+        // Get the import all tocs checkbox
+        const importAllTocsCont = document.getElementById( 'all-tocs-cont' );
 
         // Enable/disable list
         docsToggleDisabled( importAllCheckbox );
@@ -528,6 +560,9 @@ class HELPDOCS_IMPORTS {
                     importCheckboxes[c].disabled = true;
                 }
 
+                // Show the all TOC checkbox
+                importAllTocsCont.style.display = 'inline-block';
+
             } else {
 
                 // Iter the table rows
@@ -544,6 +579,9 @@ class HELPDOCS_IMPORTS {
                 for ( var c = 0; c < importCheckboxes.length; c++) {
                     importCheckboxes[c].disabled = false;
                 }
+
+                // Hide the all TOC checkbox
+                importAllTocsCont.style.display = 'none';
             }
         }
         </script>";
@@ -622,19 +660,27 @@ class HELPDOCS_IMPORTS {
 
         // All
         $all = isset( $_POST[ HELPDOCS_GO_PF.'all' ] ) && $_POST[ HELPDOCS_GO_PF.'all' ] == 1 ? 1 : 0;
+
+        // All TOCs
+        $all_tocs = isset( $_POST[ HELPDOCS_GO_PF.'all_tocs' ] ) && $_POST[ HELPDOCS_GO_PF.'all_tocs' ] == 1 ? 1 : 0;
         
         // Enabled
         $enabled = isset( $_POST[ HELPDOCS_GO_PF.'enabled' ] ) && $_POST[ HELPDOCS_GO_PF.'enabled' ] == 1 ? 1 : 0;
 
         // Docs
         $docs = isset( $_POST[ HELPDOCS_GO_PF.'docs' ] ) ? array_map( 'absint', (array) $_POST[ HELPDOCS_GO_PF.'docs' ] ) : [];
+
+        // TOCs
+        $tocs = isset( $_POST[ HELPDOCS_GO_PF.'tocs' ] ) ? array_map( 'absint', (array) $_POST[ HELPDOCS_GO_PF.'tocs' ] ) : [];
         
         // Values
         $values = [
             HELPDOCS_GO_PF.'url'        => $url,
             HELPDOCS_GO_PF.'all'        => $all,
+            HELPDOCS_GO_PF.'all_tocs'   => $all_tocs,
             HELPDOCS_GO_PF.'enabled'    => $enabled,
             HELPDOCS_GO_PF.'docs'       => $docs,
+            HELPDOCS_GO_PF.'tocs'       => $tocs,
         ];
 
         // Update the meta field in the database.
@@ -723,8 +769,9 @@ function helpdocs_get_imports( $args = null ) {
     // Get the api url
     $api_url = help_get_api_path();
 
-    // Import all key
+    // Import all keys
     $import_all_key = HELPDOCS_GO_PF.'all';
+    $import_all_tocs_key = HELPDOCS_GO_PF.'all_tocs';
 
     // Store the import objects here
     $objects = [];
@@ -760,6 +807,9 @@ function helpdocs_get_imports( $args = null ) {
                     // Get the selected docs
                     $selected_docs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true );
 
+                    // Get the selected tocs
+                    $selected_tocs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'tocs', true );
+
                     // Iter the docs
                     foreach ( $docs as $doc ) {
 
@@ -768,6 +818,14 @@ function helpdocs_get_imports( $args = null ) {
 
                         // Are we including it?
                         if ( $import_all || ( !$import_all && in_array( $doc->ID, $selected_docs ) ) ) {
+
+                            // Now check if we are including all on TOC
+                            $import_all_tocs = $import->$import_all_tocs_key;
+                            if ( $import_all && $import_all_tocs || ( !$import_all && in_array( $doc->ID, $selected_tocs ) ) ) {
+                                $toc = true;
+                            } else {
+                                $toc = false;
+                            }
 
                             // Create the object
                             $object = (object)[
@@ -784,6 +842,7 @@ function helpdocs_get_imports( $args = null ) {
                                 HELPDOCS_GO_PF.'post_types'     => $doc->post_types,
                                 HELPDOCS_GO_PF.'priority'       => $doc->priority,
                                 HELPDOCS_GO_PF.'site_location'  => $doc->site_location,
+                                HELPDOCS_GO_PF.'toc'            => $toc,
                                 'auto_feed'                     => $import->post_title,
                                 'feed_id'                       => $import->ID
                             ];

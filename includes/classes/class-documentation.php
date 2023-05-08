@@ -56,15 +56,7 @@ class HELPDOCS_DOCUMENTATION {
 	public function __construct() {
 
         // Define the post type
-        // Use dashes for spaces
         self::$post_type = 'help-docs';
-
-        // Get the page title
-        if ( get_option( HELPDOCS_GO_PF.'page_title' ) && get_option( HELPDOCS_GO_PF.'page_title' ) != '' ) {
-            $title = get_option( HELPDOCS_GO_PF.'page_title' );
-        } else {
-            $title = HELPDOCS_NAME;
-        }
 
         // Set the locations
         self::$site_location = [
@@ -322,7 +314,7 @@ class HELPDOCS_DOCUMENTATION {
      *
      * @return void
      */
-    public function meta_boxes() {        
+    public function meta_boxes() {
         // Add the location meta box to our custom post type
         add_meta_box( 
             'help-locations',
@@ -444,12 +436,13 @@ class HELPDOCS_DOCUMENTATION {
         wp_nonce_field( 'help_location_nonce', 'help_location_nonce' );
     
         // Get the current values
-        $site_location = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'site_location', true ) );
-        $page_location = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'page_location', true ) );
+        $site_location = sanitize_text_field( get_post_meta( $post->ID, HELPDOCS_GO_PF.'site_location', true ) );
+        $page_location = sanitize_key( get_post_meta( $post->ID, HELPDOCS_GO_PF.'page_location', true ) );
         $post_types = unserialize( get_post_meta( $post->ID, HELPDOCS_GO_PF.'post_types', true ) );
         $order = get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ), FILTER_SANITIZE_NUMBER_INT ) : 0;
-        $priority = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'priority', true ) );
-        $api = esc_attr( get_post_meta( $post->ID, HELPDOCS_GO_PF.'api', true ) );
+        $toc = get_post_meta( $post->ID, HELPDOCS_GO_PF.'toc', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'toc', true ), FILTER_VALIDATE_BOOLEAN ) : false;
+        $priority = sanitize_key( get_post_meta( $post->ID, HELPDOCS_GO_PF.'priority', true ) );
+        $api = sanitize_key( get_post_meta( $post->ID, HELPDOCS_GO_PF.'api', true ) );
 
         // Get all choices
         $all_site_locations = self::$site_location;
@@ -562,6 +555,7 @@ class HELPDOCS_DOCUMENTATION {
         #doc-page-location,
         #doc-post-types,
         #doc-order,
+        #doc-toc,
         doc-priority {
             display: none;
         }
@@ -615,6 +609,13 @@ class HELPDOCS_DOCUMENTATION {
             echo '<div id="doc-order" class="help-docs-number-cont">
                 <label for="doc-order-select" class="doc-order-select-label">Menu Order:</label>
                 <input name="'.esc_attr( HELPDOCS_GO_PF ).'order" id="doc-order-select" type="number" value="'.esc_attr( $order ).'">
+            </div>';
+
+            // Add to Dashboard TOC
+            $toc_checked = $toc ? ' checked' : '';
+            echo '<div id="doc-toc" class="help-docs-checkboxes-cont">
+                <input type="checkbox" id="doc_toc" name="'.esc_attr( HELPDOCS_GO_PF ).'toc" value="1"'.esc_html( $toc_checked ).'> 
+                <label for="doc_toc">Add to Dashboard Table of Contents</label>
             </div>';
 
             // Page location dropdown
@@ -752,6 +753,7 @@ class HELPDOCS_DOCUMENTATION {
         // Get the elements
         const siteLocationInput = document.getElementById( 'doc-site-location-select' );
         const order = document.getElementById( 'doc-order' );
+        const toc = document.getElementById( 'doc-toc' );
         const pageLocation = document.getElementById( 'doc-page-location' );
         const pageLocationInput = document.getElementById( 'doc-page-location-select' );
         const optionSide = document.querySelector( 'option.lop-option-side' );
@@ -772,6 +774,9 @@ class HELPDOCS_DOCUMENTATION {
 
             // Display the page location
             order.style.display = 'inline-block';
+
+            // Display the toc option
+            toc.style.display = 'inline-block';
         }
 
         // Check if the site location is edit or post
@@ -801,11 +806,18 @@ class HELPDOCS_DOCUMENTATION {
                 pageLocation.style.display = 'none';
             }
 
-            // Page Location container
+            // Order container
             if ( siteLocationValue != '' && ( siteLocationValue == 'main' || siteLocationValue == 'admin_bar' ) ) {
                 order.style.display = 'inline-block';
             } else {
                 order.style.display = 'none';
+            }
+
+            // TOC container
+            if ( siteLocationValue != '' && siteLocationValue == 'main' ) {
+                toc.style.display = 'inline-block';
+            } else {
+                toc.style.display = 'none';
             }
 
             // Post Type container
@@ -1187,6 +1199,13 @@ class HELPDOCS_DOCUMENTATION {
             $order = false;
         }
 
+        // Add to Dashboard TOC
+        if ( $decoded_site_location == 'main' ) {
+            $toc = isset( $_POST[ HELPDOCS_GO_PF.'toc' ] ) ? filter_var( $_POST[ HELPDOCS_GO_PF.'toc' ], FILTER_VALIDATE_BOOLEAN ) : false;
+        } else {
+            $toc = false;
+        }
+
         // API
         $api = isset( $_POST[ HELPDOCS_GO_PF.'api' ] ) ? sanitize_text_field( $_POST[ HELPDOCS_GO_PF.'api' ] ) : false;
 
@@ -1196,6 +1215,7 @@ class HELPDOCS_DOCUMENTATION {
             HELPDOCS_GO_PF.'page_location'  => $page_location,
             HELPDOCS_GO_PF.'post_types'     => $post_types,
             HELPDOCS_GO_PF.'order'          => $order,
+            HELPDOCS_GO_PF.'toc'            => $toc,
             HELPDOCS_GO_PF.'priority'       => $priority,
             HELPDOCS_GO_PF.'api'            => $api,
         ];
