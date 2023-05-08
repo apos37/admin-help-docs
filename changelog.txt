@@ -1,4 +1,7 @@
 == changelog.txt ==
+= 1.0.8.2 =
+* Fix: Fatal error on Dashboard TOC for previously saved imports
+
 = 1.0.8 =
 * Tweak: Added icons to dashboard TOC
 * Tweak: Added ability to add imports/feeds to dashboard TOC

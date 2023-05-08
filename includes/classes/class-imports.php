@@ -169,7 +169,7 @@ class HELPDOCS_IMPORTS {
      *
      * @return void
      */
-    public function meta_boxes() {        
+    public function meta_boxes() {
         // Add the location meta box to our custom post type
         add_meta_box( 
             'help-import-url',
@@ -298,8 +298,20 @@ class HELPDOCS_IMPORTS {
         $all = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'all', true ) == 1 ) ? 1 : 0;
         $all_tocs = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'all_tocs', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'all_tocs', true ) == 1 ) ? 1 : 0;
         $enabled = ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) && get_post_meta( $post->ID, HELPDOCS_GO_PF.'enabled', true ) == 1 ) ? 1 : 0;
-        $selected_docs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true );
-        $selected_tocs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true );
+        
+        // Get the selected docs
+        if ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true ) ) {
+            $selected_docs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true );
+        } else {
+            $selected_docs = [];
+        }
+
+        // Get the selected tocs
+        if ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true ) ) {
+            $selected_tocs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true );
+        } else {
+            $selected_tocs = [];
+        }
 
         // Get our api url
         if ( !$url || $url == '' ) {
@@ -805,10 +817,18 @@ function helpdocs_get_imports( $args = null ) {
                 if ( !empty( $docs ) ) {
 
                     // Get the selected docs
-                    $selected_docs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true );
+                    if ( get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true ) ) {
+                        $selected_docs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'docs', true );
+                    } else {
+                        $selected_docs = [];
+                    }
 
                     // Get the selected tocs
-                    $selected_tocs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'tocs', true );
+                    if ( get_post_meta( $import->ID, HELPDOCS_GO_PF.'tocs', true ) ) {
+                        $selected_tocs = get_post_meta( $import->ID, HELPDOCS_GO_PF.'tocs', true );
+                    } else {
+                        $selected_tocs = [];
+                    }
 
                     // Iter the docs
                     foreach ( $docs as $doc ) {

@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.8.2
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,9 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.0.8.2 =
+* Fix: Fatal error on Dashboard TOC for previously saved imports
+
 = 1.0.8 =
 * Tweak: Added icons to dashboard TOC
 * Tweak: Added ability to add imports/feeds to dashboard TOC
