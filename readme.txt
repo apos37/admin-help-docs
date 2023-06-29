@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.2
+Tested up to: 6.2.2
 Requires PHP: 7.4
-Stable tag: 1.0.9
+Stable tag: 1.1.1
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,15 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.1.1 =
+* Fix: Custom link fields not showing up for some people
+
+= 1.1.0 =
+* Tweak: Highlighted "Enable This Site" checkbox on imports when disabled
+* Update: Added deactivation survey
+* Update: Added support for importing custom urls with auto-updating domain
+* Update: Added new site location for custom url
+
 = 1.0.9 =
 * Tweak: Updated Discord support link
 

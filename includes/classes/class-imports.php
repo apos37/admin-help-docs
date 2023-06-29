@@ -389,12 +389,23 @@ class HELPDOCS_IMPORTS {
                 .help-docs-checkbox-cont {
                     display: inline-block;
                     margin: 10px 20px 0 0;
+                    padding: 10px;
+                }
+                .help-docs-checkbox-cont.first {
+                    padding-left: 0;
                 }
                 .help-docs-checkbox-cont input {
                     vertical-align: bottom;
                 }
                 #all-tocs-cont {
                     display: '.esc_attr( $disp_tocs ).';
+                }
+                #help-docs-enable-site-cont.disabled {
+                    background: yellow;
+                    border-radius: 5px;
+                }
+                #help-docs-enable-site-cont.disabled label {
+                    font-weight: bold;
                 }
                 .help-docs-doc-table {
                     margin-top: 1rem;
@@ -441,7 +452,7 @@ class HELPDOCS_IMPORTS {
                 echo '<div id="doc-settings" class="help-docs-checkboxes-cont">';
 
                     // Add the checkbox
-                    echo '<div class="help-docs-checkbox-cont">
+                    echo '<div class="help-docs-checkbox-cont first">
                         <input type="checkbox" id="doc_all" name="'.esc_attr( HELPDOCS_GO_PF ).'all" value="1" '.checked( 1, $all, false ).'> 
                         <span id="doc_label-all" class="doc_labels">
                             <label for="doc_all">Feed All Documents Automatically</label>
@@ -457,7 +468,8 @@ class HELPDOCS_IMPORTS {
                     </div>';
 
                     // Add the checkbox
-                    echo '<div class="help-docs-checkbox-cont">
+                    $class_disabled = $enabled ? '' : ' disabled';
+                    echo '<div id="help-docs-enable-site-cont" class="help-docs-checkbox-cont'.esc_attr( $class_disabled ).'">
                         <input type="checkbox" id="doc_enabled" name="'.esc_attr( HELPDOCS_GO_PF ).'enabled" value="1" '.checked( 1, $enabled, false ).'> 
                         <span id="doc_label-enabled" class="doc_labels">
                             <label for="doc_enabled">Enable This Site</label>
@@ -534,6 +546,17 @@ class HELPDOCS_IMPORTS {
 
         // Add some JS to make checkboxes appear
         echo "<script>
+        // Get the enable checkbox
+        const importEnableSite = document.getElementById( 'doc_enabled' );
+        importEnableSite.addEventListener( 'change', function ( e ) {
+            const importEnableSiteCont = document.getElementById( 'help-docs-enable-site-cont' );
+            if ( this.checked ) {
+                importEnableSiteCont.classList.remove( 'disabled' );
+            } else {
+                importEnableSiteCont.classList.add( 'disabled' );
+            }
+        } );
+
         // Get the import all checkbox
         const importAllCheckbox = document.getElementById( 'doc_all' );
 
@@ -608,6 +631,22 @@ class HELPDOCS_IMPORTS {
      * @return int
      */
     public function import_post( $doc, $imported_from_id ) {
+        // If custom url exists, we should swap the domains out.
+        if ( sanitize_text_field( $doc->site_location ) == base64_encode( 'custom' ) ) {
+            $custom = filter_var( $doc->custom, FILTER_SANITIZE_URL );
+
+            // Parse urls
+            $remote_parts = parse_url( $custom );
+            $remote_domain = strtolower( $remote_parts[ 'host' ] ?? '' );
+            $local_parts = parse_url( home_url() );
+            $local_domain = $local_parts[ 'host' ];
+
+            // Get an updated URL
+            $custom = str_replace( $remote_domain, $local_domain, $custom );
+        } else {
+            $custom = '';
+        }
+        
         // Gather post data.
         $post = [
             'import_id'     => absint( $doc->ID ),
@@ -621,7 +660,8 @@ class HELPDOCS_IMPORTS {
                 HELPDOCS_GO_PF.'site_location'  => sanitize_text_field( $doc->site_location ),
                 HELPDOCS_GO_PF.'page_location'  => sanitize_text_field( $doc->page_location ),
                 HELPDOCS_GO_PF.'priority'       => sanitize_text_field( $doc->priority ),
-                HELPDOCS_GO_PF.'order'          => absint( $doc->order ),
+                HELPDOCS_GO_PF.'custom'         => $custom,
+                HELPDOCS_GO_PF.'addt_params'    => absint( $doc->addt_params ),
                 HELPDOCS_GO_PF.'post_types'     => sanitize_text_field( $doc->post_types ),
                 HELPDOCS_GO_PF.'imported_from'  => absint( $imported_from_id ),
                 HELPDOCS_GO_PF.'import_id'      => absint( $doc->ID ),
@@ -803,7 +843,7 @@ function helpdocs_get_imports( $args = null ) {
                 $api_url,
                 [
                     'httpversion' => '1.1',
-                    'blocking' => true
+                    'blocking'    => true
                 ]
             );
 
@@ -847,21 +887,39 @@ function helpdocs_get_imports( $args = null ) {
                                 $toc = false;
                             }
 
+                            // If custom url exists, we should swap the domains out.
+                            if ( sanitize_text_field( $doc->site_location ) == base64_encode( 'custom' ) ) {
+                                $custom = filter_var( $doc->custom, FILTER_SANITIZE_URL );
+
+                                // Parse urls
+                                $remote_parts = parse_url( $custom );
+                                $remote_domain = strtolower( $remote_parts[ 'host' ] ?? '' );
+                                $local_parts = parse_url( home_url() );
+                                $local_domain = $local_parts[ 'host' ];
+
+                                // Get an updated URL
+                                $custom = str_replace( $remote_domain, $local_domain, $custom );
+                            } else {
+                                $custom = '';
+                            }
+
                             // Create the object
                             $object = (object)[
-                                'ID'                            => $doc->ID,
-                                'post_author'                   => $doc->created_by,
-                                'post_date'                     => $doc->publish_date,
-                                'post_content'                  => $doc->content,
-                                'post_title'                    => $doc->title,
-                                'post_excerpt'                  => $doc->desc,
-                                'post_modified'                 => $doc->modified_date,
-                                '_edit_last'                    => $doc->modified_by,
-                                HELPDOCS_GO_PF.'order'          => $doc->order,
-                                HELPDOCS_GO_PF.'page_location'  => $doc->page_location,
-                                HELPDOCS_GO_PF.'post_types'     => $doc->post_types,
-                                HELPDOCS_GO_PF.'priority'       => $doc->priority,
-                                HELPDOCS_GO_PF.'site_location'  => $doc->site_location,
+                                'ID'                            => absint( $doc->ID ),
+                                'post_author'                   => sanitize_text_field( $doc->created_by ),
+                                'post_date'                     => sanitize_text_field( $doc->publish_date ),
+                                'post_content'                  => wp_kses_post( $doc->content ),
+                                'post_title'                    => sanitize_text_field( $doc->title ),
+                                'post_excerpt'                  => sanitize_text_field( $doc->desc ),
+                                'post_modified'                 => sanitize_text_field( $doc->modified_date ),
+                                '_edit_last'                    => sanitize_text_field( $doc->modified_by ),
+                                HELPDOCS_GO_PF.'custom'         => $custom,
+                                HELPDOCS_GO_PF.'addt_params'    => absint( $doc->addt_params ),
+                                HELPDOCS_GO_PF.'order'          => $doc->order != '' ? absint( $doc->order ) : '',
+                                HELPDOCS_GO_PF.'page_location'  => sanitize_text_field( $doc->page_location ),
+                                HELPDOCS_GO_PF.'post_types'     => sanitize_text_field( $doc->post_types ),
+                                HELPDOCS_GO_PF.'priority'       => sanitize_text_field( $doc->priority ),
+                                HELPDOCS_GO_PF.'site_location'  => sanitize_text_field( $doc->site_location ),
                                 HELPDOCS_GO_PF.'toc'            => $toc,
                                 'auto_feed'                     => $import->post_title,
                                 'feed_id'                       => $import->ID

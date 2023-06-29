@@ -71,15 +71,15 @@ class HELPDOCS_API {
 		
         // All docs
         register_rest_route( $namespace, self::$base, [
-            'methods'   => WP_REST_Server::READABLE,
-            'callback'  => [ $this, 'get_all' ],
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => [ $this, 'get_all' ],
             'permission_callback' => '__return_true'
         ] );
 
         // Single docs
         register_rest_route( $namespace, self::$base.'/(?P<doc_id>[\d]+)', [
-            'methods'   => WP_REST_Server::READABLE,
-            'callback'  => [ $this, 'get_single' ],
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => [ $this, 'get_single' ],
             'permission_callback' => '__return_true'
         ] );
 	} // End register_routes()
@@ -93,7 +93,7 @@ class HELPDOCS_API {
     public function get_all() {
         // Otherwise, only get all published docs
         $args = [
-            'post_type' => 'help-docs',
+            'post_type'   => 'help-docs',
             'post_status' => 'publish'
         ];
         
@@ -206,14 +206,14 @@ class HELPDOCS_API {
         ];
 
         // Additional fields
-        $add_fields = [ 'order', 'page_location', 'post_types', 'priority', 'site_location' ];
+        $add_fields = [ 'custom', 'addt_params', 'order', 'page_location', 'post_types', 'priority', 'site_location' ];
 
         // Add the fields
         foreach ( $add_fields as $field ) {
 
             // The key
             $key = HELPDOCS_GO_PF.$field;
-
+            
             // Add to array
             $result[ $field ] = $doc->$key;
         }

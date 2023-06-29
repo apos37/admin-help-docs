@@ -153,6 +153,73 @@ function helpdocs_get_current_admin_url( $params = true ) {
 
 
 /**
+ * Check if two urls match while ignoring order of params
+ * Also allow ignoring addtional params that $url1 has that $url2 does not
+ *
+ * @param string $url1
+ * @param string $url2
+ * @return bool
+ */
+function helpdocs_do_urls_match( $url1, $url2, $ignore_addt_params = true ) {
+    // Parse urls
+    $parts1 = parse_url( $url1 );
+    $parts2 = parse_url( $url2 );
+    
+    // Scheme and host are case-insensitive.
+    $scheme1 = strtolower( $parts1[ 'scheme' ] ?? '' );
+    $scheme2 = strtolower( $parts2[ 'scheme' ] ?? '' );
+    $host1 = strtolower( $parts1[ 'host' ] ?? '' );
+    $host2 = strtolower( $parts2[ 'host' ] ?? '' );
+    
+    // URL scheme mismatch (http <-> https): URLs are not identical.
+    if ( $scheme1 !== $scheme2 ) {
+        return false;
+    }
+    
+    // Different host (domain name): Not identical.
+    if ( $host1 !== $host2 ) {
+        return false;
+    }
+    
+    // Remove leading/trailing slashes, url-decode special characters.
+    $path1 = trim( urldecode( $parts1[ 'path' ] ?? '' ), '/' );
+    $path2 = trim( urldecode( $parts2[ 'path' ] ?? '' ), '/' );
+
+    // The request-path is different: Different URLs.
+    if ( $path1 !== $path2 ) {
+        return false;
+    }
+
+    // Convert the query-params into arrays.
+    parse_str( $parts1['query'] ?? '', $query1 );
+    parse_str( $parts2['query'] ?? '', $query2 );
+
+    // Both URLs have a different number of params: They cannot match.
+    if ( !$ignore_addt_params && count( $query1 ) !== count( $query2 ) ) {
+        return false;
+    }
+
+    // Only compare the query-arrays when params are present.
+    if ( count( $query1 ) > 0 ) {
+        ksort( $query1 );
+        ksort( $query2 );
+
+        // We are not ignoring additional params, and query arrays have differencs: URLs do not match.
+        if ( !$ignore_addt_params && array_diff( $query1, $query2 ) ) {
+            return false;
+
+        // We are ignoring additional params, but url2 has params that url1 does not
+        } elseif ( $ignore_addt_params && !empty( array_diff( $query2, $query1 ) ) ) {
+            return false;
+        }
+    }
+
+    // All checks passed, URLs are identical.
+    return true;
+} // End helpdocs_do_urls_match()
+
+
+/**
  * Base64 Encoding Functions
  */
 function helpdocs_base64url_encode( $data ) {

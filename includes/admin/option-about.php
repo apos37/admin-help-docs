@@ -65,7 +65,7 @@ ul li {
 <h3>Plugin Support</h3>
 <br><img class="admin_helpbox_title" src="<?php echo esc_url( HELPDOCS_PLUGIN_IMG_PATH ); ?>discord.png" width="auto" height="100">
 <p>If you need assistance with this plugin or have suggestions for improving it, please join the Discord server below.</p>
-<?php echo sprintf( __( '<a class="button button-primary" href="%s" target="_blank">Join Our Support Server »</a><br>', 'admin-help-docs' ), 'https://discord.gg/3HnzNEJVnR' ); ?>
+<?php echo sprintf( __( '<a class="button button-primary" href="%s" target="_blank">Join Our Support Server »</a><br>', 'admin-help-docs' ), HELPDOCS_DISCORD_SUPPORT_URL ); ?>
 <br>
 <p>Or if you would rather get support on WordPress.org, you can do so here:</p>
 <?php echo sprintf( __( '<a class="button button-primary" href="%s" target="_blank">WordPress.org Plugin Support Page »</a><br>', 'admin-help-docs' ), 'https://wordpress.org/support/plugin/admin-help-docs/' ); ?>

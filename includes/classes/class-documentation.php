@@ -438,6 +438,8 @@ class HELPDOCS_DOCUMENTATION {
         // Get the current values
         $site_location = sanitize_text_field( get_post_meta( $post->ID, HELPDOCS_GO_PF.'site_location', true ) );
         $page_location = sanitize_key( get_post_meta( $post->ID, HELPDOCS_GO_PF.'page_location', true ) );
+        $custom = filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'custom', true ), FILTER_SANITIZE_URL );
+        $addt_params = get_post_meta( $post->ID, HELPDOCS_GO_PF.'addt_params', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'addt_params', true ), FILTER_VALIDATE_BOOLEAN ) : false;
         $post_types = unserialize( get_post_meta( $post->ID, HELPDOCS_GO_PF.'post_types', true ) );
         $order = get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'order', true ), FILTER_SANITIZE_NUMBER_INT ) : 0;
         $toc = get_post_meta( $post->ID, HELPDOCS_GO_PF.'toc', true ) ? filter_var( get_post_meta( $post->ID, HELPDOCS_GO_PF.'toc', true ), FILTER_VALIDATE_BOOLEAN ) : false;
@@ -539,6 +541,9 @@ class HELPDOCS_DOCUMENTATION {
                 }
             }
         }
+
+        // Add a custom link option to the bottom
+        $all_site_locations[ 'custom' ] = 'Other/Custom Page (Beta)';
     
         // Add some CSS
         echo '<style>
@@ -554,10 +559,15 @@ class HELPDOCS_DOCUMENTATION {
         }
         #doc-page-location,
         #doc-post-types,
+        #doc-custom,
+        #doc-addt-params,
         #doc-order,
         #doc-toc,
-        doc-priority {
+        #doc-priority {
             display: none;
+        }
+        #doc-custom {
+            margin-top: 20px;
         }
         .help-docs-checkbox-cont {
             display: inline-block;
@@ -638,6 +648,15 @@ class HELPDOCS_DOCUMENTATION {
                     }
 
             echo '</select>
+            </div>';
+
+            // Custom Page URL and Additional Params
+            $addt_params_checked = $addt_params ? ' checked' : '';
+            echo '<div id="doc-custom" class="help-docs-custom-cont" style="width: 100%;">
+                <label for="doc-custom-url" class="doc-custom-url-label">Custom Page URL:</label>
+                <input name="'.esc_attr( HELPDOCS_GO_PF ).'custom" id="doc-custom-url" type="text" style="width: 60%;" value="'.esc_url( $custom ).'">
+                <input type="checkbox" id="doc-addt-params" name="'.esc_attr( HELPDOCS_GO_PF ).'addt_params" value="1"'.esc_html( $addt_params_checked ).'> 
+                <label for="doc-addt-params">Ignore Additional Query String Parameters</label>
             </div>';
 
             // Priority dropdown
@@ -756,6 +775,8 @@ class HELPDOCS_DOCUMENTATION {
         const toc = document.getElementById( 'doc-toc' );
         const pageLocation = document.getElementById( 'doc-page-location' );
         const pageLocationInput = document.getElementById( 'doc-page-location-select' );
+        const custom = document.getElementById( 'doc-custom' );
+        const addtParams = document.getElementById( 'doc-addt-params' );
         const optionSide = document.querySelector( 'option.lop-option-side' );
         const priority = document.getElementById( 'doc-priority' );
         const postType = document.getElementById( 'doc-post-types' );
@@ -791,6 +812,15 @@ class HELPDOCS_DOCUMENTATION {
             priority.style.display = 'inline-block';
         } else {
             priority.style.display = 'none';
+        }
+
+        // Check if the site location is custom page url
+        if ( siteLocationInputValue == 'custom' ) {
+            custom.style.display = 'inline-block';
+            addtParams.style.display = 'inline-block';
+        } else {
+            custom.style.display = 'none';
+            addtParams.style.display = 'none';
         }
 
         // Also listen for changes
@@ -840,6 +870,14 @@ class HELPDOCS_DOCUMENTATION {
             // Check if the page location is side
             if ( siteLocationValue != 'post.php' ) {
                 priority.style.display = 'none';
+            }
+
+            if ( siteLocationValue == 'custom' ) {
+                custom.style.display = 'inline-block';
+                addtParams.style.display = 'inline-block';
+            } else {
+                custom.style.display = 'none';
+                addtParams.style.display = 'none';
             }
         } );
 
@@ -1000,6 +1038,8 @@ class HELPDOCS_DOCUMENTATION {
             return 'Post/Page Edit Screen';
         } elseif ( $url == base64_encode( 'edit.php' ) ) {
             return 'Post/Page Admin List Screen';
+        } elseif ( $url == base64_encode( 'custom' ) ) {
+            return 'Other/Custom Page';
         }
 
         // Location name changes
@@ -1192,6 +1232,15 @@ class HELPDOCS_DOCUMENTATION {
             $post_types = false;
         }
 
+        // Custom Page URL
+        if ( $decoded_site_location == 'custom' ) {
+            $custom = isset( $_POST[ HELPDOCS_GO_PF.'custom' ] ) ? filter_var( $_POST[ HELPDOCS_GO_PF.'custom' ], FILTER_SANITIZE_URL ) : false;
+            $addt_params = isset( $_POST[ HELPDOCS_GO_PF.'addt_params' ] ) ? filter_var( $_POST[ HELPDOCS_GO_PF.'addt_params' ], FILTER_VALIDATE_BOOLEAN ) : false;
+        } else {
+            $custom = false;
+            $addt_params = false;
+        }
+
         // Order
         if ( $decoded_site_location == 'main' ) {
             $order = isset( $_POST[ HELPDOCS_GO_PF.'order' ] ) ? filter_var( $_POST[ HELPDOCS_GO_PF.'order' ], FILTER_SANITIZE_NUMBER_INT ) : false;
@@ -1214,6 +1263,8 @@ class HELPDOCS_DOCUMENTATION {
             HELPDOCS_GO_PF.'site_location'  => $site_location,
             HELPDOCS_GO_PF.'page_location'  => $page_location,
             HELPDOCS_GO_PF.'post_types'     => $post_types,
+            HELPDOCS_GO_PF.'custom'         => $custom,
+            HELPDOCS_GO_PF.'addt_params'    => $addt_params,
             HELPDOCS_GO_PF.'order'          => $order,
             HELPDOCS_GO_PF.'toc'            => $toc,
             HELPDOCS_GO_PF.'priority'       => $priority,
@@ -1237,6 +1288,7 @@ class HELPDOCS_DOCUMENTATION {
         $columns[ HELPDOCS_GO_PF.'desc' ]          = __( 'Description', 'admin-help-docs' );
         $columns[ HELPDOCS_GO_PF.'site_location' ] = __( 'Site Location', 'admin-help-docs' );
         $columns[ HELPDOCS_GO_PF.'page_location' ] = __( 'Page Location', 'admin-help-docs' );
+        $columns[ HELPDOCS_GO_PF.'custom' ]        = __( 'Custom URL', 'admin-help-docs' );
         $columns[ HELPDOCS_GO_PF.'order' ]         = __( 'Order', 'admin-help-docs' );
         $columns[ HELPDOCS_GO_PF.'priority' ]      = __( 'Priority', 'admin-help-docs' );
         $columns[ HELPDOCS_GO_PF.'post_types' ]    = __( 'Post Types', 'admin-help-docs' );
@@ -1272,6 +1324,17 @@ class HELPDOCS_DOCUMENTATION {
                 $page_location .= ' Help Tab';
             }
             echo esc_html( $page_location );
+        }
+
+        // Custom
+        if ( HELPDOCS_GO_PF.'custom' === $column ) {
+            $url = filter_var( get_post_meta( $post_id, HELPDOCS_GO_PF.'custom', true ), FILTER_SANITIZE_URL );
+            if ( $url != '' ) {
+                $url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+            } else {
+                $url = '';
+            }
+            echo wp_kses_post( $url );
         }
 
         // Order
@@ -1310,7 +1373,7 @@ class HELPDOCS_DOCUMENTATION {
      * @param array $columns
      * @return array
      */
-    public function sort_columns( $columns ){
+    public function sort_columns( $columns ) {
         $columns[ HELPDOCS_GO_PF.'site_location' ] = HELPDOCS_GO_PF.'site_location';
         $columns[ HELPDOCS_GO_PF.'page_location' ] = HELPDOCS_GO_PF.'page_location';
         $columns[ HELPDOCS_GO_PF.'order' ]         = HELPDOCS_GO_PF.'order';
@@ -1428,7 +1491,7 @@ class HELPDOCS_DOCUMENTATION {
         $url = $_SERVER[ 'REQUEST_URI' ];
         $url = str_replace( '/'.HELPDOCS_ADMIN_URL.'/', '', $url );
 
-        // Get all the docs that need to go in the contextual help menu
+        // Get all the docs that are not on the main docs page
         $args = [
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
@@ -1462,6 +1525,24 @@ class HELPDOCS_DOCUMENTATION {
                 $site_location = preg_replace( '/[^A-Za-z0-9 ._\-\+\&\=\?]/', '', $site_location );
                 $site_location = str_replace( '&038', '&', $site_location );
 
+                // Custom?
+                if ( $site_location == 'custom' ) {
+                    $custom_var = HELPDOCS_GO_PF.'custom';
+                    $custom_url = $doc->$custom_var;
+                    $custom_url = str_replace( admin_url(), '', $custom_url );
+
+                    // Check if we are ignoring additional params
+                    $addt_params_var = HELPDOCS_GO_PF.'addt_params';
+                    $addt_params = $doc->$addt_params_var;
+
+                    // If so, remove the additional params by setting the current $url var to the custom url
+                    if ( $addt_params && helpdocs_do_urls_match( $url, $custom_url ) ) {
+                        $url = $custom_url;
+                    }
+                } else {
+                    $custom_url = false;
+                }
+
                 // Post types
                 $post_types_var = HELPDOCS_GO_PF.'post_types';
                 $post_types = $doc->$post_types_var;
@@ -1486,6 +1567,10 @@ class HELPDOCS_DOCUMENTATION {
                 // User profile
                 } elseif ( $site_location == 'profile.php' && 
                            str_starts_with( $url, 'profile.php' ) ) {
+                    $continue = true;
+
+                // Custom URL
+                } elseif ( $site_location == 'custom' && $custom_url == $url ) {
                     $continue = true;
 
                 // Other pages
@@ -1874,7 +1959,7 @@ class HELPDOCS_DOCUMENTATION {
             </script>
             <?php
         }
-    }
+    } // End gutenberg_content()
 
 
     /**
@@ -1960,5 +2045,5 @@ class HELPDOCS_DOCUMENTATION {
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-ui-sortable' );
         wp_enqueue_script( $handle );
-    }
+    } // End enqueue_scripts()
 }

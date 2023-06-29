@@ -1,4 +1,13 @@
 == changelog.txt ==
+= 1.1.1 =
+* Fix: Custom link fields not showing up for some people
+
+= 1.1.0 =
+* Tweak: Highlighted "Enable This Site" checkbox on imports when disabled
+* Update: Added deactivation survey
+* Update: Added support for importing custom urls with auto-updating domain
+* Update: Added new site location for custom url
+
 = 1.0.9 =
 * Tweak: Updated Discord support link
 
