@@ -52,7 +52,9 @@ class HELPDOCS_TOC {
         $title = helpdocs_title().' <span>[ <a href="'.helpdocs_plugin_options_path( 'documentation' ).'" style="display: contents;">View All Docs</a> ]</span>';
 
         // Add the widget
-        wp_add_dashboard_widget( HELPDOCS_TEXTDOMAIN, $title, [ $this, 'dashboard_content' ], null, null, 'normal', 'high' );
+        if ( helpdocs_user_can_view() ) {
+            wp_add_dashboard_widget( HELPDOCS_TEXTDOMAIN, $title, [ $this, 'dashboard_content' ], null, null, 'normal', 'high' );
+        }
     } // End dashboard_widget()
 
 

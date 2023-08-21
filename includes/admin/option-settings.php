@@ -510,6 +510,8 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
             <?php echo wp_kses( helpdocs_options_tr( 'footer_right', 'Right Footer Text', 'text', '', [ 'default' => apply_filters( 'update_footer', '' ) ] ), $allowed_html ); ?>
 
+            <?php echo wp_kses( helpdocs_options_tr( 'user_view_cap', 'Capability Required to View Docs', 'text', '<br>Use "manage_options" for admins only. <a href="https://wordpress.org/documentation/article/roles-and-capabilities/" target="_blank">View a list of capabilities</a>', [ 'default' => 'manage_options' ] ), $allowed_html ); ?>
+
             <?php 
             // Get the role details
             $roles = get_editable_roles();
@@ -565,6 +567,8 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
             <?php echo wp_kses( helpdocs_options_tr( 'color_fg', 'Text Color', 'color', null, [ 'default' => $color_fg ] ), $allowed_html ); ?>
 
             <?php echo wp_kses( helpdocs_options_tr( 'color_cl', 'Link Color', 'color', null, [ 'default' => $color_cl ] ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'curly_quotes', 'Disable Curly Quotes', 'checkbox', 'WP automatically converts straight quotes (") to curly quotes (”), which makes sharing code difficult.' ), $allowed_html ); ?>
 
             <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', ' Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
 

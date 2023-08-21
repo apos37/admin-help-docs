@@ -22,6 +22,7 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 }
 #draggable-items li {
     margin: 0 !important;
+    cursor: row-resize;
 }
 .toc-item {
     display: block;
@@ -61,7 +62,6 @@ ul {
 }
 ul li {
     padding-inline-start: 1ch;
-    cursor: row-resize;
 }
 ul, ol {
     padding-top: 10px;

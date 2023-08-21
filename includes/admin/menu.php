@@ -52,6 +52,11 @@ class HELPDOCS_MENU {
      * @return void
      */
     public function admin_menu() {
+        // Only view
+        if ( !helpdocs_user_can_view() ) {
+            return;
+        }
+
         // The icon
         // https://developer.wordpress.org/resource/dashicons/
         $icon = get_option( HELPDOCS_GO_PF.'dashicon', 'dashicons-editor-help' );
@@ -91,11 +96,19 @@ class HELPDOCS_MENU {
             $position = 2;
         }
 
+        // Capability requirement
+        $capability = 'manage_options';
+        if ( !helpdocs_has_role( 'administrator' ) ) {
+            if ( get_option( HELPDOCS_GO_PF.'user_view_cap' ) && get_option( HELPDOCS_GO_PF.'user_view_cap' ) != '' ) {
+                $capability = get_option( HELPDOCS_GO_PF.'user_view_cap' );
+            }
+        }
+
         // Add a new top level menu link to the ACP
         add_menu_page(
             $menu_title,                // Title of the page
             $menu_title,                // Text to show on the menu link
-            'manage_options',           // Capability requirement to see the link
+            $capability,                // Capability requirement to see the link
             $this->slug,                // The 'slug' (file to display when clicking the link)
             [ $this, 'options_page' ],  // Function to call
             $icon,                      // The admin menu icon
@@ -137,7 +150,7 @@ class HELPDOCS_MENU {
             }
 
             // Add the menu item
-            $submenu[ $this->slug ][] = [ $menu_item[0], 'manage_options', $link ];
+            $submenu[ $this->slug ][] = [ $menu_item[0], $capability, $link ];
         }
     } // End admin_menu()
 
@@ -210,7 +223,7 @@ function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
         'settings'          => [ __( 'Settings', 'admin-help-docs' ), '', true ],
         'settingsie'        => [ __( 'Import/Export Settings', 'admin-help-docs' ), '<p>'.__( 'You can easily import settings from another site. Just copy the settings link from the other site and paste it in the field below.' ).'</p>', false, true ],
         // 'developer'         => [ __( 'Developer', 'admin-help-docs' ), __( 'Action and filters available for developers.', 'admin-help-docs' ), true ],
-        'about'             => [ __( 'About', 'admin-help-docs' ), '<p>'.__( 'Version', 'admin-help-docs' ).' '.esc_attr( HELPDOCS_VERSION ).' - <a href="'.helpdocs_plugin_options_path( 'changelog' ).'">View the Changelog</a>'.'</p>', false ],
+        'about'             => [ __( 'About', 'admin-help-docs' ), '<p>'.__( 'Version', 'admin-help-docs' ).' '.esc_attr( HELPDOCS_VERSION ).' - <a href="'.helpdocs_plugin_options_path( 'changelog' ).'">View the Changelog</a>'.'</p>', true ],
         'changelog'         => [ __( 'Changelog', 'admin-help-docs' ), '<p>'.__( 'Updates to this plugin.', 'admin-help-docs' ).'</p>', false, true ],
     ];
 

@@ -93,6 +93,35 @@ function helpdocs_user_can_edit( $user_id = null ) {
 
 
 /**
+ * Check if a user has permission to view help sections
+ *
+ * @param int $user_id
+ * @return bool
+ */
+function helpdocs_user_can_view( $user_id = null ) {
+    // Get the user id
+    if ( is_null( $user_id ) ) {
+        $user_id = get_current_user_id();
+    }
+
+    // Get the capability
+    $capability = 'manage_options';
+    if ( !helpdocs_has_role( 'administrator' ) ) {
+        if ( get_option( HELPDOCS_GO_PF.'user_view_cap' ) && get_option( HELPDOCS_GO_PF.'user_view_cap' ) != '' ) {
+            $capability = get_option( HELPDOCS_GO_PF.'user_view_cap' );
+        }
+    }
+
+    // Check it
+    if ( current_user_can( $capability ) ) {
+        return true;
+    } else {
+        return false;
+    }
+} // End helpdocs_user_can_view()
+
+
+/**
  * Get current URL with query string
  *
  * @param boolean $params

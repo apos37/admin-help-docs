@@ -63,8 +63,10 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'menu_position',
             'footer_left',
             'footer_right',
+            'user_view_cap',
             'edit_roles',
             'api',
+            'curly_quotes',
             'user_prefs',
             'gf_merge_tags',
             'copy_from'

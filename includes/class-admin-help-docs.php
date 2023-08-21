@@ -49,6 +49,11 @@ class HELPDOCS_MAIN {
         if ( get_option( HELPDOCS_GO_PF.'footer_right' ) && get_option( HELPDOCS_GO_PF.'footer_right' ) != '' ) {
             add_action( 'update_footer', [ $this, 'footer_right' ], 9999 );
         }
+
+        // Disable curly quotes everywhere, because they're stupid and cause issues when sharing code
+        if ( get_option( HELPDOCS_GO_PF.'curly_quotes' ) && get_option( HELPDOCS_GO_PF.'curly_quotes' ) == 1 ) {
+            remove_filter( 'the_content', 'wptexturize' );
+        }
         
 	} // End __construct()
 
