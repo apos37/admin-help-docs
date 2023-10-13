@@ -495,7 +495,7 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
             <?php $footer_text = sprintf(
 			    /* translators: %s: https://wordpress.org/ */
                 __( 'Thank you for creating with <a href="%s">WordPress</a>.' ),
-                __( 'https://wordpress.org/' )
+                'https://wordpress.org/'
             ); 
             if ( get_option( HELPDOCS_GO_PF.'menu_title' ) && get_option( HELPDOCS_GO_PF.'menu_title' ) != '' ) {
                 $menu_title = get_option( HELPDOCS_GO_PF.'menu_title' );
@@ -508,9 +508,14 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
             ?>
             <?php echo wp_kses( helpdocs_options_tr( 'footer_left', 'Left Footer Text', 'text', '<br>Example: <em>"For help, see the <a href="/'.HELPDOCS_ADMIN_URL.'/admin.php?page='.HELPDOCS_TEXTDOMAIN.'%2Fincludes%2Fadmin%2Foptions.php&tab=topics">'.$menu_title.'</a></em>"', [ 'default' => $left_footer_default ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'footer_right', 'Right Footer Text', 'text', '', [ 'default' => apply_filters( 'update_footer', '' ) ] ), $allowed_html ); ?>
+            <?php $default_right_footer_text = sprintf(
+                __( 'Version ' ).'{version}',
+                'https://wordpress.org/'
+            ); 
+            ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'footer_right', 'Right Footer Text', 'text', '<br>Use <code>{version}</code> to display the current WordPress version', [ 'default' => $default_right_footer_text ] ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'user_view_cap', 'Capability Required to View Docs', 'text', '<br>Use "manage_options" for admins only. <a href="https://wordpress.org/documentation/article/roles-and-capabilities/" target="_blank">View a list of capabilities</a>', [ 'default' => 'manage_options' ] ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'user_view_cap', 'Capability Required to View Docs', 'text', '<br>Use <code>manage_options</code> for admins only. <a href="https://wordpress.org/documentation/article/roles-and-capabilities/" target="_blank">View a list of capabilities</a>', [ 'default' => 'manage_options' ] ), $allowed_html ); ?>
 
             <?php 
             // Get the role details
@@ -570,11 +575,55 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
             <?php echo wp_kses( helpdocs_options_tr( 'curly_quotes', 'Disable Curly Quotes', 'checkbox', 'WP automatically converts straight quotes (") to curly quotes (”), which makes sharing code difficult.' ), $allowed_html ); ?>
 
-            <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', ' Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', 'Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
 
             <?php if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) { ?>
                 <?php echo wp_kses( helpdocs_options_tr( 'gf_merge_tags', 'Add Missing Gravity Form User Merge Tags', 'textarea', '<br>You can add additional user merge tags to Gravity Form field options, notifications, and confirmations.<br>Separate by commas using the following format: <strong>Label (user_meta_key)</strong>', [ 'default' => 'User First Name (first_name), User Last Name (last_name), User Date Registered (user_registered)', 'rows' => '6', 'cols' => '100' ] ), $allowed_html ); ?>
             <?php } ?>
+
+            <?php 
+            // Get the docs
+            $default_doc_args = [
+                'posts_per_page'    => -1,
+                'post_status'       => 'publish',
+                'post_type'         => 'help-docs',
+                'meta_key'		    => HELPDOCS_GO_PF.'site_location',
+                'meta_value'	    => base64_encode( 'main' ),
+                'meta_compare'	    => '=',
+                'orderby'           => 'post_title',
+                'order'             => 'ASC'
+            ];
+            $docs = get_posts( $default_doc_args );
+            $imports = helpdocs_get_imports( $default_doc_args );
+            if ( !empty( $imports ) ) {
+                $docs = array_merge( $docs, $imports );
+            }
+
+            // Store the choices here
+            $main_doc_choices = [
+                'options' => [
+                    [
+                        'label' => '-- Select a Doc --',
+                        'value' => '' 
+                    ]
+                ],
+                'width' => '10rem',
+            ];
+            if ( !empty( $docs ) ) {
+                foreach ( $docs as $doc ) {
+                    $main_doc_choices[ 'options' ][] = [
+                        'label' => $doc->post_title,
+                        'value' => $doc->ID 
+                    ];
+                }
+                $default_doc_desc = 'You can select a default document to load on the <a href="'.helpdocs_plugin_options_path( 'documentation' ).'">main documentation page</a>. Otherwise it will load the first doc on the list.';
+            } else {
+                $default_doc_desc = 'Once you have added documents to the <a href="'.helpdocs_plugin_options_path( 'documentation' ).'">main documentation page</a>, you can select a default to load. Otherwise it will load the first doc on the list.';
+            }
+            ?>
+            <?php echo wp_kses( helpdocs_options_tr( 'default_doc', 'Default Document on Main Docs Page', 'select', '<br>'.$default_doc_desc, $main_doc_choices ), $allowed_html ); ?>
+
+            <?php echo wp_kses( helpdocs_options_tr( 'hide_doc_meta', 'Hide Document Meta on Main Docs Page', 'checkbox', 'Includes created and last modified dates and authors.' ), $allowed_html ); ?>
 
         </table>
         

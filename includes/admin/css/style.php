@@ -17,7 +17,7 @@ if ( is_network_admin() ) {
 }
 
 // Are we on the options page?
-if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type == 'help-docs' ) || ( $current_screen->post_type == 'help-doc-imports' ) ) {
+if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-help-docs-folder' ) || ( $current_screen->post_type == 'help-docs' ) || ( $current_screen->post_type == 'help-doc-imports' ) ) {
     // Get the colors
     $HELPDOCS_COLORS = new HELPDOCS_COLORS();
     $color_ac = $HELPDOCS_COLORS->get( 'ac' );
@@ -49,7 +49,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
         margin: 20px 0 0 2px !important;
     }
 
-    <?php if ( $current_screen->post_type == 'help-docs' || $current_screen->post_type == 'help-doc-imports' ) { ?>
+    <?php if ( $current_screen->id == 'edit-help-docs-folder' || $current_screen->post_type == 'help-docs' || $current_screen->post_type == 'help-doc-imports' ) { ?>
 
         /* ---------------------------------------------
             POST TYPES ( HELP-DOCS/HELP-DOC-IMPORTS )
@@ -68,6 +68,9 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->post_type ==
             margin: 8px 0 10px 0;
             border-top: 1px solid #ccc !important;
             border-bottom: 0px !important;
+        }
+        .taxonomy-help-docs-folder .form-field.term-parent-wrap {
+            display: none;
         }
 
     <?php } else { ?>

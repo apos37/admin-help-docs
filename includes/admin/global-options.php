@@ -69,7 +69,9 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'curly_quotes',
             'user_prefs',
             'gf_merge_tags',
-            'copy_from'
+            'copy_from',
+            'default_doc',
+            'hide_doc_meta'
         ];
         self::$settings_general = array_merge( self::$settings_general, self::$colors );
 

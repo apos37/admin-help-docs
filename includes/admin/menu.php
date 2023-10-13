@@ -188,6 +188,11 @@ class HELPDOCS_MENU {
             $tab = helpdocs_get( 'tab' ) ?? '';
             $submenu_file = 'admin.php?page='.HELPDOCS_TEXTDOMAIN.'&tab='.$tab;
 
+        // Holder taxonomy
+        } elseif ( $current_screen->id == 'edit-help-docs-folder' ) {
+            $submenu_file = 'edit-tags.php?taxonomy=help-docs-folder';
+            $parent_file = helpdocs_plugin_options_short_path();
+
         // Post Type Submenus
         } elseif ( $current_screen->post_type == 'help-docs' ) {
             $submenu_file = 'edit.php?post_type=help-docs';
@@ -196,6 +201,7 @@ class HELPDOCS_MENU {
             $submenu_file = 'edit.php?post_type=help-doc-imports';
             $parent_file = helpdocs_plugin_options_short_path();
         }
+        
         return $parent_file;
     } // End submenus()
 }
@@ -218,6 +224,7 @@ function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
     $items = [
         'documentation'     => [ __( 'Documentation', 'admin-help-docs' ), '<a href="'.esc_url( $add_new_link ).'" class="page-title-action">Add New</a>' ],
         'manage'            => [ __( 'Manage', 'admin-help-docs' ), '', true, false, 'edit.php?post_type=help-docs' ],
+        'folders'           => [ __( 'Folders', 'admin-help-docs' ), '', true, false, 'edit-tags.php?taxonomy=help-docs-folder' ],
         'imports'           => [ __( 'Imports', 'admin-help-docs' ), '<p>'.__( 'You can easily import documents from another site.' ).'</p>', true, false, 'edit.php?post_type=help-doc-imports' ],
         'faq'               => [ __( 'FAQ', 'admin-help-docs' ), '<p>'.__( 'Frequently Asked Questions', 'admin-help-docs' ).'</p>', true ],
         'settings'          => [ __( 'Settings', 'admin-help-docs' ), '', true ],

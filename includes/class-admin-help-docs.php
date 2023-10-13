@@ -155,7 +155,21 @@ class HELPDOCS_MAIN {
      * @return void
      */
     public function footer_right() {
-        return wp_kses_post( get_option( HELPDOCS_GO_PF.'footer_right' ) );
+        // Option
+        $text = get_option( HELPDOCS_GO_PF.'footer_right', 'Version {version}' );
+
+        // Check for {version}
+        if ( strpos( $text, '{version}' ) !== false ) {
+
+            // Get the version
+            $version = get_bloginfo( 'version' );
+
+            // Replace it
+            $text = str_replace( '{version}', $version, $text );
+        }
+
+        // Return it
+        return wp_kses_post( $text );
     } // End footer_right()
 
 
@@ -181,23 +195,21 @@ class HELPDOCS_MAIN {
             return;
         }
 
-        // Handle
-        $handle = HELPDOCS_GO_PF.'script';
-
         // Sorting draggable docs
         if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], '1.0.0' );
+            wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_enqueue_script( HELPDOCS_GO_PF.'settings_script' );
 
         // Feedback form
         } elseif ( helpdocs_get( 'tab', '==', 'about' ) ) {
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], '1.0.2' );
-            wp_localize_script( $handle, 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
+            wp_register_script( HELPDOCS_GO_PF.'feedback_script', HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_localize_script( HELPDOCS_GO_PF.'feedback_script', 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
+            wp_enqueue_script( HELPDOCS_GO_PF.'feedback_script' );
         }
 
         // Run jQuery, et al
         if ( helpdocs_get( 'tab', '==', 'settings' ) || helpdocs_get( 'tab', '==', 'about' ) ) {
             wp_enqueue_script( 'jquery' );
-            wp_enqueue_script( $handle );
         }
     }
 }

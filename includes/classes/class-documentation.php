@@ -22,8 +22,18 @@ class HELPDOCS_DOCUMENTATION {
 
     /**
      * Post type
+     * 
+     * @var string
      */ 
     public static $post_type;
+
+
+    /**
+     * Folder taxonomy
+     *
+     * @var string
+     */
+    public static $folder_taxonomy;
 
 
     /**
@@ -58,6 +68,9 @@ class HELPDOCS_DOCUMENTATION {
         // Define the post type
         self::$post_type = 'help-docs';
 
+        // Define the folder taxonomy name
+        self::$folder_taxonomy = 'help-docs-folder';
+
         // Set the locations
         self::$site_location = [
             'main'              => 'Main Documentation Page',
@@ -91,6 +104,7 @@ class HELPDOCS_DOCUMENTATION {
 
         // Add the header to the top of the admin list page
         add_action( 'load-edit.php', [ $this, 'add_header' ] );
+        add_action( 'load-edit-tags.php', [ $this, 'add_header' ] );
 
         // Add the meta box
         add_action( 'add_meta_boxes', [ $this, 'meta_boxes' ] );
@@ -107,6 +121,7 @@ class HELPDOCS_DOCUMENTATION {
 
         // Make admin columns sortable
         add_filter( 'manage_edit-'.self::$post_type.'_sortable_columns', [ $this, 'sort_columns' ] );
+        add_action( 'pre_get_posts', [ $this, 'sort_columns_query' ] );
 
         // Dashboard widgets
         add_action( 'wp_dashboard_setup', [ $this, 'dashboard_widgets' ] );
@@ -119,7 +134,28 @@ class HELPDOCS_DOCUMENTATION {
 
         // Update order of documentation with Ajax
         add_action( 'wp_ajax_'.HELPDOCS_GO_PF.'update_order', [ $this, 'update_order' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_order_scripts' ] );
+
+        // Edit doc scripts
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_edit_doc_scripts' ] );
+
+        // Fire when a new folder is created
+        add_action( 'create_term', [ $this, 'on_create_folder' ], 10, 4 );
+
+        // Add a filter dropdown to admin table
+        add_action( 'restrict_manage_posts', [ $this, 'admin_folder_filter' ] );
+
+        // Filter admin table
+        add_action( 'pre_get_posts', [ $this, 'filter_admin_columns' ] );
+
+        // Display shortcodes without executing them
+        add_shortcode( 'dont_do_shortcode', [ $this, 'display_shortcode_without_executing' ] );
+
+        // Add a link back to main documentation page on the edit screen
+        add_action( 'edit_form_after_title', [ $this, 'add_link_back_to_edit_screen' ] );
+
+        // Add CSS to docs
+        add_shortcode( 'helpdocs_css', [ $this, 'add_css_to_docs' ] );
 
 	} // End __construct()
 
@@ -135,7 +171,7 @@ class HELPDOCS_DOCUMENTATION {
         $this->register_post_type();
 
         // Register taxonomy
-        // $this->register_taxonomy( 'help-location', [ self::$post_type ] );
+        $this->register_taxonomy();
 
     } // End init()
 
@@ -239,54 +275,56 @@ class HELPDOCS_DOCUMENTATION {
     /**
      * Register taxonomy
      */
-    public function register_taxonomy( $taxonomy, $post_types = [], $hierarchical = true, $show_in_rest = false, $show_admin_column = true, $show_in_quick_edit = true, $show_meta_box = null ) {
+    public function register_taxonomy() {
         // Make sure it's lowercase
-        $taxonomy = strtolower( $taxonomy );
+        $taxonomy = self::$folder_taxonomy;
     
-        // Plural Taxonomy
-        if ( str_ends_with( $taxonomy, 'y' ) ) {
-            $part = substr( $taxonomy, 0, -1 );
-            $plural_no_spaces = $part.'ies';
-        } else {
-            $plural_no_spaces = $taxonomy.'s';
-        }
-        $plural = str_replace( '-', ' ', $plural_no_spaces );
-    
-        // Singular Taxonomy
-        $singular = str_replace( '-', ' ', $taxonomy );
-        
-        // Capitalize it
-        $capitalized_s = ucwords( $singular );
-        $capitalized_p = ucwords( $plural );
+        // Create names
+        $singular_lc = 'folder';
+        $singular = ucwords( $singular_lc );
+
+        $plural_lc = $singular_lc.'s';
+        $plural = ucwords( $plural_lc );
     
         // Create the labels
         $labels = [
-            'name' => _x( $capitalized_p, 'taxonomy general name' ),
-            'singular_name' => _x( $capitalized_s, 'taxonomy singular name' ),
-            'search_items' =>  __( 'Search '.$capitalized_p ),
-            'all_items' => __( 'All '.$capitalized_p ),
-            'parent_item' => __( 'Parent '.$capitalized_s ),
-            'parent_item_colon' => __( 'Parent '.$capitalized_s.':' ),
-            'edit_item' => __( 'Edit '.$capitalized_s ),
-            'update_item' => __( 'Update '.$capitalized_s ),
-            'add_new_item' => __( 'Add New '.$capitalized_s ),
-            'new_item_name' => __( 'New '.$capitalized_s.' Name' ),
-            'menu_name' => __( $capitalized_p ),
+            'name'              => _x( $singular, 'taxonomy general name' ),
+            'singular_name'     => _x( $singular, 'taxonomy singular name' ),
+            'search_items'      => __( 'Search '.$plural ),
+            'all_items'         => __( 'Add to '.$singular ),
+            'parent_item'       => __( 'Parent '.$singular ),
+            'parent_item_colon' => __( 'Parent '.$singular.': ' ),
+            'edit_item'         => __( 'Edit '.$singular ),
+            'update_item'       => __( 'Update '.$singular ),
+            'add_new_item'      => __( 'Add New '.$singular ),
+            'new_item_name'     => __( 'New '.$singular.' Name' ),
+            'menu_name'         => __( $plural ),
         ]; 	
     
         // Register it as a new taxonomy
-        register_taxonomy( $plural_no_spaces, $post_types, [
-            'hierarchical' => $hierarchical,
-            'labels' => $labels,
-            'show_ui' => true,
-            'show_in_rest' => $show_in_rest,
-            'show_admin_column' => $show_admin_column,
-            'show_in_quick_edit' => $show_in_quick_edit,
-            'meta_box_cb' => $show_meta_box,
-            'query_var' => true,
-            'rewrite' => [ 'slug' => $taxonomy, 'with_front' => false ],
+        register_taxonomy( $taxonomy, self::$post_type, [
+            'hierarchical'       => true,
+            'labels'             => $labels,
+            'show_ui'            => true,
+            'show_in_rest'       => false,
+            'show_admin_column'  => true,
+            'show_in_quick_edit' => true,
+            'query_var'          => true,
+            'public'             => false,
+            'rewrite'            => [ 'slug' => $taxonomy, 'with_front' => false ],
         ] );
     } // End register_taxonomy()
+
+
+    /**
+     * Do stuff when a new folder is created
+     *
+     * @return void
+     */
+    public function on_create_folder( $term_id, $tt_id, $taxonomy, $args ) {
+        // Add order meta
+        update_term_meta( $term_id, HELPDOCS_GO_PF.'order', 0 );
+    } // End on_create_folder()
 
 
     /**
@@ -298,7 +336,7 @@ class HELPDOCS_DOCUMENTATION {
         $screen = get_current_screen();
 
         // Only edit post screen:
-        if ( 'edit-'.self::$post_type === $screen->id ) {
+        if ( 'edit-'.self::$post_type === $screen->id || 'edit-'.self::$folder_taxonomy === $screen->id ) {
 
             // Add the header
             add_action( 'all_admin_notices', function() {
@@ -547,6 +585,15 @@ class HELPDOCS_DOCUMENTATION {
     
         // Add some CSS
         echo '<style>
+        #help-docs-folderchecklist li {
+            display: none;
+        }
+        #newhelp-docs-folder_parent {
+            display: none;
+        }
+        #help-docs-folderchecklist li.visible {
+            display: list-item;
+        }
         .help-docs-select-cont,
         .help-docs-number-cont {
             margin-right: 20px;
@@ -766,133 +813,6 @@ class HELPDOCS_DOCUMENTATION {
     
         // End the form
         echo '</form>';
-    
-        // Add some JS to make checkboxes appear
-        echo "<script>
-        // Get the elements
-        const siteLocationInput = document.getElementById( 'doc-site-location-select' );
-        const order = document.getElementById( 'doc-order' );
-        const toc = document.getElementById( 'doc-toc' );
-        const pageLocation = document.getElementById( 'doc-page-location' );
-        const pageLocationInput = document.getElementById( 'doc-page-location-select' );
-        const custom = document.getElementById( 'doc-custom' );
-        const addtParams = document.getElementById( 'doc-addt-params' );
-        const optionSide = document.querySelector( 'option.lop-option-side' );
-        const priority = document.getElementById( 'doc-priority' );
-        const postType = document.getElementById( 'doc-post-types' );
-
-        siteLocationInputValue = atob( siteLocationInput.value );
-
-        // Check if the site location is NOT main, admin_bar or dashboard
-        if ( siteLocationInputValue != '' && siteLocationInputValue != 'main' && siteLocationInputValue != 'admin_bar' && siteLocationInputValue != 'index.php' ) {
-
-            // Display the page location
-            pageLocation.style.display = 'inline-block';
-        }
-
-        // Check if the site location is main or admin_bar
-        if ( siteLocationInputValue != '' && ( siteLocationInputValue == 'main' || siteLocationInputValue == 'admin_bar' ) ) {
-
-            // Display the page location
-            order.style.display = 'inline-block';
-
-            // Display the toc option
-            toc.style.display = 'inline-block';
-        }
-
-        // Check if the site location is edit or post
-        if ( siteLocationInputValue == 'edit.php' || siteLocationInputValue == 'post.php' ) {
-            postType.style.display = 'block';
-        } else {
-            postType.style.display = 'none';
-        }
-
-        // Check if the page location is side
-        if ( pageLocationInput.value == 'side' ) {
-            priority.style.display = 'inline-block';
-        } else {
-            priority.style.display = 'none';
-        }
-
-        // Check if the site location is custom page url
-        if ( siteLocationInputValue == 'custom' ) {
-            custom.style.display = 'inline-block';
-            addtParams.style.display = 'inline-block';
-        } else {
-            custom.style.display = 'none';
-            addtParams.style.display = 'none';
-        }
-
-        // Also listen for changes
-        siteLocationInput.addEventListener( 'change', function () {
-
-            // Decode
-            siteLocationValue = atob( this.value );
-
-            // Page Location container
-            if ( siteLocationValue != '' && siteLocationValue != 'main' && siteLocationValue != 'admin_bar' && siteLocationValue != 'index.php' ) {
-                pageLocation.style.display = 'inline-block';
-            } else {
-                pageLocation.style.display = 'none';
-            }
-
-            // Order container
-            if ( siteLocationValue != '' && ( siteLocationValue == 'main' || siteLocationValue == 'admin_bar' ) ) {
-                order.style.display = 'inline-block';
-            } else {
-                order.style.display = 'none';
-            }
-
-            // TOC container
-            if ( siteLocationValue != '' && siteLocationValue == 'main' ) {
-                toc.style.display = 'inline-block';
-            } else {
-                toc.style.display = 'none';
-            }
-
-            // Post Type container
-            if ( siteLocationValue == 'edit.php' || siteLocationValue == 'post.php' ) {
-                postType.style.display = 'block';
-            } else {
-                postType.style.display = 'none';
-            }
-
-            // Change page location to top
-            pageLocationInput.value = 'top';
-
-            // 'side' option
-            if ( siteLocationValue == 'post.php' ) {
-                optionSide.style.display = 'block';
-            } else {
-                optionSide.style.display = 'none';
-            }
-
-            // Check if the page location is side
-            if ( siteLocationValue != 'post.php' ) {
-                priority.style.display = 'none';
-            }
-
-            if ( siteLocationValue == 'custom' ) {
-                custom.style.display = 'inline-block';
-                addtParams.style.display = 'inline-block';
-            } else {
-                custom.style.display = 'none';
-                addtParams.style.display = 'none';
-            }
-        } );
-
-        // Side => Priority
-        pageLocationInput.addEventListener( 'change', function () {
-            if ( this.value == 'side' ) {
-                priority.style.display = 'inline-block';
-            } else {
-                priority.style.display = 'none';
-            }
-        } );
-        </script>";
-    
-        // echo '<label for="help_location_msg">Choose a message to display instead of the default (you may include /login/?redirect_to=<strong>{current_url}</strong> or {member_dashboard_url} in your message):</label>
-        // <br><input type="text" name="help_location_msg" id="help_location_msg" value="'.esc_attr( $get_message ).'"/>';
     } // End meta_box_content()
 
 
@@ -1356,8 +1276,14 @@ class HELPDOCS_DOCUMENTATION {
                 $post_types = unserialize( $post_types );
                 $post_type_labels = [];
                 foreach ( $post_types as $post_type ) {
-                    $post_type_obj = get_post_type_object( $post_type );
-                    $post_type_labels[] = $post_type_obj->labels->singular_name;
+                    if ( $post_type_obj = get_post_type_object( $post_type ) ) {
+                        if ( isset( $post_type_obj->label ) ) {
+                            $this_label = $post_type_obj->label;
+                        } else {
+                            $this_label = $post_type;
+                        }
+                    }
+                    $post_type_labels[] = $this_label;
                 }
                 echo esc_html( implode( ', ', $post_type_labels ) );
             } else {
@@ -1380,6 +1306,24 @@ class HELPDOCS_DOCUMENTATION {
         $columns[ HELPDOCS_GO_PF.'priority' ]      = HELPDOCS_GO_PF.'priority';
         return $columns;
     } // End sort_columns()
+
+
+    /**
+     * Sort the order column properly
+     *
+     * @param object $query
+     * @return void
+     */
+    public function sort_columns_query( $query ) {
+        global $current_screen;
+        if ( is_admin() && isset( $current_screen ) && $current_screen->id === 'edit-'.self::$post_type ) {
+            $orderby = $query->get( 'orderby' );
+            if ( HELPDOCS_GO_PF.'order' == $orderby ) {
+                $query->set( 'meta_key', HELPDOCS_GO_PF.'order' );
+                $query->set( 'orderby', 'meta_value_num' );
+            }
+        }
+    } // End sort_columns_query()
 
 
     /**
@@ -1982,18 +1926,69 @@ class HELPDOCS_DOCUMENTATION {
             // Split
             $orders = explode( '&', $order );
 
+            // Store the folder here
+            $current_folder = 0;
+
+            // Get the item we moved
+            $item_id = isset( $_REQUEST[ 'item_id' ] ) ? sanitize_text_field( $_REQUEST[ 'item_id' ] ) : false;
+            $type = false;
+            if ( $item_id ) {
+                if ( strpos( $item_id, 'folder' ) !== false ) {
+                    $type = 'folder';
+                    $item_id = str_replace( 'folder-', '', $item_id );
+                } else {
+                    $type = 'doc';
+                    $item_id = str_replace( 'item-', '', $item_id );
+                }
+            }
+            $result[ 'item_id' ] = $item_id;
+
             // Iter the ordered items
             for ( $o = 0; $o < count( $orders ); $o++ ) {
-
-                // Get the doc id
-                $doc_id = str_replace( 'item[]=', '', $orders[$o] );
 
                 // Get the position
                 $position = $o;
 
-                // Update the doc
-                update_post_meta( $doc_id, HELPDOCS_GO_PF.'order', $position );
+                // The list item
+                $li = $orders[$o];
+
+                // First check if it's a folder
+                if ( strpos( $li, 'folder[]=' ) !== false ) {
+
+                    // Yes? Then change the current folder id
+                    $folder_id = str_replace( 'folder[]=', '', $li );
+                    $current_folder = $folder_id;
+
+                    // Update the folder position
+                    if ( $type == 'folder' ) {
+                        update_term_meta( $folder_id, HELPDOCS_GO_PF.'order', $position );
+                    }
+
+                // handling docs
+                } else {
+
+                    // Only update docs
+                    if ( $type == 'doc' ) {
+
+                        // Get the doc id
+                        $doc_id = str_replace( 'item[]=', '', $li );
+
+                        // Update the doc
+                        update_post_meta( $doc_id, HELPDOCS_GO_PF.'order', $position );
+
+                        // Update the folder
+                        wp_set_object_terms( $doc_id, intval( $current_folder ), self::$folder_taxonomy );
+
+                        // Get the folder to send back
+                        if ( $item_id == $doc_id ) {
+                            $result[ 'folder' ] = $current_folder;
+                        }
+                    }
+                }
             }
+
+            // Updating what?
+            $result[ 'updating' ] = $type;
 
             // Return success
             $result[ 'type' ] = 'success';
@@ -2022,7 +2017,7 @@ class HELPDOCS_DOCUMENTATION {
      * @param string $hook
      * @return void
      */
-    public function enqueue_scripts( $screen ) {
+    public function enqueue_order_scripts( $screen ) {
         // Get the options page slug
         $options_page = 'toplevel_page_'.HELPDOCS_TEXTDOMAIN;
 
@@ -2032,18 +2027,207 @@ class HELPDOCS_DOCUMENTATION {
         }
 
         // Are we on the documentation page?
-        if ( $screen != $options_page || ( $screen == $options_page && helpdocs_get( 'tab', '!=', 'documentation' ) ) ) {
+        if ( $screen == $options_page && helpdocs_get( 'tab', '==', 'documentation' ) ) {
+            
+            // Handle
+            $handle = HELPDOCS_GO_PF.'sorting-script';
+
+            // Sorting draggable docs
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-sorting.js', [ 'jquery', 'jquery-ui-sortable' ], HELPDOCS_VERSION );
+            wp_localize_script( $handle, 'docSortingAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( 'jquery-ui-sortable' );
+            wp_enqueue_script( $handle );
+        }
+    } // End enqueue_order_scripts()
+
+
+    /**
+     * Enqueue scripts
+     *
+     * @param string $hook
+     * @return void
+     */
+    public function enqueue_edit_doc_scripts( $screen ) {
+        // Are we on the documentation page?
+        if ( ( $screen == 'post.php' || $screen == 'post-new.php' ) && get_post_type() == self::$post_type ) {
+            
+            // Handle
+            $handle = HELPDOCS_GO_PF.'editing-script';
+
+            // Editing docs
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-editing.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( $handle );
+        }
+    } // End enqueue_edit_doc_scripts()
+
+
+    /**
+     * Add a folder filter to the manage tab
+     *
+     * @return void
+     */
+    public function admin_folder_filter() {
+        $screen = get_current_screen();
+        global $post_type;
+
+        // Make sure we're in the right place
+        if ( $screen->id == 'edit-'.self::$post_type && $post_type == self::$post_type ) {
+
+            // Get the folders
+            $folders = get_terms( [
+                'taxonomy'   => 'help-docs-folder',
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ] );
+
+            // Build a custom dropdown list of values to filter by
+            echo '<select id="'.esc_attr( self::$folder_taxonomy ).'-filter" name="folder">';
+                echo '<option value="0">'.__( 'All Folders', 'admin-help-docs' ).'</option>';
+
+                // Cycle through each group
+                foreach ( $folders as $folder ) {
+
+                    // Check if it is selected
+                    if ( isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) == $folder->term_id ) {
+                        $selected = ' selected="selected"';
+                    } else {
+                        $selected = '';
+                    }
+
+                    // Add the option
+                    echo '<option value="'.$folder->term_id.'"'.$selected.'>'.$folder->name.'</option>';
+                }
+
+            echo '</select>';
+        }
+    } // End admin_folder_filter()
+
+
+    /**
+     * Display only posts with group access
+     * 
+     * @param object $query
+     * @return void
+     */
+    public function filter_admin_columns( $query ) {
+        // Get the post type from the query
+        $post_type = $query->get( 'post_type' );
+        
+        // Make sure we're not on front end and we're only looking at trainings
+        if ( !is_admin() || $post_type != self::$post_type ) {
             return;
         }
 
-        // Handle
-        $handle = HELPDOCS_GO_PF.'script';
+        // Get the folder
+        if ( isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) > 0 ) {
 
-        // Sorting draggable docs
-        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-sorting.js', [ 'jquery', 'jquery-ui-sortable' ] );
-        wp_localize_script( $handle, 'docSortingAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
-        wp_enqueue_script( 'jquery' );
-        wp_enqueue_script( 'jquery-ui-sortable' );
-        wp_enqueue_script( $handle );
-    } // End enqueue_scripts()
+            // Folder id
+            $folder_id = absint( $_GET[ 'folder' ] );
+
+            // Set the query
+            $args = [
+                [
+                    'taxonomy' => self::$folder_taxonomy,
+                    'terms'    => $folder_id,
+                    'field'    => 'term_id',
+                ]
+            ];
+            $query->set( 'tax_query', $args );
+        }
+    } // End filter_admin_columns()
+    
+
+    /**
+     * Display shortcodes without executing them
+     * USAGE: [dont_do_shortcode content='{shortcode_name param="value" param2="value"}']
+     *
+     * @param array $atts
+     * @return string
+     */
+    public function display_shortcode_without_executing( $atts ) {
+        $atts = shortcode_atts( [ 'content' => '', 'code' => true ], $atts );
+        if ( strtolower( sanitize_text_field( $atts[ 'code' ] ) ) == 'false' ) {
+            $pf = '';
+            $sf = '';
+        } else {
+            $pf = '<code>';
+            $sf = '</code>';
+        }
+        $content = sanitize_text_field( $atts[ 'content' ] );
+        $content = str_replace( '{', '<span>[</span>', $content );
+        $content = str_replace( '}', '<span>]</span>', $content );
+        return $pf.$content.$sf;
+    } // End display_shortcode_without_executing()
+
+
+    /**
+     * Add a link back to main documentation page on the edit screen
+     * 
+     * @return void
+     */
+    public function add_link_back_to_edit_screen() {
+        // Only on our edit screen
+        global $post_type;
+        if ( is_admin() && self::$post_type == $post_type ) {
+
+            // Get the id
+            $doc_id = get_the_ID();
+            
+            // Check if main doc page
+            $site_location = get_post_meta( $doc_id, HELPDOCS_GO_PF.'site_location', true );
+            if ( $site_location && $site_location == base64_encode( 'main' ) ) {
+
+                // The URL
+                $url = helpdocs_plugin_options_path( 'documentation' ).'&id='.absint( $doc_id );
+                echo '<div id="edit-slug-box">
+                    <strong>Permalink:</strong> 
+                    <span id="sample-permalink">
+                        <a href="'.esc_url( $url ).'">'.esc_url( $url ).'</a>
+                    </span>
+                    <span id="edit-slug-buttons">
+                        <a class="button button-secondary" href="'.esc_url( $url ).'" style="display: inline-block; margin-left: 5px; min-height: 26px; line-height: 2.18181818; padding: 0 8px; font-size: 11px;">View</a>
+                    </span>
+                </div>';
+            } else {
+                return;
+            }
+        }
+    } // End add_link_back_to_edit_screen()
+
+
+    /**
+     * Add CSS to docs
+     * USAGE: [helpdocs_css stylesheet="/test.css" version="1"]
+     * USAGE: [helpdocs_css].example {background: red}[/helpdocs_css]
+     *
+     * @param array $atts
+     * @param string $content
+     * @return string|void
+     */
+    public function add_css_to_docs( $atts, $content = null ) {
+        // Check for a stylesheet
+        $atts = shortcode_atts( [ 'stylesheet' => '', 'version' => time() ], $atts );
+        if ( esc_url( $atts[ 'stylesheet' ] ) != '' ) {
+            
+            // Pass to action
+            $args = [
+                'url'     => esc_url( $atts[ 'stylesheet' ] ),
+                'version' => sanitize_text_field( $atts[ 'version' ] ),
+            ];
+            
+            // Add the stylesheet
+            add_action( 'admin_enqueue_scripts', function() use ( $args ) {
+                wp_enqueue_style( 'doc-'.uniqid(), $args[ 'url' ], false, $args[ 'version' ] );
+            } );
+            do_action( 'admin_enqueue_scripts' );
+            return;
+
+        // Or else embedded styles
+        } elseif ( !is_null( $content ) ) {
+            return '<style>'.sanitize_textarea_field( $content ).'</style>';
+        }
+    } // End add_css_to_docs()
 }

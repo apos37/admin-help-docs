@@ -427,7 +427,8 @@ function helpdocs_wp_kses_allowed_html() {
             'id' => []
         ],
         'em' => [],
-        'strong' => []
+        'strong' => [],
+        'code' => []
     ];
     return $allowed_html;
 } // End helpdocs_options_tr_allowed_html()

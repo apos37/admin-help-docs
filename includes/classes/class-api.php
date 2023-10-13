@@ -93,8 +93,9 @@ class HELPDOCS_API {
     public function get_all() {
         // Otherwise, only get all published docs
         $args = [
-            'post_type'   => 'help-docs',
-            'post_status' => 'publish'
+            'post_type'      => 'help-docs',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1
         ];
         
         // Store them here

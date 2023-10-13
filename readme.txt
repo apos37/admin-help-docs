@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.3
+Tested up to: 6.3.2
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 1.2.1
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,32 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.2.1 =
+* Update: Added setting option to hide the created and last modified dates and authors (props chrismaclean for suggestion)
+* Update: Added `[helpdocs_css]` shortcode for adding custom CSS to docs on the main doc page
+* Update: Added setting option to select a default doc for the main doc page
+* Tweak: Removed top border on first doc in main doc page and added borders to dragged doc instead
+* Update: Added permalink and view button to top of edit screen if site location is main doc page
+* Update: Added `[dont_do_shortcode]` shortcode to make it easier to share shortcodes without executing them
+
+= 1.2.0 =
+* Tweak: Drag and drop sorting - added icons, linked entire cells instead of just text, removed sorting cursor
+* Tweak: Added 150 ms delay to drag and drop sorting to prevent accidental dragging
+* Update: Added folders for main documentation page (props alex_p6577 for suggestion)
+* Tweak: Moved doc editing JS to its own file
+* Update: Added support for WP Version to still be used in footer
+* Tweak: Changed order of deactivate feedback form options
+* Tweak: Planned Updates on About tab
+* Update: Added search bar on main documentation page (props alex_p6577 for suggestion)
+
+= 1.1.5 =
+* Fix: PHP warning about id variable not being found on every page load
+
+= 1.1.4 =
+* Fix: Sorting by order column not in order (props alex_p6577 for pointing this out)
+* Fix: Documentation page ordering issue (props alex_p6577 for pointing this out)
+* Fix: Attempt to read property "singular_name" on null (props alex_p6577 for pointing this out)
+
 = 1.1.3 =
 * Update: Added setting to change user capability
 * Fix: Editors could view menu link and dashboard widget, but not view docs (props chrismaclean for pointing it out)

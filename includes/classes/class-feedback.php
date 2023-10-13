@@ -41,7 +41,6 @@ class HELPDOCS_FEEDBACK {
      * @return void
      */
     public static function send() {
-
         // First verify the nonce
         if ( !wp_verify_nonce( $_REQUEST[ 'nonce' ], HELPDOCS_GO_PF.'feedback' ) ) {
             exit( 'No naughty business please' );

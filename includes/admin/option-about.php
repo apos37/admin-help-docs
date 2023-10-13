@@ -108,14 +108,10 @@ if ( $coffee_filter ) {
 <h3>Planned Updates</h3>
 <p>The following items are currently planned, not necessarily in order. If you would like to request a feature or encourage priority of one them, please do so on Discord at the link above.</p>
 <ul>
-    <li>Add page/post specific locations: choose a post or page to only show the documentation on. Maybe even specify a custom post state?</li>
-    <li>More site locations: possibly add a fixed area at the top or bottom of all screens, or a floating help button on the bottom right?</li>
-    <li>Site-specific feeds: add a field underneath "Allow Public" to specify site addresses so only those sites will have permission to auto-feed the document.</li>
-    <li>Add the WordPress Updates page to site locations. The dashboard was initially removed to add a meta box instead of a notice, but it also removed the updates page in the process.</li>
-    <li>Folders: add folders for the main documentation page. So far I haven't needed to add so much documentation on this page, but I can see how some people might want it.</li>
-    <li>Themes: add a collection of themes that you can choose from. I just don't have any great ideas yet, so if you have an awesome look for your documents, please submit them on Discord.</li>
     <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
-    <li>If Dev Debug Tools is also installed, add visibility option for devs only so devs can have their own docs separate from everyone else.</li>
+    <li>Add form integrations to main documentation page.</li>
+    <li>Multiple placements per doc.</li>
+    <li>Bulk edit options.</li>
 </ul>
 
 <br><br>

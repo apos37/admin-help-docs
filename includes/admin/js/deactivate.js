@@ -18,13 +18,12 @@ jQuery( $ => {
 
         // Reasons
         const options = {
-            'better': 'I found a better plugin',
             'short': 'I only needed the plugin for a short period',
             'noneed': 'I no longer need the plugin',
-            'broke': 'The plugin broke my site',
             'errors': 'Found errors on the plugin',
             'conflict': 'There is a conflict with another plugin',
             'temp': 'It\'s temporary; just debugging an issue',
+            'better': 'I found a better plugin',
             'other': 'Other',
         };
 
@@ -35,7 +34,7 @@ jQuery( $ => {
         } );
 
         // Add comment section
-        var comments = $( '<br><label for="helpdocs-deactivate-comments">Kindly explain your reason so I can improve (optional):</label><br><br><textarea id="helpdocs-deactivate-comments" name="comments"></textarea><br><br>');
+        var comments = $( '<br><label for="helpdocs-deactivate-comments">Kindly explain your reason so I can improve:</label><br><br><textarea id="helpdocs-deactivate-comments" name="comments"></textarea><br><br>');
         modal.find( '#helpdocs-dialog-cont' ).append( comments );
 
         // Add Anonymous checkbox

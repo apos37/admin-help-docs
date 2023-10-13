@@ -21,7 +21,9 @@ $menu_items = helpdocs_plugin_menu_items();
 
 // Get the active tab
 global $current_screen;
-if ( $current_screen->post_type == 'help-docs' ) {
+if ( $current_screen->id == 'edit-help-docs-folder' ) {
+    $tab = 'folders';
+} elseif ( $current_screen->post_type == 'help-docs' ) {
     $tab = 'manage';
 } elseif ( $current_screen->post_type == 'help-doc-imports' ) {
     $tab = 'imports';
