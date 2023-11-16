@@ -80,6 +80,9 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 .file-icon:before {
     content: "\1F4C4";
 }
+.file-import-icon:before {
+    content: "\1F4F0";
+}
 #doc-viewer {
     flex: 1 0 auto;
     padding: 2rem;
@@ -180,6 +183,33 @@ ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roma
 }
 .highlight {
     background: yellow;
+}
+#helpdocs-alert-imports {
+    display: none;
+    position: fixed;
+    bottom: 3rem;
+    right: 2rem;
+    background: red;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    box-shadow: 4px 4px 16px;
+    font-weight: 600;
+    font-size: medium;
+}
+#helpdocs-alert-imports .close {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    border: 2px solid black;
+    color: black !important;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 0 5px;
+    font-size: 10px;
+    text-decoration: none;
 }
 </style>
 
@@ -344,10 +374,10 @@ echo '<div id="documentation">';
                 // Active folder
                 if ( $current_doc_id && in_array( $current_doc_id, $folder_docs ) ) {
                     $active_folder = ' active-folder';
-                    $folder_icon = $opened_folder_icon;
+                    // $folder_icon = $opened_folder_icon;
                 } else {
                     $active_folder = ' hide-in-folder';
-                    $folder_icon = $closed_folder_icon;
+                    // $folder_icon = $closed_folder_icon;
                 }
 
                 // Add the folder
@@ -402,12 +432,16 @@ echo '<div id="documentation">';
                     if ( isset( $doc->auto_feed ) && $doc->auto_feed != '' ) {
                         $incl_feed = '&feed=true';
                         $feed = $doc->ID;
+                        $file_icon_class = 'file-import-icon';
+                        $data_import = 'true';
                     } else {
                         $incl_feed = '';
+                        $file_icon_class = 'file-icon';
+                        $data_import = 'false';
                     }
 
                     // Add the item
-                    echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item in-folder'.esc_attr( $active_folder.$active ).'" data-folder="'.absint( $folder_id ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="file-icon"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
+                    echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item in-folder'.esc_attr( $active_folder.$active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="'.absint( $folder_id ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
                 }
             }
 
@@ -462,12 +496,16 @@ echo '<div id="documentation">';
             if ( isset( $doc->auto_feed ) && $doc->auto_feed != '' ) {
                 $incl_feed = '&feed=true';
                 $feed = $doc->ID;
+                $file_icon_class = 'file-import-icon';
+                $data_import = 'true';
             } else {
                 $incl_feed = '';
+                $file_icon_class = 'file-icon';
+                $data_import = 'false';
             }
 
             // Add the item
-            echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item not-in-folder'.esc_attr( $active ).'" data-folder="0"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="file-icon"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
+            echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item not-in-folder'.esc_attr( $active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="0"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
         }
 
     // End the toc container
@@ -580,4 +618,7 @@ echo '<div id="documentation">';
 
 // End the full page container
 echo '</div>';
+
+// Alert
+echo '<div id="helpdocs-alert-imports" aria-hidden="true"><a href="javascript:void(0);" class="close" aria-label="Close Notice">X</a>Import feeds cannot be added to folders. You must clone them onto your site to add them.</div>';
 ?>

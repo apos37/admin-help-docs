@@ -84,6 +84,7 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
     <li>Select the folder you want to put it in.</li>
     <li>You may also manage folders by clicking on the <a href="<?php echo esc_url( helpdocs_admin_url( 'edit-tags.php?taxonomy=help-docs-folder' ) ); ?>">Folders</a> tab.</li>
     <li>You may also drag and drop documents into different folders from the main documentation page.</li>
+    <li>Import feeds cannot be added to folders since they cannot be assigned taxonomies. You must clone them onto your site to add them to folders.</li>
 </ul>
 
 <br><br>

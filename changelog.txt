@@ -1,4 +1,8 @@
 == changelog.txt ==
+= 1.2.2 =
+* Tweak: Changed import feeds icon to a newspaper
+* Update: Added notice that import feeds cannot be added to folders
+
 = 1.2.1 =
 * Update: Added setting option to hide the created and last modified dates and authors (props chrismaclean for suggestion)
 * Update: Added `[helpdocs_css]` shortcode for adding custom CSS to docs on the main doc page

@@ -32,7 +32,12 @@ jQuery( $ => {
         update: function( event, ui ) {
 
             // Prevent folders from moving below the fold
-            if ( ui.item.hasClass( 'toc-folder' ) && placeholderIndex > $( '#folder-0' ).index() ) {
+            if ( ui.item.hasClass( 'toc-item' ) && placeholderIndex < $( '#folder-0' ).index() && ui.item.data( 'import' ) ) {
+                $( '#helpdocs-alert-imports').attr( 'aria-hidden', 'false' ).show( 'slow' );
+                $( this ).sortable( 'cancel' );
+
+            // Prevent folders from moving below the fold
+            } else if ( ui.item.hasClass( 'toc-folder' ) && placeholderIndex > $( '#folder-0' ).index() ) {
                 console.log( 'Attempt to move folders into non-folder area has failed. Please try again.' );
                 $( this ).sortable( 'cancel' );
 
@@ -173,5 +178,10 @@ jQuery( $ => {
                 $( this ).parent().removeClass( 'active-folder' ).addClass( 'hide-in-folder' );
             }
         } );
+    } );
+
+    // Close notice
+    $( '#helpdocs-alert-imports .close' ).on( 'click', function( e ) {
+        $( '#helpdocs-alert-imports').attr( 'aria-hidden', 'true' ).hide();
     } );
 } )

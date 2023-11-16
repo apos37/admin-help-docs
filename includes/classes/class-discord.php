@@ -31,20 +31,20 @@ class HELPDOCS_DISCORD {
     
 
     // $args = [
-    //     'msg'           => 'This is a test',
-    //     'embed'         => true,
-    //     'author_name'   => 'Apos37',
-    //     'author_url'    => HELPDOCS_AUTHOR_URL,
-    //     'title'         => 'My title',
-    //     'title_url'     => 'https://mytitleurl.com',
-    //     'desc'          => 'The description',
-    //     'img_url'       => '',
-    //     'thumbnail_url' => '',
+    //     'msg'            => 'This is a test',
+    //     'embed'          => true,
+    //     'author_name'    => 'Apos37',
+    //     'author_url'     => HELPDOCS_AUTHOR_URL,
+    //     'title'          => 'My title',
+    //     'title_url'      => 'https://mytitleurl.com',
+    //     'desc'           => 'The description',
+    //     'img_url'        => '',
+    //     'thumbnail_url'  => '',
     //     'disable_footer' => true,
-    //     'fields' => [
+    //     'fields'         => [
     //          [
-    //              'name' => 'Field #2 Name',
-    //              'value' => 'Field #2 Value',
+    //              'name'   => 'Field #2 Name',
+    //              'value'  => 'Field #2 Value',
     //              'inline' => true
     //          ]
     //      ]

@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.3.2
+Tested up to: 6.4.1
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,10 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.2.2 =
+* Tweak: Changed import feeds icon to a newspaper
+* Update: Added notice that import feeds cannot be added to folders
+
 = 1.2.1 =
 * Update: Added setting option to hide the created and last modified dates and authors (props chrismaclean for suggestion)
 * Update: Added `[helpdocs_css]` shortcode for adding custom CSS to docs on the main doc page
