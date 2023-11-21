@@ -31,7 +31,7 @@ jQuery( $ => {
         },
         update: function( event, ui ) {
 
-            // Prevent folders from moving below the fold
+            // Prevent adding imports to folders
             if ( ui.item.hasClass( 'toc-item' ) && placeholderIndex < $( '#folder-0' ).index() && ui.item.data( 'import' ) ) {
                 $( '#helpdocs-alert-imports').attr( 'aria-hidden', 'false' ).show( 'slow' );
                 $( this ).sortable( 'cancel' );

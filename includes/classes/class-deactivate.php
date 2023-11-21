@@ -12,7 +12,9 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-new HELPDOCS_DEACTIVATE;
+if ( !get_option( HELPDOCS_GO_PF.'disable_fb_form' ) ) {
+    new HELPDOCS_DEACTIVATE;
+}
 
 
 /**
@@ -55,6 +57,7 @@ class HELPDOCS_DEACTIVATE {
         $message = isset( $_REQUEST[ 'comments' ] ) ? sanitize_textarea_field( $_REQUEST[ 'comments' ] ) : '';
         $anonymous = isset( $_REQUEST[ 'anonymous' ] ) ? filter_var( $_REQUEST[ 'anonymous' ], FILTER_VALIDATE_BOOLEAN ) : false;
         $contact = isset( $_REQUEST[ 'contact' ] ) ? filter_var( $_REQUEST[ 'contact' ], FILTER_VALIDATE_BOOLEAN ) : false;
+        $disable = isset( $_REQUEST[ 'disable' ] ) ? filter_var( $_REQUEST[ 'disable' ], FILTER_VALIDATE_BOOLEAN ) : false;
        
         // Check for a message
         if ( $reason ) {
@@ -85,10 +88,20 @@ class HELPDOCS_DEACTIVATE {
                 $email = 'Wishes not to be contacted';
             }
 
+            // Stop showing the form
+            $disable_reasons = [
+                'broke',
+                'errors',
+                'conflict',
+                'temp'
+            ];
+            if ( in_array( $reason, $disable_reasons ) || $disable ) {
+                update_option( HELPDOCS_GO_PF.'disable_fb_form', true );
+            }
+
             // Reason
             $reasons = [
                 'better'   => 'I found a better plugin',
-                'short'    => 'I only needed the plugin for a short period',
                 'noneed'   => 'I no longer need the plugin',
                 'broke'    => 'The plugin broke my site',
                 'errors'   => 'Found errors on the plugin',
@@ -129,6 +142,11 @@ class HELPDOCS_DEACTIVATE {
                         'inline' => false
                     ],
                     [
+                        'name'   => 'Disable',
+                        'value'  => $disable ? 'Yes' : 'No',
+                        'inline' => false
+                    ],
+                    [
                         'name'   => 'Comments',
                         'value'  => $message,
                         'inline' => false
@@ -137,7 +155,8 @@ class HELPDOCS_DEACTIVATE {
             ];
             
             // First try sending to Discord
-            if ( HELPDOCS_DISCORD::send( $args ) ) {
+            $send = HELPDOCS_DISCORD::send( $args );
+            if ( $send ) {
                 $result[ 'type' ] = 'success';
 
                 // Method of sending
@@ -217,7 +236,7 @@ class HELPDOCS_DEACTIVATE {
         $nonce = wp_create_nonce( HELPDOCS_GO_PF.'deactivate' );
 
         // Register
-        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'deactivate.js', [ 'jquery' ] );
+        wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'deactivate.js', [ 'jquery' ], HELPDOCS_VERSION );
         wp_localize_script( $handle, HELPDOCS_GO_PF.'deactivate', [ 
             'plugin_slug' => HELPDOCS_TEXTDOMAIN,
             'support_url' => HELPDOCS_DISCORD_SUPPORT_URL,

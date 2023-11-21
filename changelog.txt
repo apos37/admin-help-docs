@@ -1,4 +1,8 @@
-== changelog.txt ==
+== changelog.txt === 
+= 1.2.3 =
+* Fix: More than 5 files in a folder won't stay in the folder (props alex_p6577 for pointing this out)
+* Tweak: Added an option to stop showing feedback form on deactivate; will automatically disable for certain choices
+
 = 1.2.2 =
 * Tweak: Changed import feeds icon to a newspaper
 * Update: Added notice that import feeds cannot be added to folders

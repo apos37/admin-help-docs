@@ -359,25 +359,25 @@ echo '<div id="documentation">';
 
                 // Get docs in this folder
                 $folder_doc_args = [
-                    'post_type' => 'help-docs',
-                    'tax_query' => [
+                    'post_type'      => 'help-docs',
+                    'posts_per_page' => -1,
+                    'post_status'    => 'publish',
+                    'tax_query'      => [
                         [
                             'taxonomy' => 'help-docs-folder',
-                            'field'    => 'term_id',
+                            'field'    => 'term_taxonomy_id',
                             'terms'    => $folder_id
                         ]
                     ],
                     'fields'    => 'ids'
                 ];
-                $folder_docs = get_posts( $folder_doc_args ); 
+                $folder_docs = get_posts( $folder_doc_args );
 
                 // Active folder
                 if ( $current_doc_id && in_array( $current_doc_id, $folder_docs ) ) {
                     $active_folder = ' active-folder';
-                    // $folder_icon = $opened_folder_icon;
                 } else {
                     $active_folder = ' hide-in-folder';
-                    // $folder_icon = $closed_folder_icon;
                 }
 
                 // Add the folder

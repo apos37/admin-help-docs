@@ -5,7 +5,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.4.1
 Requires PHP: 7.4
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,10 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.2.3 =
+* Fix: More than 5 files in a folder won't stay in the folder (props alex_p6577 for pointing this out)
+* Tweak: Added an option to stop showing feedback form on deactivate; will automatically disable for certain choices
+
 = 1.2.2 =
 * Tweak: Changed import feeds icon to a newspaper
 * Update: Added notice that import feeds cannot be added to folders

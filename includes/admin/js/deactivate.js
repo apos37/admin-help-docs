@@ -18,7 +18,6 @@ jQuery( $ => {
 
         // Reasons
         const options = {
-            'short': 'I only needed the plugin for a short period',
             'noneed': 'I no longer need the plugin',
             'errors': 'Found errors on the plugin',
             'conflict': 'There is a conflict with another plugin',
@@ -44,6 +43,10 @@ jQuery( $ => {
         // Add contact checkbox
         var contact = $( '<br><input type="checkbox" id="helpdocs-deactivate-contact" class="helpdocs-checkbox" name="contact" value="1"> <label for="helpdocs-deactivate-contact" id="helpdocs-deactivate-contact-label" class="helpdocs-checkbox-label">You may contact me for more information</label>' );
         modal.find( '#helpdocs-deactivate-footer' ).append( contact );
+
+        // Add disable checkbox
+        var disable = $( '<br><input type="checkbox" id="helpdocs-deactivate-disable" class="helpdocs-checkbox" name="disable" value="1"> <label for="helpdocs-deactivate-disable" id="helpdocs-deactivate-disable-label" class="helpdocs-checkbox-label">Don\'t show this form again</label>' );
+        modal.find( '#helpdocs-deactivate-footer' ).append( disable );
 
         // Add buttons
         var buttons = $( '<div id="helpdocs-deactivate-buttons"><input type="submit" id="helpdocs-submit" class="button button-primary" value="Deactivate" disabled> <input type="submit" id="helpdocs-cancel"class="button button-secondary" value="Cancel"></div>' );
@@ -125,6 +128,7 @@ jQuery( $ => {
             var commentsVal = $( '#helpdocs-deactivate-comments' ).val();
             var anonVal = $( '#helpdocs-deactivate-anonymously' ).is( ':checked' );
             var canContact = $( '#helpdocs-deactivate-contact' ).is( ':checked' );
+            var disableVal = $( '#helpdocs-deactivate-disable' ).is( ':checked' );
 
             // Validate
             if ( nonce !== '' && reasonVal !== '' ) {
@@ -140,7 +144,8 @@ jQuery( $ => {
                         reason: reasonVal,
                         comments: commentsVal,
                         anonymous: anonVal,
-                        contact: canContact
+                        contact: canContact,
+                        disable: disableVal
                     },
                     success: function( response ) {
 
