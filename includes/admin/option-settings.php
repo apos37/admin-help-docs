@@ -470,7 +470,7 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
             sort( $dashicons );
             $icons = [
                 'options' => $dashicons,
-                'width' => '20rem',
+                'width'   => '20rem',
                 'default' => $di.'editor-help'
             ]; 
             $current_dashicon = get_option( HELPDOCS_GO_PF.'dashicon', 'dashicons-editor-help' );

@@ -63,6 +63,8 @@ html, body, #wpwrap, #wpcontent, #wpbody, #wpbody-content, .wrap {
 .nav-tab-wrapper .nav-tab {
     background-color: <?php echo esc_attr( $color_bg ); ?> !important;
     filter: brightness(95%);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 .nav-tab-wrapper .nav-tab.nav-tab-active {
     border-bottom: 1px solid <?php echo esc_attr( $color_bg ); ?>;

@@ -299,10 +299,17 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
     // If comments
     $incl_comments = '';
     if ( !is_null( $comments ) ) {
-        if ( $comments == 'get_option' ) {
+        if ( $comments == '' ) {
+            $incl_comments = '';
+        } elseif ( $comments == 'get_option' ) {
             $incl_comments = 'get_option( '.$option_name.' )';
-        } else {
+        } elseif ( str_starts_with( $comments, '<br>' ) ) {
+            $comments = ltrim( $comments, '<br>' );
+            $incl_comments = '<p class="field-desc break">'.$comments.'</p>';
+        } elseif ( str_starts_with( $comments, '<div' ) ) {
             $incl_comments = $comments;
+        } else {
+            $incl_comments = '<p class="field-desc">'.$comments.'</p>';
         }
     }
 
@@ -335,7 +342,14 @@ function helpdocs_wp_kses_allowed_html() {
             'id' => [],
             'class' => []
         ],
+        'p' => [
+            'id' => [],
+            'class' => []
+        ],
         'pre' => [
+            'class' => []
+        ],
+        'code' => [
             'class' => []
         ],
         'span' => [
@@ -427,8 +441,7 @@ function helpdocs_wp_kses_allowed_html() {
             'id' => []
         ],
         'em' => [],
-        'strong' => [],
-        'code' => []
+        'strong' => []
     ];
     return $allowed_html;
 } // End helpdocs_options_tr_allowed_html()

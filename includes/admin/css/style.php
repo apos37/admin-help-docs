@@ -233,34 +233,61 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
         }
 
         /* Input fields */
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php input[type=text],
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php input[type=number],
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php textarea,
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php select {
+        /* Input fields */
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> input[type=text]:not( .normal-text-input ),
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> input[type=number],
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> textarea,
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> select {
             background-color: <?php echo esc_attr( $color_bg ); ?> !important;
             filter: brightness( 95% );
             color: <?php echo esc_attr( $color_fg ); ?> !important;
             padding: 8px 12px !important;
-            width: 43.75rem;
-            max-width: 43.75rem;
             min-height: 2.85rem !important;
             vertical-align: revert;
         }
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php textarea {
-            width: 100%;
-            height: 20rem;
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> textarea {
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
+            filter: brightness( 95% );
+            max-width: 75%;
+            height: 10rem;
             cursor: auto;
         }
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php select {
-            background: none;
-            -webkit-appearance: menulist !important;
-            -moz-appearance: menulist !important; 
-            appearance: menulist !important;
-        }
-        .<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?>-includes-admin-options-php input[type=color] {
-            background-color: <?php echo esc_attr( $color_bg ); ?> !important;
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> select {
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
             filter: brightness( 95% );
+        }
+        .toplevel_page_<?php echo esc_attr( HELPDOCS_TEXTDOMAIN ); ?> input[type=color] {
+            background-color: <?php echo esc_attr( $color_bg ); ?> !important;
             height: 4rem;
+            width: 10rem !important;
+        }        
+
+        /* Field descriptions/comments */
+        .field-desc {
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
+            filter: brightness( 97% );
+            color: <?php echo esc_attr( $color_fg ); ?>;
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid <?php echo esc_attr( $color_bg ); ?>;
+            font-size: 12px !important;
+            line-height: 1.5;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            box-shadow: 0 1px 1px <?php echo esc_attr( $color_ac ); ?>;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .field-desc.break {
+            display: block !important;
+            width: max-content;
+        }
+        .field-desc code {
+            background-color: <?php echo esc_attr( $color_bg ); ?>;
+            filter: brightness( 94% );
+            border-radius: 2px;
+            font-size: revert !important;
         }
 
         /* Color field sample */

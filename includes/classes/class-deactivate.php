@@ -114,6 +114,7 @@ class HELPDOCS_DEACTIVATE {
             /**
              * Post to Discord Support Server
              */
+            global $wp_version;
 
             $args = [
                 'embed'          => true,
@@ -144,6 +145,13 @@ class HELPDOCS_DEACTIVATE {
                     [
                         'name'   => 'Disable',
                         'value'  => $disable ? 'Yes' : 'No',
+                        'inline' => false
+                    ],
+                    [
+                        'name'   => 'Versions',
+                        'value'  => 'Plugin: '.HELPDOCS_VERSION.'
+                        WP: '.$wp_version.'
+                        PHP: '.phpversion(),
                         'inline' => false
                     ],
                     [

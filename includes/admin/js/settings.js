@@ -46,37 +46,58 @@ jQuery( $ => {
     } )
     $( "#" + HELPDOCS_GO_PF + "color_ac" ).on( "change", function() {
         const ac_elements = [ 'input[type="checkbox"]' ];
-        console.log( ac_elements );
         for ( let ac = 0; ac < ac_elements.length; ac++ ) {
             $( ac_elements[ac] ).attr( 'style', 'border: 1px solid ' + this.value + ' !important;' );
         }
+        $( '.field-desc' ).css( 'box-shadow', '0 1px 1px ' + this.value );
         saveReminder();
     } )
     $( "#" + HELPDOCS_GO_PF + "color_bg" ).on( "change", function() {
+        const thisValue = this.value;
         const bg_elements = [ 'html', 'body', '#wpwrap', '#wpcontent', '#wpbody', '#wpbody-content', '.wrap', '.nav-tab-wrapper .nav-tab' ];
         const border_elements = [ '.nav-tab-wrapper .nav-tab.nav-tab-active' ];
         for ( let bg = 0; bg < bg_elements.length; bg++ ) {
             const currentStyle = $( bg_elements[bg] ).css( 'color' );
-            $( bg_elements[bg] ).attr( 'style', 'color: ' + currentStyle + ' !important; background-color: ' + this.value + ' !important' );
+            $( bg_elements[bg] ).attr( 'style', 'color: ' + currentStyle + ' !important; background-color: ' + thisValue + ' !important;' );
         }
         for ( let b = 0; b < border_elements.length; b++ ) {
-            $( border_elements[b] ).attr( 'style', 'border-color: ' + this.value + ' !important' );
+            $( border_elements[b] ).attr( 'style', 'border-color: ' + thisValue + ' !important' );
+        }
+        $( '.field-desc' ).css( 'background-color', thisValue ).css( 'border-color', thisValue );
+        $( '.field-desc code' ).css( 'background-color', thisValue );
+        const input_elements = [ 'input', 'textarea', 'select' ];
+        for ( let input = 0; input < input_elements.length; input++ ) {
+            $( input_elements[input] ).each( function() {
+                const currentColor = $( this ).css( 'color' );
+                const currentWidth = $( this ).css( 'width' );
+                $( this ).attr( 'style', 'width: ' + currentWidth + ' !important; color: ' + currentColor + ' !important; background-color: ' + thisValue + ' !important;' );
+            } );
         }
         saveReminder();
     } )
     $( "#" + HELPDOCS_GO_PF + "color_fg" ).on( "change", function() {
+        const thisValue = this.value;
         const fg_elements = [ 'html', 'body', '#wpwrap', '#wpcontent', '#wpbody', '#wpbody-content', '.wrap', '.admin-title-cont h1', '.tab-header', '.wp-heading-inline', '.form-table th','.subsubsub .count', '#footer-thankyou', '#footer-upgrade' ];
         for ( let fg = 0; fg < fg_elements.length; fg++ ) {
             const currentStyle = $( fg_elements[fg] ).css( 'background-color' );
-            $( fg_elements[fg] ).attr( 'style', 'background-color: ' + currentStyle + ' !important; color: ' + this.value + ' !important' );
+            $( fg_elements[fg] ).attr( 'style', 'background-color: ' + currentStyle + ' !important; color: ' + thisValue + ' !important;' );
+        }
+        $( '.field-desc' ).css( 'color', thisValue );
+        const input_elements = [ 'input', 'textarea', 'select' ];
+        for ( let input = 0; input < input_elements.length; input++ ) {
+            $( input_elements[input] ).each( function() {
+                const currentBgColor = $( this ).css( 'background-color' );
+                const currentWidth = $( this ).css( 'width' );
+                $( this ).attr( 'style', 'width: ' + currentWidth + ' !important; background-color: ' + currentBgColor + ' !important; color: ' + thisValue + ' !important;' );
+            } );
         }
         saveReminder();
     } )
     $( "#" + HELPDOCS_GO_PF + "color_cl" ).on( "change", function() {
         const cl_elements = [ '#wpbody-content a', '#footer-thankyou a', '#footer-upgrade a' ];
         for ( let cl = 0; cl < cl_elements.length; cl++ ) {
-            const currentStyle = $( cl_elements[cl] ).css( 'background-color' );
-            $( cl_elements[cl] ).attr( 'style', 'color: ' + this.value + ' !important' );
+            // const currentStyle = $( cl_elements[cl] ).css( 'background-color' );
+            $( cl_elements[cl] ).attr( 'style', 'color: ' + this.value + ' !important;' );
         }
         saveReminder();
     } )

@@ -1,4 +1,9 @@
 == changelog.txt === 
+= 1.2.4 =
+* Fix: FAQ css example stylsheet path was missing a slash
+* Tweak: Updated some CSS styles
+* Tweak: Added version logging to deactivation feedback to make it easier to chase down errors
+
 = 1.2.3 =
 * Fix: More than 5 files in a folder won't stay in the folder (props alex_p6577 for pointing this out)
 * Tweak: Added an option to stop showing feedback form on deactivate; will automatically disable for certain choices

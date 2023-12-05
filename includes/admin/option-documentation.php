@@ -297,7 +297,7 @@ echo '<div id="search-bar">
     <form>
         '.wp_kses_post( $folder_action_links ).'
         <a id="view-all" class="action-links" href="'.esc_url( remove_query_arg( 'search', $current_url ) ).'">View All</a>
-        <input type="text" id="search-input" name="search" value="'.esc_html( $s ).'" aria-label="Enter Keyword">
+        <input type="text" id="search-input" class="normal-text-input" name="search" value="'.esc_html( $s ).'" aria-label="Enter Keyword">
         <input type="hidden" name="page" value="'.esc_attr( HELPDOCS_TEXTDOMAIN ).'">
         <input type="hidden" name="tab" value="documentation">
         <input type="submit" class="button" value="Search Docs">

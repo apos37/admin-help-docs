@@ -211,5 +211,5 @@ class HELPDOCS_MAIN {
         if ( helpdocs_get( 'tab', '==', 'settings' ) || helpdocs_get( 'tab', '==', 'about' ) ) {
             wp_enqueue_script( 'jquery' );
         }
-    }
+    } // End enqueue_scripts()
 }

@@ -107,7 +107,7 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <h3>How do I add custom CSS to documents?</h3>
 <ul>
     <li>You can use the <code>[helpdocs_css]</code> shortcode.</li>
-    <li>Adding a stylesheet: <code>[helpdocs_css stylesheet="<strong><?php echo esc_url( get_stylesheet_directory_uri() ); ?>example.css</strong>" version="<strong>1</strong>"]</code></li>
+    <li>Adding a stylesheet: <code>[helpdocs_css stylesheet="<strong><?php echo esc_url( get_stylesheet_directory_uri() ); ?>/example.css</strong>" version="<strong>1</strong>"]</code></li>
     <li>If you are adding a stylesheet, the <code>version</code> parameter is optional. If left out, it will default to current time, which is good for testing. It is recommended to set a version when done so it can cache.</li>
     <li>Embedding styles directly: <code>[helpdocs_css]<strong>.example { background: red; }</strong>[/helpdocs_css]</code></li>
     <li>If you are embedding styles, it should be added to the top of the document above what you are styling.</li>

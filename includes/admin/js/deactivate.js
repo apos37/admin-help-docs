@@ -36,6 +36,10 @@ jQuery( $ => {
         var comments = $( '<br><label for="helpdocs-deactivate-comments">Kindly explain your reason so I can improve:</label><br><br><textarea id="helpdocs-deactivate-comments" name="comments"></textarea><br><br>');
         modal.find( '#helpdocs-dialog-cont' ).append( comments );
 
+        // Add please section
+        var please = $( '<br><label for="helpdocs-please"><strong>Please note that 100% of the suggested updates to this plugin have been carried out so far. If you there is something to improve on or a feature you\'d like to add, I ask that you allow me to contact you or send me a message on Discord at the link below. I want this plugin to work for you. :)</strong><br><br>');
+        modal.find( '#helpdocs-dialog-cont' ).append( please );
+
         // Add Anonymous checkbox
         var anon = $( '<input type="checkbox" id="helpdocs-deactivate-anonymously" class="helpdocs-checkbox" name="anonymous" value="1"> <label for="helpdocs-deactivate-anonymously" class="helpdocs-checkbox-label">Anonymous feedback</label>' );
         modal.find( '#helpdocs-deactivate-footer' ).append( anon );

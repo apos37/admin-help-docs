@@ -856,7 +856,7 @@ class HELPDOCS_DOCUMENTATION {
     
                 if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
                     $menu_file = substr( $menu_file, 0, $pos );
-                if ( ! empty( $menu_hook ) || ( ( 'index.php' != $submenu_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! file_exists( ABSPATH . "/wp-admin/$menu_file" ) ) ) {
+                if ( !empty( $menu_hook ) || ( ( 'index.php' != $submenu_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && !file_exists( ABSPATH . "/wp-admin/$menu_file" ) ) ) {
                     $admin_is_parent = true;
                     $url = 'admin.php?page=' . $submenu_item[2];
                 } else {
@@ -870,7 +870,7 @@ class HELPDOCS_DOCUMENTATION {
     
                 if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
                     $menu_file = substr( $menu_file, 0, $pos );
-                if ( ! empty( $menu_hook ) || ( ( 'index.php' != $item[2] ) && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! file_exists( ABSPATH . "/wp-admin/$menu_file" ) ) ) {
+                if ( !empty( $menu_hook ) || ( ( 'index.php' != $item[2] ) && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && !file_exists( ABSPATH . "/wp-admin/$menu_file" ) ) ) {
                     $admin_is_parent = true;
                     $url = 'admin.php?page=' . $item[2];
                 } else {
@@ -880,7 +880,7 @@ class HELPDOCS_DOCUMENTATION {
         }
     
         // 2. Check if sub-level menu item
-        if ( ! $item ) {
+        if ( !$item ) {
             $sub_item = '';
             foreach( $submenu as $top_file => $submenu_items ) {
     
@@ -894,7 +894,7 @@ class HELPDOCS_DOCUMENTATION {
                     }
                 }					
     
-                if ( ! empty( $sub_item ) )
+                if ( !empty( $sub_item ) )
                     break;
             }
     
@@ -917,16 +917,16 @@ class HELPDOCS_DOCUMENTATION {
                 $menu_file = substr( $menu_file, 0, $pos );
     
             // Handle current for post_type=post|page|foo pages, which won't match $self.
-            $self_type = ! empty( $typenow ) ? $self . '?post_type=' . $typenow : 'nothing';
+            // $self_type = ! empty( $typenow ) ? $self . '?post_type=' . $typenow : 'nothing';
             $menu_hook = get_plugin_page_hook( $sub_item[2], $item[2] );
     
             $sub_file = $sub_item[2];
             if ( false !== ( $pos = strpos( $sub_file, '?' ) ) )
                 $sub_file = substr($sub_file, 0, $pos);
     
-            if ( ! empty( $menu_hook ) || ( ( 'index.php' != $sub_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$sub_file" ) && ! file_exists( ABSPATH . "/wp-admin/$sub_file" ) ) ) {
+            if ( !empty( $menu_hook ) || ( ( 'index.php' != $sub_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$sub_file" ) && !file_exists( ABSPATH . "/wp-admin/$sub_file" ) ) ) {
                 // If admin.php is the current page or if the parent exists as a file in the plugins or admin dir
-                if ( ( ! $admin_is_parent && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! is_dir( WP_PLUGIN_DIR . "/{$item[2]}" ) ) || file_exists( $menu_file ) )
+                if ( ( !$admin_is_parent && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && !is_dir( WP_PLUGIN_DIR . "/{$item[2]}" ) ) || file_exists( $menu_file ) )
                     $url = add_query_arg( array( 'page' => $sub_item[2] ), $item[2] );
                 else
                     $url = add_query_arg( array( 'page' => $sub_item[2] ), 'admin.php' );
