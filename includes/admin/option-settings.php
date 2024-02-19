@@ -87,12 +87,12 @@ if ( $reset = helpdocs_get( 'reset' ) ) {
         if ( $reset == 'colors' ) {
 
             // Get the color keys
-            $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$colors;
+            $reset_keys = (new HELPDOCS_GLOBAL_OPTIONS)->colors;
 
         } elseif ( $reset == 'all' ) {
 
             // Get all keys
-            $reset_keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
+            $reset_keys = (new HELPDOCS_GLOBAL_OPTIONS)->settings_general;
         }
 
         // Iter the options

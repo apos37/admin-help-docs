@@ -216,7 +216,7 @@ class HELPDOCS_MENU {
  */
 function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
     // Get add new link
-    $add_new_link = home_url( HELPDOCS_ADMIN_URL.'/post-new.php?post_type='.HELPDOCS_DOCUMENTATION::$post_type );
+    $add_new_link = home_url( HELPDOCS_ADMIN_URL.'/post-new.php?post_type='.(new HELPDOCS_DOCUMENTATION)->post_type );
 
     // The menu items
     // Set 3rd param to true if the item should only be visible to admins

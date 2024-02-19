@@ -311,16 +311,19 @@ if ( helpdocs_get( 'id' ) ) {
     $current_doc_id = false;
 } else {
     // Check if we have a default
-    if ( $default_doc_id = get_option( HELPDOCS_GO_PF.'default_doc' ) ) {
-        if ( get_post_status( $default_doc_id ) && get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) && get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) == base64_encode( 'main' ) ) {
+    $default_doc_id = get_option( HELPDOCS_GO_PF.'default_doc' );
+    if ( 'publish' == get_post_status( $default_doc_id ) ) {
+        if ( get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) && get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) == base64_encode( 'main' ) ) {
             $current_doc_id = $default_doc_id;
         } else {
-            $current_doc_id = $docs[0]->ID;
+            $current_doc_id = false;
         }
     } else {
         $current_doc_id = $docs[0]->ID;
     }
-    helpdocs_add_qs_without_refresh( 'id', $current_doc_id );
+    if ( $current_doc_id ) {
+        helpdocs_add_qs_without_refresh( 'id', $current_doc_id );
+    }
 }
 
 // Store the current doc here

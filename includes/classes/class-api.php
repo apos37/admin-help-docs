@@ -25,7 +25,7 @@ class HELPDOCS_API {
      *
      * @var string
      */
-    public static $api_namespace;
+    public $api_namespace;
 
 
     /**
@@ -33,7 +33,7 @@ class HELPDOCS_API {
      *
      * @var string
      */
-	public static $base;
+	public $base;
 
 
     /**
@@ -41,7 +41,7 @@ class HELPDOCS_API {
      *
      * @var string
      */
-	public static $api_version;
+	public $api_version;
 
 
     /**
@@ -50,9 +50,9 @@ class HELPDOCS_API {
 	public function __construct() {
 
         // Add the variables
-        self::$api_namespace = HELPDOCS_TEXTDOMAIN.'/v';
-		self::$base = 'docs';
-		self::$api_version = '1';
+        $this->api_namespace = HELPDOCS_TEXTDOMAIN.'/v';
+		$this->base = 'docs';
+		$this->api_version = '1';
 
         // Register the routes
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
@@ -67,17 +67,17 @@ class HELPDOCS_API {
      */
     public function register_routes() {
         // Put the namespace together with the version
-		$namespace = self::$api_namespace.self::$api_version;
+		$namespace = $this->api_namespace.$this->api_version;
 		
         // All docs
-        register_rest_route( $namespace, self::$base, [
+        register_rest_route( $namespace, $this->base, [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'get_all' ],
             'permission_callback' => '__return_true'
         ] );
 
         // Single docs
-        register_rest_route( $namespace, self::$base.'/(?P<doc_id>[\d]+)', [
+        register_rest_route( $namespace, $this->base.'/(?P<doc_id>[\d]+)', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [ $this, 'get_single' ],
             'permission_callback' => '__return_true'
@@ -232,11 +232,12 @@ class HELPDOCS_API {
  */
 function help_get_api_path( $doc_id = null ) {
     // Put the namespace together with the version
-    $namespace = HELPDOCS_API::$api_namespace.HELPDOCS_API::$api_version;
+    $HELPDOCS_API = new HELPDOCS_API();
+    $namespace = $HELPDOCS_API->api_namespace.$HELPDOCS_API->api_version;
     if ( !is_null( $doc_id ) ) {
         $incl_id = '/'.$doc_id;
     } else {
         $incl_id = '';
     }
-    return home_url( 'wp-json/'.$namespace.'/'.HELPDOCS_API::$base.$incl_id );
+    return home_url( 'wp-json/'.$namespace.'/'.$HELPDOCS_API->base.$incl_id );
 } // End get_api_path()

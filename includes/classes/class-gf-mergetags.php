@@ -25,7 +25,7 @@ class HELPDOCS_GF_MERGETAGS {
      *
      * @var string
      */
-    public static $merge_tags;
+    public $merge_tags;
 
 
     /**
@@ -35,9 +35,9 @@ class HELPDOCS_GF_MERGETAGS {
 
         // Merge tags
         if ( get_option( HELPDOCS_GO_PF.'gf_merge_tags' ) && sanitize_textarea_field( get_option( HELPDOCS_GO_PF.'gf_merge_tags' ) ) != '' ) {
-            self::$merge_tags = sanitize_textarea_field( get_option( HELPDOCS_GO_PF.'gf_merge_tags' ) );
+            $this->merge_tags = sanitize_textarea_field( get_option( HELPDOCS_GO_PF.'gf_merge_tags' ) );
         } else {
-            self::$merge_tags = 'User First Name (first_name), User Last Name (last_name), User Date Registered (user_registered)';
+            $this->merge_tags = 'User First Name (first_name), User Last Name (last_name), User Date Registered (user_registered)';
         }
 
         // Add merge tags
@@ -57,7 +57,7 @@ class HELPDOCS_GF_MERGETAGS {
      */
     public function merge_tags( $merge_tags, $form_id, $fields, $element_id ) {
         // Get the merge tag string
-        $string = self::$merge_tags;
+        $string = $this->merge_tags;
 
         // Explode them
         $tags = explode( ',', $string );

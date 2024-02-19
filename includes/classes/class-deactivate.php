@@ -150,8 +150,8 @@ class HELPDOCS_DEACTIVATE {
                     [
                         'name'   => 'Versions',
                         'value'  => 'Plugin: '.HELPDOCS_VERSION.'
-                        WP: '.$wp_version.'
-                        PHP: '.phpversion(),
+WP: '.$wp_version.'
+PHP: '.phpversion(),
                         'inline' => false
                     ],
                     [
@@ -163,7 +163,7 @@ class HELPDOCS_DEACTIVATE {
             ];
             
             // First try sending to Discord
-            $send = HELPDOCS_DISCORD::send( $args );
+            $send = (new HELPDOCS_DISCORD)->send( $args );
             if ( $send ) {
                 $result[ 'type' ] = 'success';
 

@@ -23,7 +23,7 @@ class HELPDOCS_TOC {
     /**
      * Post type
      */ 
-    public static $post_type;
+    public $post_type;
 
 
     /**
@@ -32,7 +32,7 @@ class HELPDOCS_TOC {
 	public function __construct() {
 
         // Define the post type
-        self::$post_type = 'help-docs';
+        $this->post_type = 'help-docs';
 
         // Dashboard widget
         if ( get_option( HELPDOCS_GO_PF.'dashboard_toc' ) && get_option( HELPDOCS_GO_PF.'dashboard_toc' ) == '1' ) {
@@ -68,7 +68,7 @@ class HELPDOCS_TOC {
         $args = [
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
-            'post_type'         => self::$post_type,
+            'post_type'         => $this->post_type,
             'meta_query' => [
                 'relation' => 'AND',
                 [

@@ -33,7 +33,7 @@ jQuery( $ => {
         } );
 
         // Add comment section
-        var comments = $( '<br><label for="helpdocs-deactivate-comments">Kindly explain your reason so I can improve:</label><br><br><textarea id="helpdocs-deactivate-comments" name="comments"></textarea><br><br>');
+        var comments = $( '<br><label for="helpdocs-deactivate-comments">If there is an issue with the plugin, please explain so I can fix it:</label><br><br><textarea id="helpdocs-deactivate-comments" name="comments"></textarea><br><br>');
         modal.find( '#helpdocs-dialog-cont' ).append( comments );
 
         // Add please section

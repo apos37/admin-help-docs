@@ -1,19 +1,12 @@
 <?php
 /**
  * Discord class
- * USAGE: HELPDOCS_DISCORD::send( $args );
  */
 
 // Exit if accessed directly.
 if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-
-/**
- * Initiate the class
- */
-new HELPDOCS_DISCORD;
 
 
 /**
@@ -27,7 +20,7 @@ class HELPDOCS_DISCORD {
      * 
      * @var string
      */
-    public static $webhook = '2uF_aUoerJIYF7l9VPNcIG13z2zONdVGd_7kpmdHmSUaBIrycyk7gpgnvG8DEfjCiPWy';
+    private $webhook = '2uF_aUoerJIYF7l9VPNcIG13z2zONdVGd_7kpmdHmSUaBIrycyk7gpgnvG8DEfjCiPWy';
     
 
     // $args = [
@@ -57,7 +50,7 @@ class HELPDOCS_DISCORD {
      * @param string $webhook
      * @return boolean
      */
-    public static function send( $args ) {
+    public function send( $args ) {
         // Timestamp
         $timestamp = date( 'c', strtotime( 'now' ) );
 
@@ -144,7 +137,7 @@ class HELPDOCS_DISCORD {
         $json_data = json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
         // Convert webhook url
-        $webhook_url = base64_decode( 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTEyMzYzMDIzNTQ2MDU3OTM5OC8' ).self::$webhook;
+        $webhook_url = base64_decode( 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTEyMzYzMDIzNTQ2MDU3OTM5OC8' ).$this->webhook;
 
         // Send it to discord
         $options = [

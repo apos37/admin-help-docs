@@ -21,7 +21,7 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <br><br>
 <h3>How do I add a document?</h3>
 <ul>
-    <li>Head over to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.HELPDOCS_DOCUMENTATION::$post_type ) ); ?>">Manage</a> tab and add a new Help Document.</li>
+    <li>Head over to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.(new HELPDOCS_DOCUMENTATION)->post_type ) ); ?>">Manage</a> tab and add a new Help Document.</li>
     <li>Include the title and content for the document.</li>
     <li>If you want to add a separate description for the document so you can reference what it is for, add it the Description section.</li>
     <li>The "Location" box is where you specify where you want the document to show up.</li>
@@ -50,7 +50,7 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <h3>How do I use the same documentation across multiple sites?</h3>
 <ul>
     <li>On the site that has the document you want to share, edit the document and set "Allow Public" to "Yes". Alternatively, you may allow all of your documents to be public by default from <a href="<?php echo esc_url( helpdocs_plugin_options_path( 'settings' ) ); ?>">Settings</a>.</li>
-    <li>On the site in which you want to display the document, go to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.HELPDOCS_IMPORTS::$post_type ) ); ?>">Imports</a> tab, add a new import, and enter the site URL of the site the document is coming from. Then update the import.</li>
+    <li>On the site in which you want to display the document, go to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.(new HELPDOCS_IMPORTS)->post_type ) ); ?>">Imports</a> tab, add a new import, and enter the site URL of the site the document is coming from. Then update the import.</li>
     <li>You may then choose to automatically feed all of the documents that are public from the other site, or you can feed specific documents only. You also have the option to import it locally so you don't have to feed it remotely.</li>
 </ul>
 
@@ -90,7 +90,7 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <br><br>
 <h3>If I delete a folder with documents, will I lose all of the documents inside the folder?</h3>
 <ul>
-    <li>No. Deleting a folder simply removes the documents from the folder and places them outside of the folder area on the main documentation page. If you want to delete all of the documents inside a folder, the easiest way to do so is to go to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.HELPDOCS_DOCUMENTATION::$post_type ) ); ?>">Manage</a> tab, filter by folder, delete all of documents in that folder, <em>then</em> delete the folder from the <a href="<?php echo esc_url( helpdocs_admin_url( 'edit-tags.php?taxonomy=help-docs-folder' ) ); ?>">Folders</a> tab.</li>
+    <li>No. Deleting a folder simply removes the documents from the folder and places them outside of the folder area on the main documentation page. If you want to delete all of the documents inside a folder, the easiest way to do so is to go to the <a href="<?php echo esc_url( home_url( HELPDOCS_ADMIN_URL.'/edit.php?post_type='.(new HELPDOCS_DOCUMENTATION)->post_type ) ); ?>">Manage</a> tab, filter by folder, delete all of documents in that folder, <em>then</em> delete the folder from the <a href="<?php echo esc_url( helpdocs_admin_url( 'edit-tags.php?taxonomy=help-docs-folder' ) ); ?>">Folders</a> tab.</li>
 </ul>
 
 <br><br>

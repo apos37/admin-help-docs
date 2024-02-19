@@ -19,14 +19,6 @@ if ( !defined( 'ABSPATH' ) ) {
 class HELPDOCS_COLORS {
 
     /**
-	 * Constructor
-	 */
-	public function __construct() {
-
-	} // End __construct()
-
-
-    /**
      * Get a hex color from option or default
      *
      * @param string $color

@@ -25,7 +25,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      * 
      * @var array
      */
-    public static $colors = [];
+    public $colors = [];
 
 
     /**
@@ -33,7 +33,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      *
      * @var array
      */
-    public static $settings_general = [];
+    public $settings_general = [];
 
 
     /**
@@ -42,7 +42,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
 	public function __construct() {
 
         // Define the color keys
-        self::$colors = [
+        $this->colors = [
             'color_ac',
             'color_bg',
             'color_ti',
@@ -51,7 +51,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
         ];
 
         // Define the other keys
-        self::$settings_general = [
+        $this->settings_general = [
             'admin_bar',
             'dashboard_toc',
             'dashicon',
@@ -73,7 +73,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'default_doc',
             'hide_doc_meta'
         ];
-        self::$settings_general = array_merge( self::$settings_general, self::$colors );
+        $this->settings_general = array_merge( $this->settings_general, $this->colors );
 
         // Call register settings function
         add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -89,7 +89,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
      */
     public function register_settings() {
         // General Settings
-        $this->register_group_settings( 'settings', self::$settings_general );
+        $this->register_group_settings( 'settings', $this->settings_general );
 
         // Settings Import/Export
         $this->register_group_settings( 'settingsie', [ 'import_link' ] );

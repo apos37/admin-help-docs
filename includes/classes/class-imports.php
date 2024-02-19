@@ -15,7 +15,9 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-new HELPDOCS_IMPORTS;
+add_action( 'init', function() {
+    (new HELPDOCS_IMPORTS)->init();
+} );
 
 
 /**
@@ -26,7 +28,7 @@ class HELPDOCS_IMPORTS {
     /**
      * Post type
      */ 
-    public static $post_type;
+    public $post_type;
 
 
     /**
@@ -35,23 +37,7 @@ class HELPDOCS_IMPORTS {
 	public function __construct() {
 
         // The post type
-        self::$post_type = 'help-doc-imports';
-
-        // Initialize on init
-        add_action( 'init', [ $this, 'init' ] );
-
-        // Add the header to the top of the admin list page
-        add_action( 'load-edit.php', [ $this, 'add_header' ] );
-
-        // Add the meta box
-        add_action( 'add_meta_boxes', [ $this, 'meta_boxes' ] );
-
-        // Save the post data
-        add_action( 'save_post', [ $this, 'save_post' ] );
-
-        // Add admin columns
-        add_filter( 'manage_'.self::$post_type.'_posts_columns', [ $this, 'admin_columns' ] );
-        add_action( 'manage_'.self::$post_type.'_posts_custom_column', [ $this, 'admin_column_content' ], 10, 2 );
+        $this->post_type = 'help-doc-imports';
 
 	} // End __construct()
 
@@ -65,6 +51,19 @@ class HELPDOCS_IMPORTS {
 
         // Register the post type
         $this->register_post_type();
+
+        // Add the header to the top of the admin list page
+        add_action( 'load-edit.php', [ $this, 'add_header' ] );
+
+        // Add the meta box
+        add_action( 'add_meta_boxes', [ $this, 'meta_boxes' ] );
+
+        // Save the post data
+        add_action( 'save_post', [ $this, 'save_post' ] );
+
+        // Add admin columns
+        add_filter( 'manage_'.$this->post_type.'_posts_columns', [ $this, 'admin_columns' ] );
+        add_action( 'manage_'.$this->post_type.'_posts_custom_column', [ $this, 'admin_column_content' ], 10, 2 );
 
     } // End init()
 
@@ -134,13 +133,13 @@ class HELPDOCS_IMPORTS {
             'has_archive'           => false,
             'exclude_from_search'   => true,
             'publicly_queryable'    => false,
-            'query_var'             => self::$post_type,
+            'query_var'             => $this->post_type,
             'capability_type'       => 'post',
             'show_in_rest'          => false,
         ];
     
         // Register the CPT
-        register_post_type( self::$post_type, $args );
+        register_post_type( $this->post_type, $args );
     } // End register_post_type()
 
 
@@ -153,7 +152,7 @@ class HELPDOCS_IMPORTS {
         $screen = get_current_screen();
 
         // Only edit post screen:
-        if ( 'edit-'.self::$post_type === $screen->id ) {
+        if ( 'edit-'.$this->post_type === $screen->id ) {
 
             // Add the header
             add_action( 'all_admin_notices', function() {
@@ -175,7 +174,7 @@ class HELPDOCS_IMPORTS {
             'help-import-url',
             __( 'Website URL', 'admin-help-docs' ),
             [ $this, 'meta_box_content_url' ],
-            self::$post_type,
+            $this->post_type,
             'advanced',
 			'high'
         );
@@ -185,7 +184,7 @@ class HELPDOCS_IMPORTS {
             'help-import-docs',
             __( 'Choose Documents to Import', 'admin-help-docs' ),
             [ $this, 'meta_box_content' ],
-            self::$post_type,
+            $this->post_type,
             'advanced',
 			'default'
         );
@@ -654,7 +653,7 @@ class HELPDOCS_IMPORTS {
             'post_content'  => wp_kses_post( $doc->content ),
             'post_status'   => 'publish',
             'post_author'   => get_current_user_id(),
-            'post_type'     => HELPDOCS_DOCUMENTATION::$post_type,
+            'post_type'     => (new HELPDOCS_DOCUMENTATION)->post_type,
             'post_excerpt'  => sanitize_text_field( $doc->desc ),
             'meta_input'    => [
                 HELPDOCS_GO_PF.'site_location'  => sanitize_text_field( $doc->site_location ),
@@ -701,7 +700,7 @@ class HELPDOCS_IMPORTS {
         }
      
         // Check the user's permissions.
-        if ( isset( $_POST[ 'post_type' ] ) && $_POST[ 'post_type' ] != self::$post_type ) {
+        if ( isset( $_POST[ 'post_type' ] ) && $_POST[ 'post_type' ] != $this->post_type ) {
             return;
         }
      
@@ -805,7 +804,7 @@ class HELPDOCS_IMPORTS {
  */
 function helpdocs_get_imports( $args = null ) {
     // Get the post type
-    $post_type = HELPDOCS_IMPORTS::$post_type;
+    $post_type = (new HELPDOCS_IMPORTS)->post_type;
 
     // Get all of the imports that are enabled
     $import_args = [
@@ -954,4 +953,4 @@ function helpdocs_get_imports( $args = null ) {
 
     // Return the objects
     return $objects;
-}
+} // End helpdocs_get_imports()

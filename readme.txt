@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.4.1
+Tested up to: 6.4.3
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.7
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,8 +68,23 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.2.7 =
+* Fix: Description showing endless characters in admin column
+* Fix: Manage tab admin columns duplicating values
+* Fix: Documentation page causing error if default doc is deleted
+
+= 1.2.6.1 =
+* Fix: Session already open
+
+= 1.2.6 =
+* Fix: Docs on pages were duplicating
+
+= 1.2.5 =
+* Fix: Removed unneccesary instantiation of Discord class
+* Tweak: Removed all unneccesary static declarations and usage
+
 = 1.2.4 =
-* Fix: FAQ css example stylsheet path was missing a slash
+* Fix: FAQ css example stylesheet path was missing a slash
 * Tweak: Updated some CSS styles
 * Tweak: Added version logging to deactivation feedback to make it easier to chase down errors
 

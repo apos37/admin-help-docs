@@ -12,7 +12,9 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Initiate the class
  */
-new HELPDOCS_FEEDBACK;
+add_action( 'init', function() {
+    (new HELPDOCS_FEEDBACK)->init();
+} );
 
 
 /**
@@ -21,10 +23,12 @@ new HELPDOCS_FEEDBACK;
 class HELPDOCS_FEEDBACK {
 
     /**
-	 * Constructor
-	 */
-	public function __construct() {
-
+     * Load on init, but not every time the class is called
+     *
+     * @return void
+     */
+    public function init() {
+        
         // Ajax
         add_action( 'wp_ajax_'.HELPDOCS_GO_PF.'send_feedback', [ $this, 'send' ] );
         add_action( 'wp_ajax_nopriv_'.HELPDOCS_GO_PF.'send_feedback', [ $this, 'send' ] );
@@ -32,7 +36,7 @@ class HELPDOCS_FEEDBACK {
         // On failure
         add_action( 'wp_mail_failed', [ $this, 'mail_error' ], 10, 1 );
 
-	} // End __construct()
+    } // End init()
 
 
     /**
@@ -40,7 +44,7 @@ class HELPDOCS_FEEDBACK {
      *
      * @return void
      */
-    public static function send() {
+    public function send() {
         // First verify the nonce
         if ( !wp_verify_nonce( $_REQUEST[ 'nonce' ], HELPDOCS_GO_PF.'feedback' ) ) {
             exit( 'No naughty business please' );

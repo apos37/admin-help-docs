@@ -748,7 +748,7 @@ function helpdocs_get_five_point_rating ( $r1, $r2, $r3, $r4, $r5 ) {
  */
 function helpdocs_create_json_from_settings() {
     // Get all of the settings
-    $keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
+    $keys = (new HELPDOCS_GLOBAL_OPTIONS)->settings_general;
 
     // Store the values here
     $values = [];
@@ -814,7 +814,7 @@ function helpdocs_import_settings_from_json( $file ) {
 
     // Get our setting meta keys for validation
     // Get all of the settings
-    $keys = HELPDOCS_GLOBAL_OPTIONS::$settings_general;
+    $keys = (new HELPDOCS_GLOBAL_OPTIONS)->settings_general;
 
     // Bools
     $bools = [
