@@ -1,4 +1,16 @@
 == changelog.txt === 
+= 1.2.9 =
+* Tweak: Updates to some areas affected by live preview
+* Update: Added other plugins on About tab
+
+= 1.2.8.3 =
+* Fix: Options page path error
+* Update: Added live preview blueprints
+
+= 1.2.8 =
+* Update: Added click-to-copy functionality to [dont_do_shortcode], can disable
+* Update: Temporarily disabled deactivation feedback form
+
 = 1.2.7 =
 * Fix: Description showing endless characters in admin column
 * Fix: Manage tab admin columns duplicating values

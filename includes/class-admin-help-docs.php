@@ -107,7 +107,7 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-discord.php';
-        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-deactivate.php';
+        // require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-deactivate.php'; // Temporarily disable
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-feedback.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-gf-mergetags.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-dashboard-toc.php';

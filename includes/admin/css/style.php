@@ -184,6 +184,9 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
             border-radius: 0;
             display: none;
         }
+        .click-to-copy-link.shortcode {
+            text-decoration: none;
+        }
 
         /* ---------------------------------------------
                             FORMS

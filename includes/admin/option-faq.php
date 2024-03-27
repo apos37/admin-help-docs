@@ -97,10 +97,11 @@ $dashboard_link = home_url( HELPDOCS_ADMIN_URL.'/index.php' );
 <h3>How do I display a shortcode without executing it?</h3>
 <ul>
     <li>You can use the <code>[dont_do_shortcode content='']</code> shortcode for that.</li>
-    <li>Important: make sure you use single-quotes in the shortcode so you can add double-quotes to the content value.</li>
+    <li>Important: make sure you use single-quotes in this shortcode so you can add double-quotes to the content value.</li>
     <li>Usage: <code>[dont_do_shortcode content='<strong>{shortcode_name param="value" param2="value2"}Content{/shortcode_name}</strong>']</code></li>
     <li>Basically, replace the brackets with curly brackets and add the whole thing to the content parameter.</li>
-    <li>You may use the optional <code>code="false"</code> parameter.</li>
+    <li>Disable click-to-copy functionality with <code>click_to_copy='false'</code> parameter.</li>
+    <li>You may use the optional <code>code='false'</code> parameter.</li>
 </ul>
 
 <br><br>

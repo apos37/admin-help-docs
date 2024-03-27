@@ -1,0 +1,21 @@
+{
+    "landingPage": "/wp-admin/admin.php?page=admin-help-docs&tab=settings",
+    "preferredVersions": {
+        "php": "8.0",
+        "wp": "latest"
+    },
+    "phpExtensionBundles": [
+        "kitchen-sink"
+    ],
+    "steps": [
+        {
+            "step": "login",
+            "username": "admin",
+            "password": "password"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php\ninclude 'wordpress/wp-load.php';\nwp_insert_post(array(\n'import_id' => 5,\n'post_title' => 'No Internet',\n'post_content' => '<!-- wp:paragraph -->\n<p>This is an example of a Help Doc. The WordPress Playground Live Preview is not connected to the Internet, so the Import option cannot actually be used here. You will have to watch the sample video or install the plugin on a live site to see it in action.</p>\n<!-- \/wp:paragraph -->',\n'post_type' => 'help-docs',\n'post_status' => 'publish',\n'post_author' => 1,\n'meta_input' => array(\n'helpdocs_site_location' => 'bWFpbg=='\n)\n));"
+        }
+    ]
+}

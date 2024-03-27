@@ -433,7 +433,7 @@ function helpdocs_get( $qs_param, $comparison = '!=', $equal_to = '' ) {
 function helpdocs_click_to_copy( $unique_link_id, $link_text, $unique_copy_id = null, $copy_text = null, $include_copied_span = false ) {
     // First check if we are copying text
     if ( $copy_text != null ) {
-        $content = 'let content = "'.$copy_text.'";';
+        $content = "let content = '".$copy_text."';";
 
     // If not, let's see if we're copying another div
     } elseif ( $unique_copy_id != null ) {
@@ -459,8 +459,15 @@ function helpdocs_click_to_copy( $unique_link_id, $link_text, $unique_copy_id = 
         $incl_copied_span = '';
     }
 
+    // Add additional class if unique id starts with string_
+    if ( preg_match( '/[a-zA-Z0-9]+\_/', $unique_link_id, $matches ) ) {
+        $add_class = ' '.str_replace( '_', '', $matches[0] );
+    } else {
+        $add_class = '';
+    }
+
     // Create the link
-    $results = '<a href="#" id="'.$unique_link_id.'" style="cursor: pointer;">'.$link_text.'</a>'.$incl_copied_span;
+    $results = '<a class="click-to-copy-link'.$add_class.'" href="#" id="'.$unique_link_id.'" style="cursor: pointer;">'.$link_text.'</a>'.$incl_copied_span;
 
     // The script
     $results .= '<script>

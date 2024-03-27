@@ -80,40 +80,35 @@ $buy_me_coffee = '<br><br><br><h3>'. __( 'Support This Plugin', 'admin-help-docs
 <p>At this time, there are no premium add-ons so the only source of income I have to maintain this plugin is from donations.</p>';
 $buy_me_coffee .= sprintf( __( '<a class="button button-primary" href="%s" target="_blank">Buy Me Coffee :)</a><br>', 'admin-help-docs' ), 'https://paypal.com/donate/?business=3XHJUEHGTMK3N' );
 $coffee_filter = apply_filters( 'helpdocs_coffee', $buy_me_coffee );
-$coffee_filter = false; /// REMOVE AFTER DEVELOPMENT
 if ( $coffee_filter ) {
     echo wp_kses_post( $buy_me_coffee );
 }
 ?>
 
-<br><br><br>
-<h3>How Can We Improve?</h3>
-<div id="feedback-form">
-    <div class="form-group">
-        <label for="message" style="display: block;">If there was one thing you would change about this plugin, what would it be?</label> 
-        <br><textarea id="feedback-message" name="message" class="form-control input-message" rows="6" style="width: 600px;" placeholder="Your feedback..."></textarea><br>
+<?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
+    <br><br><br>
+    <h3>How Can We Improve?</h3>
+    <div id="feedback-form">
+        <div class="form-group">
+            <label for="message" style="display: block;">If there was one thing you would change about this plugin, what would it be?</label> 
+            <br><textarea id="feedback-message" name="message" class="form-control input-message" rows="6" style="width: 600px;" placeholder="Your feedback..."></textarea><br>
+        </div>
+        <?php 
+        $nonce = wp_create_nonce( HELPDOCS_GO_PF.'feedback' );
+        $user = get_userdata( get_current_user_id() ); 
+        $display_name = $user->display_name; 
+        $email = $user->user_email; 
+        ?>
+        <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>" disabled>Send Feedback</button>
+        <div id="feedback-sending">Sending</div>
+        <div id="feedback-result"></div>
     </div>
-    <?php 
-    $nonce = wp_create_nonce( HELPDOCS_GO_PF.'feedback' );
-    $user = get_userdata( get_current_user_id() ); 
-    $display_name = $user->display_name; 
-    $email = $user->user_email; 
-    ?>
-    <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>" disabled>Send Feedback</button>
-    <div id="feedback-sending">Sending</div>
-    <div id="feedback-result"></div>
-</div>
+<?php } ?>
 
-<br><br><br>
-<h3>Planned Updates</h3>
-<p>The following items are currently planned, not necessarily in order. If you would like to request a feature or encourage priority of one them, please do so on Discord at the link above.</p>
-<ul>
-    <li>Scheduling: the ability to schedule a document to be displayed during a specified date range. This will be useful since many of the documents used are actually notices rather than permanent fixtures.</li>
-    <li>Add form integrations to main documentation page.</li>
-    <li>Multiple placements per doc.</li>
-    <li>Bulk edit options.</li>
-</ul>
-
-<br><br>
-<h3>Try My Other Plugin</h3>
-<?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>
+<?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
+    <br><br>
+    <h3>Try My Other Plugins</h3>
+    <?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>
+    <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-discord' ) ); ?>
+    <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-msteams' ) ); ?>
+<?php } ?>

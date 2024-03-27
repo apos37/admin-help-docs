@@ -5,8 +5,8 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.4.3
 Requires PHP: 7.4
-Stable tag: 1.2.7
-License: GPL v2 or later
+Stable tag: 1.2.9
+License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
 Site developers and operators can easily create help documentation and notices for the admin area.
@@ -50,7 +50,7 @@ Anyone that has the Administrator role, or other roles that you specify.
 Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin.
 
 = Where can I request features and get further support? =
-Join my [WordPress Support Discord server](https://discord.gg/3HnzNEJVnR)
+Join my [Discord support server](https://discord.gg/3HnzNEJVnR)
 
 == Demo ==
 https://youtu.be/-V_vyBe6lv0
@@ -68,6 +68,18 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.2.9 =
+* Tweak: Updates to some areas affected by live preview
+* Update: Added other plugins on About tab
+
+= 1.2.8.3 =
+* Fix: Options page path error
+* Update: Added live preview blueprints
+
+= 1.2.8 =
+* Update: Add click-to-copy functionality to [dont_do_shortcode], can disable
+* Update: Temporarily disable deactivation feedback form
+
 = 1.2.7 =
 * Fix: Description showing endless characters in admin column
 * Fix: Manage tab admin columns duplicating values

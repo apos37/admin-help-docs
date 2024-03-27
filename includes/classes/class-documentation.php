@@ -2170,13 +2170,18 @@ class HELPDOCS_DOCUMENTATION {
 
     /**
      * Display shortcodes without executing them
-     * USAGE: [dont_do_shortcode content='{shortcode_name param="value" param2="value"}']
+     * USAGE: [dont_do_shortcode content='{shortcode_name param="value" param2="value"}' click_to_copy='false']
      *
      * @param array $atts
      * @return string
      */
     public function display_shortcode_without_executing( $atts ) {
-        $atts = shortcode_atts( [ 'content' => '', 'code' => true ], $atts );
+        $atts = shortcode_atts( [ 
+            'content'       => '', 
+            'code'          => true,
+            'click_to_copy' => true
+        ], $atts );
+
         if ( strtolower( sanitize_text_field( $atts[ 'code' ] ) ) == 'false' ) {
             $pf = '';
             $sf = '';
@@ -2187,7 +2192,16 @@ class HELPDOCS_DOCUMENTATION {
         $content = sanitize_text_field( $atts[ 'content' ] );
         $content = str_replace( '{', '<span>[</span>', $content );
         $content = str_replace( '}', '<span>]</span>', $content );
-        return $pf.$content.$sf;
+
+        // Final
+        $text = $pf.$content.$sf;
+
+        // Click to copy?
+        if ( strtolower( sanitize_text_field( $atts[ 'click_to_copy' ] ) ) == 'false' ) {
+            return $text;
+        } else {
+            return helpdocs_click_to_copy( uniqid( 'shortcode_' ), $text, null, strip_tags( $text ), true );
+        }
     } // End display_shortcode_without_executing()
 
 
