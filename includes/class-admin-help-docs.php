@@ -107,20 +107,9 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-discord.php';
-        // require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-deactivate.php'; // Temporarily disable
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-feedback.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-gf-mergetags.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-dashboard-toc.php';
-
-        // Admin additional CSS
-        // Must not be initialized too early, or else error upon activation:
-        // "The plugin generated X characters of unexpected output during activation"
-        add_action( 'admin_init', function() {
-
-            // Deactivate modal
-            wp_register_style( HELPDOCS_GO_PF.'deactivate', HELPDOCS_PLUGIN_CSS_PATH.'deactivate.css', [], HELPDOCS_VERSION );
-            wp_enqueue_style( HELPDOCS_GO_PF.'deactivate' );
-        } );
 
         // Enqueue scripts
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );

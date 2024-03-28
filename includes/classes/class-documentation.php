@@ -1113,7 +1113,7 @@ class HELPDOCS_DOCUMENTATION {
         }
      
         // Verify that the nonce is valid.
-        if ( !wp_verify_nonce( $_POST[ 'help_location_nonce' ], 'help_location_nonce' ) ) {
+        if ( !wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[ 'help_location_nonce' ] ) ), 'help_location_nonce' ) ) {
             return;
         }
      
@@ -1941,8 +1941,8 @@ class HELPDOCS_DOCUMENTATION {
      */
     public function update_order() {
         // First verify the nonce
-        if ( !wp_verify_nonce( $_REQUEST[ 'nonce' ], 'drag-doc-toc' ) ) {
-            exit( 'No naughty business please' );
+        if ( !wp_verify_nonce( sanitize_text_field( wp_unslash ( $_REQUEST[ 'nonce' ] ) ), 'drag-doc-toc' ) ) {
+            exit( 'No naughty business please.' );
         }
 
         // Get the order
@@ -2027,11 +2027,10 @@ class HELPDOCS_DOCUMENTATION {
         }
 
         // Pass to ajax
-        if( !empty( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) == 'xmlhttprequest' ) {
-            echo json_encode( $result );
+        if ( !empty( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && strtolower( sanitize_key( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) ) == 'xmlhttprequest' ) {
+            echo wp_json_encode( $result );
         } else {
-            $referer = filter_input( INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL );
-            header( 'Location: '.$referer );
+            header( 'Location: '.filter_var( $_SERVER[ 'HTTP_REFERER' ], FILTER_SANITIZE_URL ) );
         }
 
         // Stop

@@ -689,8 +689,8 @@ class HELPDOCS_IMPORTS {
         }
      
         // Verify that the nonce is valid.
-        if ( !wp_verify_nonce( $_POST[ 'help_imports_nonce' ], 'help_imports_nonce' ) || 
-             !wp_verify_nonce( $_POST[ 'help_imports_rest_nonce' ], 'help_imports_rest_nonce' ) ) {
+        if ( !wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[ 'help_imports_nonce' ] ) ), 'help_imports_nonce' ) ||
+             !wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[ 'help_imports_rest_nonce' ] ) ), 'help_imports_rest_nonce' ) ) {
             return;
         }
      
