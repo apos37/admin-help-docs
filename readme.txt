@@ -3,9 +3,9 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.4.3
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.2.9
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,11 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.0 =
+* Update: Added new plugin to About tab
+* Tweak: Removed deactivation survey code and files permanently; only one legitimate response - not worth it
+* Tweak: Updated some functions and techniques as recommended by WP Plugin team
+
 = 1.2.9 =
 * Tweak: Updates to some areas affected by live preview
 * Update: Added other plugins on About tab

@@ -1,5 +1,6 @@
 == changelog.txt === 
-= 1.3.0 = // TODO: BETA
+= 1.3.0 =
+* Update: Added new plugin to About tab
 * Tweak: Removed deactivation survey code and files permanently; only one legitimate response - not worth it
 * Tweak: Updated some functions and techniques as recommended by WP Plugin team
 

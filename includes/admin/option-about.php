@@ -111,4 +111,5 @@ if ( $coffee_filter ) {
     <?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>
     <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-discord' ) ); ?>
     <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-msteams' ) ); ?>
+    <?php echo wp_kses_post( helpdocs_plugin_card( 'broken-link-notifier' ) ); ?>
 <?php } ?>
