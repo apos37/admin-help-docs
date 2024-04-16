@@ -132,13 +132,11 @@ ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roma
     height: auto;
     object-fit: contain;
 }
-
 #search-bar {
     float: right;
     margin-right: 20px;
     margin-top: -7px;
 }
-
 #no-docs-found {
     padding: 3rem;
     font-style: italic;
@@ -210,6 +208,9 @@ ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roma
     padding: 0 5px;
     font-size: 10px;
     text-decoration: none;
+}
+.click-to-copy-link .extra-bracket {
+    display: none;
 }
 </style>
 

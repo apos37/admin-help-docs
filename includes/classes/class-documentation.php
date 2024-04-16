@@ -143,6 +143,9 @@ class HELPDOCS_DOCUMENTATION {
 
         // Other locations
         add_action( 'admin_head', [ $this, 'add_to_other_pages' ] );
+        // if ( is_admin() ) {
+        //     $this->add_to_other_pages();
+        // }
 
         // Gutenberg
         add_action( 'admin_footer', [ $this, 'gutenberg_content' ] );
@@ -1411,282 +1414,217 @@ class HELPDOCS_DOCUMENTATION {
      */
     public function add_to_other_pages() {
         // We only need to call this once
-        if ( !isset( $_SESSION ) ) {
-            session_start();
+        // if ( !isset( $_SESSION ) ) {
+        //     session_start();
+        // }
+        // if ( !isset( $_SESSION[ 'admin_help_doc' ] ) ) {
+
+        //     // We have added it
+        //     $_SESSION[ 'admin_help_doc' ] = 'done';
+
+        // // Remove the session
+        // } else {
+        //     unset( $_SESSION[ 'admin_help_doc' ] );
+        // }
+
+        // Get the colors
+        $HELPDOCS_COLORS = new HELPDOCS_COLORS();
+        $color_ac = $HELPDOCS_COLORS->get( 'ac' );
+        $color_bg = $HELPDOCS_COLORS->get( 'bg' );
+        $color_ti = $HELPDOCS_COLORS->get( 'ti' );
+        $color_fg = $HELPDOCS_COLORS->get( 'fg' );
+        $color_cl = $HELPDOCS_COLORS->get( 'cl' );
+
+        // Do not add to dashboard
+        global $current_screen;
+        if ( $current_screen->id == 'dashboard' ) {
+
+            echo '<style>
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] {
+                background-color: '.esc_attr( $color_bg ).' !important;
+                color: '.esc_attr( $color_fg ).' !important;
+            }
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .order-higher-indicator,
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .order-lower-indicator,
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .toggle-indicator {
+                color: '.esc_attr( $color_ac ).' !important;
+            }
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .postbox-header h2 {
+                color: '.esc_attr( $color_ti ).' !important;
+            }
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .postbox-header h2 span {
+                color: revert !important;
+            }
+            div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] a {
+                color: '.esc_attr( $color_cl ).' !important;
+            }
+            </style>';
+            return;
         }
-        if ( !isset( $_SESSION[ 'admin_help_doc' ] ) ) {
 
-            // Get the colors
-            $HELPDOCS_COLORS = new HELPDOCS_COLORS();
-            $color_ac = $HELPDOCS_COLORS->get( 'ac' );
-            $color_bg = $HELPDOCS_COLORS->get( 'bg' );
-            $color_ti = $HELPDOCS_COLORS->get( 'ti' );
-            $color_fg = $HELPDOCS_COLORS->get( 'fg' );
-            $color_cl = $HELPDOCS_COLORS->get( 'cl' );
+        // Get params
+        $url = $_SERVER[ 'REQUEST_URI' ];
+        $url = str_replace( '/'.HELPDOCS_ADMIN_URL.'/', '', $url );
 
-            // Do not add to dashboard
-            global $current_screen;
-            if ( $current_screen->id == 'dashboard' ) {
+        // Get all the docs that are not on the main docs page
+        $args = [
+            'posts_per_page'    => -1,
+            'post_status'       => 'publish',
+            'post_type'         => $this->post_type,
+            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
+            'meta_value'	    => base64_encode( 'main' ),
+            'meta_compare'	    => '!=',
+        ];
+        $docs = get_posts( $args );
 
-                echo '<style>
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] {
-                    background-color: '.esc_attr( $color_bg ).' !important;
-                    color: '.esc_attr( $color_fg ).' !important;
-                }
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .order-higher-indicator,
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .order-lower-indicator,
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .toggle-indicator {
-                    color: '.esc_attr( $color_ac ).' !important;
-                }
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .postbox-header h2 {
-                    color: '.esc_attr( $color_ti ).' !important;
-                }
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] .postbox-header h2 span {
-                    color: revert !important;
-                }
-                div[id^="'.esc_attr( HELPDOCS_GO_PF ).'"] a {
-                    color: '.esc_attr( $color_cl ).' !important;
-                }
-                </style>';
-                return;
-            }
+        // Also get the imports
+        $imports = helpdocs_get_imports( $args );
 
-            // Get params
-            $url = $_SERVER[ 'REQUEST_URI' ];
-            $url = str_replace( '/'.HELPDOCS_ADMIN_URL.'/', '', $url );
+        // Merge them together
+        if ( !empty( $imports ) ) {
+            $docs = array_merge( $docs, $imports );
+        }
 
-            // Get all the docs that are not on the main docs page
-            $args = [
-                'posts_per_page'    => -1,
-                'post_status'       => 'publish',
-                'post_type'         => $this->post_type,
-                'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-                'meta_value'	    => base64_encode( 'main' ),
-                'meta_compare'	    => '!=',
-            ];
-            $docs = get_posts( $args );
+        // Did we find any?
+        if ( !empty( $docs ) ) {
 
-            // Also get the imports
-            $imports = helpdocs_get_imports( $args );
+            // Only show things once
+            $already_posted = false;
 
-            // Merge them together
-            if ( !empty( $imports ) ) {
-                $docs = array_merge( $docs, $imports );
-            }
+            // Iter the docs
+            foreach ( $docs as $doc ) {
 
-            // Did we find any?
-            if ( !empty( $docs ) ) {
+                // Site location
+                $site_location_var = HELPDOCS_GO_PF.'site_location';
+                $site_location = base64_decode( esc_attr( $doc->$site_location_var ) );
+                $site_location = preg_replace( '/[^A-Za-z0-9 ._\-\+\&\=\?]/', '', $site_location );
+                $site_location = str_replace( '&038', '&', $site_location );
 
-                // Only show things once
-                $already_posted = false;
+                // Custom?
+                if ( $site_location == 'custom' ) {
+                    $custom_var = HELPDOCS_GO_PF.'custom';
+                    $custom_url = $doc->$custom_var;
+                    $custom_url = str_replace( admin_url(), '', $custom_url );
 
-                // Iter the docs
-                foreach ( $docs as $doc ) {
+                    // Check if we are ignoring additional params
+                    $addt_params_var = HELPDOCS_GO_PF.'addt_params';
+                    $addt_params = $doc->$addt_params_var;
 
-                    // Site location
-                    $site_location_var = HELPDOCS_GO_PF.'site_location';
-                    $site_location = base64_decode( esc_attr( $doc->$site_location_var ) );
-                    $site_location = preg_replace( '/[^A-Za-z0-9 ._\-\+\&\=\?]/', '', $site_location );
-                    $site_location = str_replace( '&038', '&', $site_location );
-
-                    // Custom?
-                    if ( $site_location == 'custom' ) {
-                        $custom_var = HELPDOCS_GO_PF.'custom';
-                        $custom_url = $doc->$custom_var;
-                        $custom_url = str_replace( admin_url(), '', $custom_url );
-
-                        // Check if we are ignoring additional params
-                        $addt_params_var = HELPDOCS_GO_PF.'addt_params';
-                        $addt_params = $doc->$addt_params_var;
-
-                        // If so, remove the additional params by setting the current $url var to the custom url
-                        if ( $addt_params && helpdocs_do_urls_match( $url, $custom_url ) ) {
-                            $url = $custom_url;
-                        }
-                    } else {
-                        $custom_url = false;
+                    // If so, remove the additional params by setting the current $url var to the custom url
+                    if ( $addt_params && helpdocs_do_urls_match( $url, $custom_url ) ) {
+                        $url = $custom_url;
                     }
+                } else {
+                    $custom_url = false;
+                }
 
-                    // Post types
-                    $post_types_var = HELPDOCS_GO_PF.'post_types';
-                    $post_types = $doc->$post_types_var;
-                    $post_types = unserialize( $post_types );
+                // Post types
+                $post_types_var = HELPDOCS_GO_PF.'post_types';
+                $post_types = $doc->$post_types_var;
+                $post_types = unserialize( $post_types );
 
-                    // Continue?
-                    $continue = false;
+                // Continue?
+                $continue = false;
 
-                    // Post/pages admin list screen
-                    if ( $site_location == 'edit.php' && 
-                        str_starts_with( $url, 'edit.php' ) && 
+                // Post/pages admin list screen
+                if ( $site_location == 'edit.php' && 
+                    str_starts_with( $url, 'edit.php' ) && 
+                    in_array( $current_screen->post_type, $post_types ) ) {
+                    $continue = true;
+
+                // Post/pages edit screen
+                } elseif ( $site_location == 'post.php' && 
+                        ( str_starts_with( $url, 'post.php' ) || 
+                        str_starts_with( $url, 'post-new.php' ) ) && 
                         in_array( $current_screen->post_type, $post_types ) ) {
-                        $continue = true;
+                    $continue = true;
 
-                    // Post/pages edit screen
-                    } elseif ( $site_location == 'post.php' && 
-                            ( str_starts_with( $url, 'post.php' ) || 
-                            str_starts_with( $url, 'post-new.php' ) ) && 
-                            in_array( $current_screen->post_type, $post_types ) ) {
-                        $continue = true;
+                // User profile
+                } elseif ( $site_location == 'profile.php' && 
+                        str_starts_with( $url, 'profile.php' ) ) {
+                    $continue = true;
 
-                    // User profile
-                    } elseif ( $site_location == 'profile.php' && 
-                            str_starts_with( $url, 'profile.php' ) ) {
-                        $continue = true;
+                // Custom URL
+                } elseif ( $site_location == 'custom' && $custom_url == $url ) {
+                    $continue = true;
 
-                    // Custom URL
-                    } elseif ( $site_location == 'custom' && $custom_url == $url ) {
-                        $continue = true;
+                // Other pages
+                } elseif ( $site_location != 'edit.php' &&
+                        $site_location != 'post.php' &&
+                        $site_location != 'profile.php' &&
+                        $url == $site_location ) {
+                    $continue = true;
+                }
 
-                    // Other pages
-                    } elseif ( $site_location != 'edit.php' &&
-                            $site_location != 'post.php' &&
-                            $site_location != 'profile.php' &&
-                            $url == $site_location ) {
-                        $continue = true;
+                // Stop them in their tracks
+                if ( !$continue ) {
+                    continue;
+                }
+
+                // Page location
+                $page_location_var = HELPDOCS_GO_PF.'page_location';
+                $page_location = esc_attr( $doc->$page_location_var );
+
+                // Contextual help
+                if ( $page_location == 'contextual' ) {
+
+                    $args = [ 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg ];
+                    if ( !$already_posted ) {
+                        echo '<style>
+                        #contextual-help-back {
+                            background-color: '.esc_attr( $args[ 'color_bg' ] ).' !important;
+                        }
+                        .help-tab-content.active {
+                            color: '.esc_attr( $args[ 'color_fg' ] ).' !important;
+                        }
+                        .contextual-help-tabs .active {
+                            border-left-color: '.esc_attr( $args[ 'color_ac' ] ).' !important;
+                            background-color: '.esc_attr( $args[ 'color_bg' ] ).' !important;
+                        }
+                        .contextual-help-tabs .active a {
+                            color: '.esc_attr( $args[ 'color_ti' ] ).' !important;
+                        }
+                        </style>';
                     }
+                    $already_posted = true;
 
-                    // Stop them in their tracks
-                    if ( !$continue ) {
+                    $current_screen->add_help_tab( [
+                        'id'       => HELPDOCS_GO_PF.'_'.$doc->ID, 
+                        'title'    => $doc->post_title, 
+                        'content'  => $this->add_to_other_pages_content( $doc ),
+                    ] );
+
+                // Top of page
+                } elseif ( $page_location == 'top' ) {
+
+                    // If post edit screen and using gutenberg editor, things are different
+                    if ( str_starts_with( $site_location, 'post.php' ) && is_gutenberg() ) {
                         continue;
+
+                    // Otherwise just add as a notice
+                    } else {
+                        $args = [ 'doc' => $doc, 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg ];
+                        add_action( 'admin_notices', function() use ( $args ) {
+                            $logo = get_option( HELPDOCS_GO_PF.'logo', HELPDOCS_PLUGIN_IMG_PATH.'logo.png' );
+                            if ( $logo != '' ) {
+                                $incl_logo = '<img src="'.$logo.'" style="height: 20px; width: auto; margin-right: 10px;">';
+                            } else {
+                                $incl_logo = '';
+                            }
+                            $doc = $args[ 'doc' ];
+                            echo '<div class="notice notice-info is-dismissible" style="background-color: '.esc_attr( $args[ 'color_bg' ] ).'; color: '.esc_attr( $args[ 'color_fg' ] ).'; border-left-color: '.esc_attr( $args[ 'color_ac' ] ).';">
+                                <h2 style="color: '.esc_attr( $args[ 'color_ti' ] ).' !important; margin-top: 10px !important;">'.wp_kses_post( $incl_logo ).''.esc_html( $doc->post_title ).'</h2>
+                                <p>'.wp_kses_post( $doc->post_content ).'</p>
+                            </div>';
+                        } );
                     }
 
-                    // Page location
-                    $page_location_var = HELPDOCS_GO_PF.'page_location';
-                    $page_location = esc_attr( $doc->$page_location_var );
+                // Bottom of page
+                }  elseif ( $page_location == 'bottom' ) {
 
-                    // Contextual help
-                    if ( $page_location == 'contextual' ) {
-
-                        $args = [ 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg ];
-                        if ( !$already_posted ) {
-                            echo '<style>
-                            #contextual-help-back {
-                                background-color: '.esc_attr( $args[ 'color_bg' ] ).' !important;
-                            }
-                            .help-tab-content.active {
-                                color: '.esc_attr( $args[ 'color_fg' ] ).' !important;
-                            }
-                            .contextual-help-tabs .active {
-                                border-left-color: '.esc_attr( $args[ 'color_ac' ] ).' !important;
-                                background-color: '.esc_attr( $args[ 'color_bg' ] ).' !important;
-                            }
-                            .contextual-help-tabs .active a {
-                                color: '.esc_attr( $args[ 'color_ti' ] ).' !important;
-                            }
-                            </style>';
-                        }
-                        $already_posted = true;
-
-                        $current_screen->add_help_tab( [
-                            'id'       => HELPDOCS_GO_PF.'_'.$doc->ID, 
-                            'title'    => $doc->post_title, 
-                            'content'  => $this->add_to_other_pages_content( $doc ),
-                        ] );
-
-                    // Top of page
-                    } elseif ( $page_location == 'top' ) {
-
-                        // If post edit screen and using gutenberg editor, things are different
-                        if ( str_starts_with( $site_location, 'post.php' ) && is_gutenberg() ) {
-                            continue;
-
-                        // Otherwise just add as a notice
-                        } else {
-                            $args = [ 'doc' => $doc, 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg ];
-                            add_action( 'admin_notices', function() use ( $args ) {
-                                $logo = get_option( HELPDOCS_GO_PF.'logo', HELPDOCS_PLUGIN_IMG_PATH.'logo.png' );
-                                if ( $logo != '' ) {
-                                    $incl_logo = '<img src="'.$logo.'" style="height: 20px; width: auto; margin-right: 10px;">';
-                                } else {
-                                    $incl_logo = '';
-                                }
-                                $doc = $args[ 'doc' ];
-                                echo '<div class="notice notice-info is-dismissible" style="background-color: '.esc_attr( $args[ 'color_bg' ] ).'; color: '.esc_attr( $args[ 'color_fg' ] ).'; border-left-color: '.esc_attr( $args[ 'color_ac' ] ).';">
-                                    <h2 style="color: '.esc_attr( $args[ 'color_ti' ] ).' !important; margin-top: 10px !important;">'.wp_kses_post( $incl_logo ).''.esc_html( $doc->post_title ).'</h2>
-                                    <p>'.wp_kses_post( $doc->post_content ).'</p>
-                                </div>';
-                            } );
-                        }
-
-                    // Bottom of page
-                    }  elseif ( $page_location == 'bottom' ) {
-
-                        // Check if a edit screen
-                        // The content is added as a meta box in post_page_meta_box_content()
-                        if ( str_starts_with( $site_location, 'post.php' ) && !is_gutenberg() ) {
-                            if ( !$already_posted ) {
-                                echo '<style>
-                                #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' {
-                                    background-color: '.esc_attr( $color_bg ).' !important; 
-                                    color: '.esc_attr( $color_fg ).' !important;
-                                }
-                                #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .postbox-header h2 {
-                                    color: '.esc_attr( $color_ti ).' !important;
-                                }
-                                #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .handle-order-higher, 
-                                #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .handle-order-lower,
-                                #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .toggle-indicator {
-                                    color: '.esc_attr( $color_ac ).' !important;
-                                }
-                                </style>';
-                            }
-                            $already_posted = true;
-
-                        // Skip if gutenberg post
-                        } elseif ( str_starts_with( $site_location, 'post.php' ) && is_gutenberg() ) {
-                            continue;
-
-                        // Otherwise just add to footer
-                        } else {
-                            if ( !$already_posted ) {
-                                echo '<style>
-                                #wpbody-content {
-                                    position: relative;
-                                    padding-bottom: 0px;
-                                }
-                                </style>';
-                                $bottom_margin = '20px';
-                            } else {
-                                $bottom_margin = '0';
-                            }
-                            $args = [ 'doc' => $doc, 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg, 'bottom_margin' => $bottom_margin ];
-                            add_action( 'admin_notices', function( $data ) use ( $args ) {
-                                $logo = get_option( HELPDOCS_GO_PF.'logo', HELPDOCS_PLUGIN_IMG_PATH.'logo.png' );
-                                if ( $logo != '' ) {
-                                    $incl_logo = '<img src="'.$logo.'" style="height: 20px; width: auto; margin-right: 10px;">';
-                                } else {
-                                    $incl_logo = '';
-                                }
-                                $doc = $args[ 'doc' ];
-                                echo '<div class="doc-location-footer" style="position: absolute; bottom: 0; left: 0; margin: 20px 20px '.esc_attr( $args[ 'bottom_margin' ] ).' 0px; padding: 10px 20px; background-color: '.esc_attr( $args[ 'color_bg' ] ).'; color: '.esc_attr( $args[ 'color_fg' ] ).'; box-shadow: 0 1px 1px rgb(0 0 0 / 4%); border: 1px solid #c3c4c7; border-left-color: '.esc_attr( $args[ 'color_ac' ] ).'; border-left-width: 4px;">
-                                    <h2 style="margin-top: 5px; color: '.esc_attr( $args[ 'color_ti' ] ).';">'.wp_kses_post( $incl_logo ).''.esc_html( $doc->post_title ).'</h2>
-                                    <p>'.wp_kses_post( $doc->post_content ).'</p>
-                                </div>';
-                            }, 1 );
-                            if ( !$already_posted ) {
-                                echo '<script>
-                                jQuery( document ).ready( function( $ ) {
-                                    var outerHeight = 0;
-                                    $( ".doc-location-footer" ).each( function() {
-                                        var thisHeight = $( this ).outerHeight();
-                                        outerHeight += thisHeight;
-                                        $( this ).css( {
-                                            "bottom" : outerHeight - 40
-                                        } );
-                                        console.log( thisHeight );
-                                    } );
-                                    $( "#wpbody-content" ).css( {
-                                        "padding-bottom" : outerHeight + 140 + "px"
-                                    } );
-                                    console.log( "total: " + outerHeight );
-                                } );
-                                </script>';
-                            }
-                            $already_posted = true;
-                        }
-
-                    // Side of post/page edit screen
-                    } elseif ( $page_location == 'side' && str_starts_with( $site_location, 'post.php' ) ) {
+                    // Check if a edit screen
+                    // The content is added as a meta box in post_page_meta_box_content()
+                    if ( str_starts_with( $site_location, 'post.php' ) && !is_gutenberg() ) {
                         if ( !$already_posted ) {
                             echo '<style>
                             #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' {
@@ -1704,16 +1642,81 @@ class HELPDOCS_DOCUMENTATION {
                             </style>';
                         }
                         $already_posted = true;
+
+                    // Skip if gutenberg post
+                    } elseif ( str_starts_with( $site_location, 'post.php' ) && is_gutenberg() ) {
+                        continue;
+
+                    // Otherwise just add to footer
+                    } else {
+                        if ( !$already_posted ) {
+                            echo '<style>
+                            #wpbody-content {
+                                position: relative;
+                                padding-bottom: 0px;
+                            }
+                            </style>';
+                            $bottom_margin = '20px';
+                        } else {
+                            $bottom_margin = '0';
+                        }
+                        $args = [ 'doc' => $doc, 'color_ac' => $color_ac, 'color_bg' => $color_bg, 'color_ti' => $color_ti, 'color_fg' => $color_fg, 'bottom_margin' => $bottom_margin ];
+                        add_action( 'admin_notices', function( $data ) use ( $args ) {
+                            $logo = get_option( HELPDOCS_GO_PF.'logo', HELPDOCS_PLUGIN_IMG_PATH.'logo.png' );
+                            if ( $logo != '' ) {
+                                $incl_logo = '<img src="'.$logo.'" style="height: 20px; width: auto; margin-right: 10px;">';
+                            } else {
+                                $incl_logo = '';
+                            }
+                            $doc = $args[ 'doc' ];
+                            echo '<div class="doc-location-footer" style="position: absolute; bottom: 0; left: 0; margin: 20px 20px '.esc_attr( $args[ 'bottom_margin' ] ).' 0px; padding: 10px 20px; background-color: '.esc_attr( $args[ 'color_bg' ] ).'; color: '.esc_attr( $args[ 'color_fg' ] ).'; box-shadow: 0 1px 1px rgb(0 0 0 / 4%); border: 1px solid #c3c4c7; border-left-color: '.esc_attr( $args[ 'color_ac' ] ).'; border-left-width: 4px;">
+                                <h2 style="margin-top: 5px; color: '.esc_attr( $args[ 'color_ti' ] ).';">'.wp_kses_post( $incl_logo ).''.esc_html( $doc->post_title ).'</h2>
+                                <p>'.wp_kses_post( $doc->post_content ).'</p>
+                            </div>';
+                        }, 1 );
+                        if ( !$already_posted ) {
+                            echo '<script>
+                            jQuery( document ).ready( function( $ ) {
+                                var outerHeight = 0;
+                                $( ".doc-location-footer" ).each( function() {
+                                    var thisHeight = $( this ).outerHeight();
+                                    outerHeight += thisHeight;
+                                    $( this ).css( {
+                                        "bottom" : outerHeight - 40
+                                    } );
+                                    console.log( thisHeight );
+                                } );
+                                $( "#wpbody-content" ).css( {
+                                    "padding-bottom" : outerHeight + 140 + "px"
+                                } );
+                                console.log( "total: " + outerHeight );
+                            } );
+                            </script>';
+                        }
+                        $already_posted = true;
                     }
+
+                // Side of post/page edit screen
+                } elseif ( $page_location == 'side' && str_starts_with( $site_location, 'post.php' ) ) {
+                    if ( !$already_posted ) {
+                        echo '<style>
+                        #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' {
+                            background-color: '.esc_attr( $color_bg ).' !important; 
+                            color: '.esc_attr( $color_fg ).' !important;
+                        }
+                        #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .postbox-header h2 {
+                            color: '.esc_attr( $color_ti ).' !important;
+                        }
+                        #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .handle-order-higher, 
+                        #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .handle-order-lower,
+                        #'.esc_attr( HELPDOCS_GO_PF ).absint( $doc->ID ).' .toggle-indicator {
+                            color: '.esc_attr( $color_ac ).' !important;
+                        }
+                        </style>';
+                    }
+                    $already_posted = true;
                 }
             }
-
-            // We have added it
-            $_SESSION[ 'admin_help_doc' ] = 'done';
-
-        // Remove the session
-        } else {
-            unset( $_SESSION[ 'admin_help_doc' ] );
         }
     } // End add_to_other_pages()
 
@@ -2189,8 +2192,8 @@ class HELPDOCS_DOCUMENTATION {
             $sf = '</code>';
         }
         $content = sanitize_text_field( $atts[ 'content' ] );
-        $content = str_replace( '{', '<span>[</span>', $content );
-        $content = str_replace( '}', '<span>]</span>', $content );
+        $content = str_replace( '{', '[<span class="extra-bracket">[</span>', $content );
+        $content = str_replace( '}', '<span class="extra-bracket">]</span>]', $content );
 
         // Final
         $text = $pf.$content.$sf;
@@ -2210,45 +2213,45 @@ class HELPDOCS_DOCUMENTATION {
      * @return void
      */
     public function add_link_back_to_edit_screen() {
-        // We only need to call this once
-        if ( !isset( $_SESSION ) ) {
-            session_start();
-        }
-        if ( !isset( $_SESSION[ 'admin_help_doc_permalink' ] ) ) {
+        // // We only need to call this once
+        // if ( !isset( $_SESSION ) ) {
+        //     session_start();
+        // }
+        // if ( !isset( $_SESSION[ 'admin_help_doc_permalink' ] ) ) {
 
-            // Only on our edit screen
-            global $post_type;
-            if ( is_admin() && $this->post_type == $post_type ) {
+        //     // We have added it
+        //     $_SESSION[ 'admin_help_doc_permalink' ] = 'done';
 
-                // Get the id
-                $doc_id = get_the_ID();
-                
-                // Check if main doc page
-                $site_location = get_post_meta( $doc_id, HELPDOCS_GO_PF.'site_location', true );
-                if ( $site_location && $site_location == base64_encode( 'main' ) ) {
+        // // Remove the session
+        // } else {
+        //     unset( $_SESSION[ 'admin_help_doc_permalink' ] );
+        // }
 
-                    // The URL
-                    $url = helpdocs_plugin_options_path( 'documentation' ).'&id='.absint( $doc_id );
-                    echo '<div id="edit-slug-box">
-                        <strong>Permalink:</strong> 
-                        <span id="sample-permalink">
-                            <a href="'.esc_url( $url ).'">'.esc_url( $url ).'</a>
-                        </span>
-                        <span id="edit-slug-buttons">
-                            <a class="button button-secondary" href="'.esc_url( $url ).'" style="display: inline-block; margin-left: 5px; min-height: 26px; line-height: 2.18181818; padding: 0 8px; font-size: 11px;">View</a>
-                        </span>
-                    </div>';
-                } else {
-                    return;
-                }
+        // Only on our edit screen
+        global $post_type;
+        if ( is_admin() && $this->post_type == $post_type ) {
+
+            // Get the id
+            $doc_id = get_the_ID();
+            
+            // Check if main doc page
+            $site_location = get_post_meta( $doc_id, HELPDOCS_GO_PF.'site_location', true );
+            if ( $site_location && $site_location == base64_encode( 'main' ) ) {
+
+                // The URL
+                $url = helpdocs_plugin_options_path( 'documentation' ).'&id='.absint( $doc_id );
+                echo '<div id="edit-slug-box">
+                    <strong>Permalink:</strong> 
+                    <span id="sample-permalink">
+                        <a href="'.esc_url( $url ).'">'.esc_url( $url ).'</a>
+                    </span>
+                    <span id="edit-slug-buttons">
+                        <a class="button button-secondary" href="'.esc_url( $url ).'" style="display: inline-block; margin-left: 5px; min-height: 26px; line-height: 2.18181818; padding: 0 8px; font-size: 11px;">View</a>
+                    </span>
+                </div>';
+            } else {
+                return;
             }
-
-            // We have added it
-            $_SESSION[ 'admin_help_doc_permalink' ] = 'done';
-
-        // Remove the session
-        } else {
-            unset( $_SESSION[ 'admin_help_doc_permalink' ] );
         }
     } // End add_link_back_to_edit_screen()
 

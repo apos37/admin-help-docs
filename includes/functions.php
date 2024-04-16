@@ -473,24 +473,24 @@ function helpdocs_click_to_copy( $unique_link_id, $link_text, $unique_copy_id = 
     $results .= '<script>
     document.getElementById("'.$unique_link_id.'").onclick = function(e) {
         e.preventDefault();
-        var tempItem = document.createElement("input");
-        tempItem.setAttribute("type","text");
-        tempItem.setAttribute("display","none");
+        var tempItem = document.createElement( "input" );
+        tempItem.setAttribute( "type", "text" );
+        tempItem.setAttribute( "display", "none" );
         '.$content.'
-        tempItem.setAttribute("value",htmlEntities(content));
-        document.body.appendChild(tempItem);
+        tempItem.setAttribute( "value", htmlEntities( content ) );
+        document.body.appendChild( tempItem );
         tempItem.select();
-        document.execCommand("Copy");
-        tempItem.parentElement.removeChild(tempItem);
-        var c = document.getElementById("copied_'.$unique_link_id.'");
+        document.execCommand( "Copy" );
+        tempItem.parentElement.removeChild( tempItem );
+        var c = document.getElementById( "copied_'.$unique_link_id.'" );
         c.style.display="inline-block";
-        setTimeout(function () {
+        setTimeout( function () {
             c.style.display="none"
-        }, 3000);
-        console.log("Copied: " + htmlEntities(content));
+        }, 3000 );
+        console.log( "Copied: " + htmlEntities( content ) );
     }
-    function htmlEntities(str) {
-        return String(str).replace("<!--?php", "<?php").replace("?-->", "?>").replaceAll("&amp;", "&");
+    function htmlEntities( str ) {
+        return String( str ).replace( "<!--?php", "<?php" ).replace( "?-->", "?>" ).replaceAll( "&amp;", "&" );
     }
     </script>';
     
