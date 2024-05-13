@@ -3,39 +3,25 @@ Contributors: apos37
 Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.5.2
+Tested up to: 6.5.3
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
 Site developers and operators can easily create help documentation and notices for the admin area.
 
 == Description ==
-Site developers and operators can easily create help documentation and notices for the admin area. Include a help section with pages of instructions, or add a help box just about anywhere on the back-end (see site locations and page locations below).
 
-* Supports custom post types
-* Supports Gutenberg and Classic editors
-* Completely customizeable - colors, admin menu name, icon, logo, etc
-* Change the admin footer text to admin contact information or whatever you want
-* Easily import settings from another site
-* Import or auto-feed documents from another site
-* Users can reset meta box and admin list column preferences from profile page
-* Use it for notices and reminders, too!
+The "Admin Help Docs" WordPress plugin is a brilliant tool for streamlining administrative tasks and empowering website management! It allows you to create custom, contextual help documentation for your WordPress admin dashboard, making it easy to guide yourself or other administrators through complex tasks and settings.
 
-= Site Locations =
-* Main documentation page
-* Admin bar
-* Dashboard
-* Post/page edit screen
-* Post/page admin list screen
-* All other pages that are listed on admin menu
+With this plugin, you can:
 
-= Page Locations =
-* Contextual help (even on Gutenberg)
-* Top
-* Bottom
-* Side
+* Create custom help docs for specific admin pages or sections
+* Add clear, concise instructions and explanations
+* Use multimedia like images, videos, and links to enhance understanding
+
+By providing easy access to relevant information and guidance, "Admin Help Docs" saves time, reduces confusion, and makes WordPress administration more efficient and enjoyable! It's perfect for developers, designers, and site owners who want to simplify website management and focus on creating amazing content!
 
 == Installation ==
 1. Install the plugin from your website's plugin directory, or upload the plugin to your plugins folder. 
@@ -68,6 +54,9 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.2 =
+* Fix: Some issues with folder docs not loading in folder on main doc page
+
 = 1.3.1 =
 * Fix: Warning: session_start(): Session cannot be started after headers have already been sent (props pauloc)
 * Fix: Click to copy shortcodes copying shortcode output instead of shortcode itself

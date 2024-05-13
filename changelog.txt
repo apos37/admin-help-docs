@@ -1,4 +1,7 @@
 == changelog.txt === 
+= 1.3.2 =
+* Fix: Some issues with folder docs not loading in folder on main doc page
+
 = 1.3.1 =
 * Fix: Warning: session_start(): Session cannot be started after headers have already been sent (props pauloc)
 * Fix: Click to copy shortcodes copying shortcode output instead of shortcode itself

@@ -369,7 +369,7 @@ echo '<div id="documentation">';
                     'tax_query'      => [
                         [
                             'taxonomy' => 'help-docs-folder',
-                            'field'    => 'term_taxonomy_id',
+                            'field'    => 'term_id',
                             'terms'    => $folder_id
                         ]
                     ],
