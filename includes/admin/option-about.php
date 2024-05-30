@@ -75,16 +75,6 @@ ul li {
 <p>Please rate and review this plugin if you find it helpful. If you would give it fewer than 5 stars, please let me know how I can improve it.</p>
 <?php echo sprintf( __( '<a class="button button-primary" href="%s" target="_blank">Rate and Review on WordPress.org »</a><br>', 'admin-help-docs' ), 'https://wordpress.org/support/plugin/admin-help-docs/reviews/' ); ?>
 
-<?php
-$buy_me_coffee = '<br><br><br><h3>'. __( 'Support This Plugin', 'admin-help-docs' ).'</h3>
-<p>At this time, there are no premium add-ons so the only source of income I have to maintain this plugin is from donations.</p>';
-$buy_me_coffee .= sprintf( __( '<a class="button button-primary" href="%s" target="_blank">Buy Me Coffee :)</a><br>', 'admin-help-docs' ), 'https://paypal.com/donate/?business=3XHJUEHGTMK3N' );
-$coffee_filter = apply_filters( 'helpdocs_coffee', $buy_me_coffee );
-if ( $coffee_filter ) {
-    echo wp_kses_post( $buy_me_coffee );
-}
-?>
-
 <?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
     <br><br><br>
     <h3>How Can We Improve?</h3>

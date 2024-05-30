@@ -409,7 +409,8 @@ function helpdocs_wp_kses_allowed_html() {
             'disabled' => [],
             'size' => [],
             'autocomplete' => [],
-            'data-target' => []
+            'data-target' => [],
+            'aria-label' => []
         ],
         'textarea' => [
             'type' => [],

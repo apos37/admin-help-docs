@@ -301,6 +301,9 @@ class HELPDOCS_IMPORTS {
         // Get the selected docs
         if ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true ) ) {
             $selected_docs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'docs', true );
+            if ( !is_array( $selected_docs ) ) {
+                $selected_docs = unserialize( $selected_docs );
+            }
         } else {
             $selected_docs = [];
         }
@@ -308,6 +311,9 @@ class HELPDOCS_IMPORTS {
         // Get the selected tocs
         if ( get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true ) ) {
             $selected_tocs = get_post_meta( $post->ID, HELPDOCS_GO_PF.'tocs', true );
+            if ( !is_array( $selected_tocs ) ) {
+                $selected_tocs = unserialize( $selected_tocs );
+            }
         } else {
             $selected_tocs = [];
         }
@@ -462,7 +468,7 @@ class HELPDOCS_IMPORTS {
                     echo '<div id="all-tocs-cont" class="help-docs-checkbox-cont">
                         <input type="checkbox" id="doc_all_tocs" name="'.esc_attr( HELPDOCS_GO_PF ).'all_tocs" value="1" '.checked( 1, $all_tocs, false ).'> 
                         <span id="doc_label-all-tocs" class="doc_labels">
-                            <label for="doc_all_tocs">Add All to Dashboard Table of Contents</label>
+                            <label for="doc_all_tocs">Add All Main Docs to Dashboard Table of Contents (Must be Enabled in <a href="'.helpdocs_plugin_options_path( 'settings' ).'">Settings</a>)</label>
                         </span>
                     </div>';
 
@@ -496,18 +502,21 @@ class HELPDOCS_IMPORTS {
                     <th class="toc-col">TOC</th>
                 </tr>';
 
+                // Allowed html
+                $allowed_html = helpdocs_wp_kses_allowed_html(); 
+
                 // Iter the docs
                 foreach ( $docs as $doc ) {
 
                     // Feed Checked?
-                    if ( in_array( $doc->ID, $selected_docs ) ) {
+                    if ( !empty( $selected_docs ) && in_array( $doc->ID, $selected_docs ) ) {
                         $feed_checked = ' checked';
                     } else {
                         $feed_checked = '';
                     }
 
                     // TOC Checked?
-                    if ( in_array( $doc->ID, $selected_tocs ) ) {
+                    if ( !empty( $selected_tocs ) && in_array( $doc->ID, $selected_tocs ) ) {
                         $toc_checked = ' checked';
                     } else {
                         $toc_checked = '';
@@ -520,6 +529,13 @@ class HELPDOCS_IMPORTS {
                         $incl_desc = '';
                     }
 
+                    // Include a TOC checkbox ONLY if location is main
+                    if ( base64_decode( $doc->site_location ) == 'main' ) {
+                        $incl_toc = '<input type="checkbox" id="toc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'tocs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $toc_checked ).' aria-label="Add to Dashboard Table of Contents">';
+                    } else {
+                        $incl_toc = '';
+                    }
+
                     // Start the field
                     echo '<tr>
                         <td><a href="'.esc_url( $current_url ).'&imp='.absint( $doc->ID ).'">Import Now</a></td>
@@ -528,7 +544,7 @@ class HELPDOCS_IMPORTS {
                         <td>'.date( 'F j, Y', strtotime( $doc->publish_date ) ).'</td>
                         <td>'.esc_attr( $doc->created_by ).'</td>
                         <td>'.wp_kses_post( $HELPDOCS_DOCUMENTATION->get_admin_page_title_from_url( $doc->site_location ) ).'</td>
-                        <td><input type="checkbox" id="toc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'tocs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $toc_checked ).' aria-label="Add to Dashboard Table of Contents"></td>
+                        <td>'.wp_kses( $incl_toc, $allowed_html ).'</td>
                     </tr>';
                 }
 
@@ -927,17 +943,64 @@ function helpdocs_get_imports( $args = null ) {
                             // Check for args
                             if ( !is_null( $args ) ) {
 
-                                // The vars
-                                $meta_key = $args[ 'meta_key' ];
-                                $meta_value = $args[ 'meta_value' ];
-                                $meta_compare = $args[ 'meta_compare' ];                                
+                                // Check for meta_key and meta_value
+                                if ( isset( $args[ 'meta_key' ] ) && isset( $args[ 'meta_value' ] ) && isset( $args[ 'meta_compare' ] ) ) {
 
-                                // Check it
-                                if ( ( ( $meta_compare == '==' || $meta_compare == '=' ) && $object->$meta_key == $meta_value ) ||
-                                        ( $meta_compare == '!=' && $object->$meta_key != $meta_value ) ) {
+                                    // The vars
+                                    $meta_key = $args[ 'meta_key' ];
+                                    $meta_value = $args[ 'meta_value' ];
+                                    $meta_compare = $args[ 'meta_compare' ];                                
 
-                                    // Add it
-                                    $objects[] = $object;
+                                    // Check it
+                                    if ( ( ( $meta_compare == '==' || $meta_compare == '=' ) && $object->$meta_key == $meta_value ) ||
+                                            ( $meta_compare == '!=' && $object->$meta_key != $meta_value ) ) {
+
+                                        // Add it
+                                        $objects[] = $object;
+                                    }
+                                }
+
+                                 // Check for meta_query
+                                 if ( isset( $args[ 'meta_query' ] ) ) {
+
+                                    // Separate queries from relation
+                                    if ( isset( $args[ 'meta_query' ][ 'relation' ] ) ) {
+                                        $relation = strtoupper( $args[ 'meta_query' ][ 'relation' ] );
+                                        unset( $args[ 'meta_query' ][ 'relation' ] );
+                                    } else {
+                                        $relation = 'AND';
+                                    }
+                                    $meta_query = $args[ 'meta_query' ];
+
+                                    // Count queries
+                                    $queries = count( $meta_query );
+
+                                    // Check single query
+                                    if ( $queries == 1 ) {
+                                        $meta_key = $meta_query[ 'key' ];
+                                        $meta_value = $meta_query[ 'value' ];
+                                        if ( $object->$meta_key == $meta_value ) {
+
+                                            // Add it
+                                            $objects[] = $object;
+                                        }
+
+                                    } elseif ( $queries > 1 ) {
+                                        $matches = 0;
+                                        foreach ( $meta_query as $query ) {
+                                            $meta_key = $query[ 'key' ];
+                                            $meta_value = $query[ 'value' ];
+                                            if ( $object->$meta_key == $meta_value ) {
+                                                $matches++;
+                                            }
+                                        }
+                                        if ( ( $relation == 'AND' && $matches == $queries ) ||
+                                             ( $relation == 'OR' && $matches > 0 ) ) {
+                                            
+                                            // Add it
+                                            $objects[] = $object;
+                                        }
+                                    }
                                 }
 
                             // Or else just add it

@@ -1,11 +1,10 @@
 === Admin Help Docs ===
 Contributors: apos37
-Donate link: https://paypal.com/donate/?business=3XHJUEHGTMK3N
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.5.3
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -54,6 +53,13 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.3 =
+* Tweak: Removed checkboxes for adding to Dashboard TOC on imports that are not on Main Doc page
+* Tweak: Updated Add All to Dashboard TOC checkbox on imports to include Main Docs only with notice to enable in settings
+* Fix: Non-main documentation items from imports showing up on dashboard table of contents when selecting all
+* Fix: Error on Imports page with not serializing array
+* Tweak: Removed donate option; nobody ever donates
+
 = 1.3.2 =
 * Fix: Some issues with folder docs not loading in folder on main doc page
 

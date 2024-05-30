@@ -84,7 +84,7 @@ class HELPDOCS_TOC {
         $docs = get_posts( $args );
 
         // Also get the imports
-        $imports = helpdocs_get_imports();
+        $imports = helpdocs_get_imports( $args );
 
         // Merge them together
         if ( !empty( $imports ) ) {
