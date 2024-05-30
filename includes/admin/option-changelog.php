@@ -25,7 +25,7 @@ if ( $activated_date = get_option( 'helpdocs_plugin_activated' ) ) {
 echo '<style>h3 { margin-bottom: 0; }</style>';
 
 // Fetch the changelog
-$file = file_get_contents( HELPDOCS_PLUGIN_ROOT . 'changelog.txt' ); 
+$file = file_get_contents( HELPDOCS_PLUGIN_ROOT . 'readme.txt' ); 
 $changelog = strstr( $file, '= '. HELPDOCS_VERSION .' =' );
 
 // Replace the versions and bullets

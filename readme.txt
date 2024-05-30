@@ -61,7 +61,7 @@ https://youtu.be/-V_vyBe6lv0
 * Tweak: Removed donate option; nobody ever donates
 
 = 1.3.2 =
-* Fix: Some issues with folder docs not loading in folder on main doc page
+* Fix: Some issues with folder docs not loading in folder on main docs page
 
 = 1.3.1 =
 * Fix: Warning: session_start(): Session cannot be started after headers have already been sent (props pauloc)
