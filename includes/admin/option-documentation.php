@@ -228,8 +228,8 @@ $args = [
     'posts_per_page'    => -1,
     'post_status'       => 'publish',
     'post_type'         => $post_type,
-    'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-    'meta_value'	    => base64_encode( 'main' ),
+    'meta_key'		    => HELPDOCS_GO_PF.'site_location', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+    'meta_value'	    => base64_encode( 'main' ),        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
     'meta_compare'	    => '=',
 ];
 
@@ -279,10 +279,12 @@ $folders = get_terms( [
     'hide_empty' => false,
     'orderby'    => 'meta_value_num',
     'order'      => 'ASC',
-    'meta_query' => [[
-        'key'    => HELPDOCS_GO_PF.'order',
-        'type'   => 'NUMERIC',
-    ]],
+    'meta_query' => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+        [ 
+            'key'    => HELPDOCS_GO_PF.'order',
+            'type'   => 'NUMERIC',
+        ] 
+    ],
 ] );
 
 // Add Expand and Collapse links, only if folders exist
@@ -366,7 +368,7 @@ echo '<div id="documentation">';
                     'post_type'      => 'help-docs',
                     'posts_per_page' => -1,
                     'post_status'    => 'publish',
-                    'tax_query'      => [
+                    'tax_query'      => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                         [
                             'taxonomy' => 'help-docs-folder',
                             'field'    => 'term_id',
@@ -601,7 +603,7 @@ echo '<div id="documentation">';
             } else {
                 $post_content = $current_doc->post_content;
             }
-            echo '<div id="doc-content">'.apply_filters( 'the_content', $post_content ).'</div>';
+            echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $post_content ) ).'</div>';
 
         // End the toc container
         echo '</div>';

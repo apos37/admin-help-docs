@@ -186,12 +186,12 @@ class HELPDOCS_MAIN {
 
         // Sorting draggable docs
         if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
-            wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_VERSION, true );
             wp_enqueue_script( HELPDOCS_GO_PF.'settings_script' );
 
         // Feedback form
         } elseif ( helpdocs_get( 'tab', '==', 'about' ) ) {
-            wp_register_script( HELPDOCS_GO_PF.'feedback_script', HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_register_script( HELPDOCS_GO_PF.'feedback_script', HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], HELPDOCS_VERSION, true );
             wp_localize_script( HELPDOCS_GO_PF.'feedback_script', 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
             wp_enqueue_script( HELPDOCS_GO_PF.'feedback_script' );
         }

@@ -63,14 +63,18 @@ class HELPDOCS_ADMIN_BAR {
 
         // Start the args to get the docs
         $args = [
-            'posts_per_page'    => -1,
-            'post_status'       => 'publish',
-            'post_type'         => 'help-docs',
-            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-            'meta_value'	    => base64_encode( 'admin_bar' ),
-            'meta_compare'	    => '=',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'post_type'      => 'help-docs',
+            'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                [
+                    'key'     => HELPDOCS_GO_PF.'site_location',
+                    'value'   => base64_encode( 'admin_bar' ),
+                    'compare' => '='
+                ]
+            ]
         ];
-
+        
         // Get the posts
         $docs = get_posts( $args );
 
@@ -97,7 +101,7 @@ class HELPDOCS_ADMIN_BAR {
                     $incl_content = '';
                 } elseif ( trim( $doc->post_content ) != '' ) {
                     $href = false;
-                    $incl_content = ' — '.esc_html( strip_tags( $doc->post_content ) );
+                    $incl_content = ' — '.esc_html( wp_strip_all_tags( $doc->post_content ) );
                 } else {
                     $href = false;
                     $incl_content = '';

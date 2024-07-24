@@ -191,8 +191,9 @@ function helpdocs_get_current_admin_url( $params = true ) {
  */
 function helpdocs_do_urls_match( $url1, $url2, $ignore_addt_params = true ) {
     // Parse urls
-    $parts1 = parse_url( $url1 );
-    $parts2 = parse_url( $url2 );
+
+    $parts1 = wp_parse_url( $url1 );
+    $parts2 = wp_parse_url( $url2 );
     
     // Scheme and host are case-insensitive.
     $scheme1 = strtolower( $parts1[ 'scheme' ] ?? '' );
@@ -356,10 +357,9 @@ function helpdocs_add_qs_without_refresh( $qs, $value, $is_admin = true ) {
  * @return string
  */
 function helpdocs_convert_timezone( $date = null, $format = 'F j, Y g:i A T', $timezone = null ) {
-
     // Get today as default
     if ( is_null( $date ) ) {
-        $date = date( 'Y-m-d H:i:s' );
+        $date = gmdate( 'Y-m-d H:i:s' );
     }
 
     // Get the date in UTC time
@@ -392,25 +392,25 @@ function helpdocs_convert_timezone( $date = null, $format = 'F j, Y g:i A T', $t
  * @param string $equal_to
  * @return string|false
  */
-function helpdocs_get( $qs_param, $comparison = '!=', $equal_to = '' ) {
+function helpdocs_get( $qs_param, $comparison = '!=', $equal_to = '', $nonce_action = null, $nonce_value = null ) {
+    // Check nonce if action and value are provided
+    if ( $nonce_action && $nonce_value ) {
+        if ( !isset( $_GET[ $nonce_value ] ) || !wp_verify_nonce( $_GET[ $nonce_value ], $nonce_action ) ) {
+            error_log( 'Nonce verification failed' );
+            return false;
+        }
+    }
+    
     // Get if the query string exists at all
     if ( isset( $_GET[ $qs_param ] ) ) {
-        $_GET = filter_input_array( INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        $get = $_GET[ $qs_param ];
+        $fitered_get = filter_input_array( INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $get = $fitered_get[ $qs_param ];
 
         // How are we comparing?
         if ( $comparison == '!=' ) {
-            if ( $get != $equal_to ) {
-                return $get;
-            } else {
-                return false;
-            }
+            return ( $get != $equal_to ) ? $get : false;
         } elseif ( $comparison == '==' ) {
-            if ( $get == $equal_to ) {
-                return $get;
-            } else {
-                return false;
-            }
+            return ( $get == $equal_to ) ? $get : false;
         } else {
             return false;
         }

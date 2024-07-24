@@ -69,7 +69,7 @@ class HELPDOCS_TOC {
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
             'post_type'         => $this->post_type,
-            'meta_query' => [
+            'meta_query' => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 'relation' => 'AND',
                 [
                     'key'     => HELPDOCS_GO_PF.'site_location',

@@ -72,45 +72,35 @@ class HELPDOCS_IMPORTS {
      * Register the post type
      */
     public function register_post_type() {
-        // Create names
-        $singular_lc = 'import';
-        $singular = ucwords( $singular_lc );
-
-        $plural_lc = $singular_lc.'s';
-        $plural = ucwords( $plural_lc );
-
-        $menu_label = $plural;
-        $name_admin_bar = $plural;
-
         // Set the labels
         $labels = [
-            'name'                  => _x( $plural, 'Post Type General Name', 'admin-help-docs' ),
-            'singular_name'         => _x( $singular, 'Post Type Singular Name', 'admin-help-docs' ),
-            'menu_name'             => __( $menu_label, 'admin-help-docs' ),
-            'name_admin_bar'        => __( $name_admin_bar, 'admin-help-docs' ),
-            'archives'              => __( $singular.' Archives', 'admin-help-docs' ),
-            'attributes'            => __( $singular.' Attributes', 'admin-help-docs' ),
-            'parent_item_colon'     => __( 'Parent '.$singular.':', 'admin-help-docs' ),
-            'all_items'             => __( 'All '.$plural, 'admin-help-docs' ),
-            'add_new_item'          => __( 'Add New '.$singular, 'admin-help-docs' ),
+            'name'                  => _x( 'Imports', 'Post Type General Name', 'admin-help-docs' ),
+            'singular_name'         => _x( 'Import', 'Post Type Singular Name', 'admin-help-docs' ),
+            'menu_name'             => __( 'Imports', 'admin-help-docs' ),
+            'name_admin_bar'        => __( 'Imports', 'admin-help-docs' ),
+            'archives'              => __( 'Import Archives', 'admin-help-docs' ),
+            'attributes'            => __( 'Import Attributes', 'admin-help-docs' ),
+            'parent_item_colon'     => __( 'Parent Import:', 'admin-help-docs' ),
+            'all_items'             => __( 'All Imports', 'admin-help-docs' ),
+            'add_new_item'          => __( 'Add New Import', 'admin-help-docs' ),
             'add_new'               => __( 'Add New', 'admin-help-docs' ),
-            'new_item'              => __( 'New '.$singular, 'admin-help-docs' ),
-            'edit_item'             => __( 'Edit '.$singular, 'admin-help-docs' ),
-            'update_item'           => __( 'Update '.$singular, 'admin-help-docs' ),
-            'view_item'             => __( 'View '.$singular, 'admin-help-docs' ),
-            'view_items'            => __( 'View '.$plural, 'admin-help-docs' ),
-            'search_items'          => __( 'Search '.$plural, 'admin-help-docs' ),
+            'new_item'              => __( 'New Import', 'admin-help-docs' ),
+            'edit_item'             => __( 'Edit Import', 'admin-help-docs' ),
+            'update_item'           => __( 'Update Import', 'admin-help-docs' ),
+            'view_item'             => __( 'View Import', 'admin-help-docs' ),
+            'view_items'            => __( 'View Imports', 'admin-help-docs' ),
+            'search_items'          => __( 'Search Imports', 'admin-help-docs' ),
             'not_found'             => __( 'Not found', 'admin-help-docs' ),
             'not_found_in_trash'    => __( 'Not found in Trash', 'admin-help-docs' ),
             'featured_image'        => __( 'Featured Image', 'admin-help-docs' ),
             'set_featured_image'    => __( 'Set featured image', 'admin-help-docs' ),
             'remove_featured_image' => __( 'Remove featured image', 'admin-help-docs' ),
             'use_featured_image'    => __( 'Use as featured image', 'admin-help-docs' ),
-            'insert_into_item'      => __( 'Insert into '.$singular_lc, 'admin-help-docs' ),
-            'uploaded_to_this_item' => __( 'Uploaded to this '.$singular_lc, 'admin-help-docs' ),
-            'items_list'            => __( $singular.' list', 'admin-help-docs' ),
-            'items_list_navigation' => __( $singular.' list navigation', 'admin-help-docs' ),
-            'filter_items_list'     => __( 'Filter '.$singular_lc.' list', 'admin-help-docs' ),
+            'insert_into_item'      => __( 'Insert into import', 'admin-help-docs' ),
+            'uploaded_to_this_item' => __( 'Uploaded to this import', 'admin-help-docs' ),
+            'items_list'            => __( 'Import list', 'admin-help-docs' ),
+            'items_list_navigation' => __( 'Import list navigation', 'admin-help-docs' ),
+            'filter_items_list'     => __( 'Filter import list', 'admin-help-docs' ),
         ];
 
         // Allow filter for supports and taxonomies
@@ -119,8 +109,8 @@ class HELPDOCS_IMPORTS {
     
         // Set the CPT args
         $args = [
-            'label'                 => __( $name_admin_bar, 'admin-help-docs' ),
-            'description'           => __( $plural, 'admin-help-docs' ),
+            'label'                 => __( 'Imports', 'admin-help-docs' ),
+            'description'           => __( 'Imports', 'admin-help-docs' ),
             'labels'                => $labels,
             'supports'              => $supports,
             'taxonomies'            => $taxonomies,
@@ -333,7 +323,7 @@ class HELPDOCS_IMPORTS {
             $api_url,
             [
                 'httpversion' => '1.1',
-                'blocking' => true
+                'blocking'    => true
             ]
         );
 
@@ -350,10 +340,10 @@ class HELPDOCS_IMPORTS {
             if ( !empty( $docs ) ) {
 
                 // Check if we are importing a doc
-                if ( isset( $_GET[ 'imp' ] ) && absint( $_GET[ 'imp' ] ) != '' ) {
+                if ( isset( $_GET[ 'imp' ] ) && absint( $_GET[ 'imp' ] ) != '' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
                     // Doc id
-                    $import_doc_id = absint( $_GET[ 'imp' ] );
+                    $import_doc_id = absint( $_GET[ 'imp' ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
                     // Iter the docs
                     foreach ( $docs as $doc ) {
@@ -370,7 +360,8 @@ class HELPDOCS_IMPORTS {
                                 helpdocs_remove_qs_without_refresh( 'imp' );
                                 ?>
                                 <div class="notice notice-success is-dismissible">
-                                <p><?php _e( 'Great Scott! You have imported the doc entitled "<strong>'.esc_html( $doc->title ).'</strong>".', 'admin-help-docs' ); ?> <span class="notice-buttons" style="margin-left: 10px;"><a class="button button-secondary" href="<?php echo esc_url( $import_edit_url ); ?>">Manage Doc</a></span></p>
+                                <p><?php /* translators: 1: The help document title */
+                                echo esc_html( sprintf( __( 'Great Scott! You have imported the doc entitled "<strong>%s</strong>".', 'admin-help-docs' ), $doc->title ) ); ?> <span class="notice-buttons" style="margin-left: 10px;"><a class="button button-secondary" href="<?php echo esc_url( $import_edit_url ); ?>">Manage Doc</a></span></p>
                                 </div>
                                 <?php
                             }
@@ -468,7 +459,7 @@ class HELPDOCS_IMPORTS {
                     echo '<div id="all-tocs-cont" class="help-docs-checkbox-cont">
                         <input type="checkbox" id="doc_all_tocs" name="'.esc_attr( HELPDOCS_GO_PF ).'all_tocs" value="1" '.checked( 1, $all_tocs, false ).'> 
                         <span id="doc_label-all-tocs" class="doc_labels">
-                            <label for="doc_all_tocs">Add All Main Docs to Dashboard Table of Contents (Must be Enabled in <a href="'.helpdocs_plugin_options_path( 'settings' ).'">Settings</a>)</label>
+                            <label for="doc_all_tocs">Add All Main Docs to Dashboard Table of Contents (Must be Enabled in <a href="'.esc_url( helpdocs_plugin_options_path( 'settings' ) ).'">Settings</a>)</label>
                         </span>
                     </div>';
 
@@ -540,8 +531,8 @@ class HELPDOCS_IMPORTS {
                     echo '<tr>
                         <td><a href="'.esc_url( $current_url ).'&imp='.absint( $doc->ID ).'">Import Now</a></td>
                         <td><input type="checkbox" id="doc_'.absint( $doc->ID ).'" class="import-checkboxes" name="'.esc_attr( HELPDOCS_GO_PF ).'docs[]" value="'.absint( $doc->ID ).'" '.esc_attr( $feed_checked ).'></td>
-                        <td><label for="doc_'.absint( $doc->ID ).'">'.esc_attr( $doc->title ).'</label>'.$incl_desc.'</td>
-                        <td>'.date( 'F j, Y', strtotime( $doc->publish_date ) ).'</td>
+                        <td><label for="doc_'.absint( $doc->ID ).'">'.esc_attr( $doc->title ).'</label>'.wp_kses( $incl_desc, [ 'br' => [], 'em' => [] ] ).'</td>
+                        <td>'.esc_html( gmdate( 'F j, Y', strtotime( $doc->publish_date ) ) ).'</td>
                         <td>'.esc_attr( $doc->created_by ).'</td>
                         <td>'.wp_kses_post( $HELPDOCS_DOCUMENTATION->get_admin_page_title_from_url( $doc->site_location ) ).'</td>
                         <td>'.wp_kses( $incl_toc, $allowed_html ).'</td>
@@ -651,9 +642,9 @@ class HELPDOCS_IMPORTS {
             $custom = filter_var( $doc->custom, FILTER_SANITIZE_URL );
 
             // Parse urls
-            $remote_parts = parse_url( $custom );
+            $remote_parts = wp_parse_url( $custom );
             $remote_domain = strtolower( $remote_parts[ 'host' ] ?? '' );
-            $local_parts = parse_url( home_url() );
+            $local_parts = wp_parse_url( home_url() );
             $local_domain = $local_parts[ 'host' ];
 
             // Get an updated URL
@@ -824,12 +815,16 @@ function helpdocs_get_imports( $args = null ) {
 
     // Get all of the imports that are enabled
     $import_args = [
-        'posts_per_page'    => -1,
-        'post_status'       => 'publish',
-        'post_type'         => $post_type,
-        'meta_key'		    => HELPDOCS_GO_PF.'enabled',
-        'meta_value'	    => 1,
-        'meta_compare'	    => '==',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'post_type'      => $post_type,
+        'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+            [
+                'key'     => HELPDOCS_GO_PF.'enabled',
+                'value'   => 1,
+                'compare' => '='
+            ]
+        ]
     ];
     $imports = get_posts( $import_args );
 
@@ -907,9 +902,9 @@ function helpdocs_get_imports( $args = null ) {
                                 $custom = filter_var( $doc->custom, FILTER_SANITIZE_URL );
 
                                 // Parse urls
-                                $remote_parts = parse_url( $custom );
+                                $remote_parts = wp_parse_url( $custom );
                                 $remote_domain = strtolower( $remote_parts[ 'host' ] ?? '' );
-                                $local_parts = parse_url( home_url() );
+                                $local_parts = wp_parse_url( home_url() );
                                 $local_domain = $local_parts[ 'host' ];
 
                                 // Get an updated URL

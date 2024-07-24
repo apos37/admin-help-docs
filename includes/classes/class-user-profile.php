@@ -310,7 +310,7 @@ class HELPDOCS_USER_PROFILE {
      */
     public function reset( $user_id ) {
         // Check for query strings
-        if ( isset( $_GET ) && !empty( $_GET ) ) {
+        if ( isset( $_GET ) && !empty( $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
             // Meta keys
             $meta_keys = [
@@ -324,7 +324,7 @@ class HELPDOCS_USER_PROFILE {
             $qs_value = false;
 
             // Iter the query strings
-            foreach ( $_GET as $param => $value ) {
+            foreach ( $_GET as $param => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
                 // Check if it's one of ours
                 if ( array_key_exists( sanitize_text_field( $param ), $meta_keys ) ) {

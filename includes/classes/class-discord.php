@@ -52,7 +52,7 @@ class HELPDOCS_DISCORD {
      */
     public function send( $args ) {
         // Timestamp
-        $timestamp = date( 'c', strtotime( 'now' ) );
+        $timestamp = gmdate( 'c', strtotime( 'now' ) );
 
         // Message data
         $data = [
@@ -134,7 +134,7 @@ class HELPDOCS_DISCORD {
         }
 
         // Encode
-        $json_data = json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+        $json_data = wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
         // Convert webhook url
         $webhook_url = base64_decode( 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTEyMzYzMDIzNTQ2MDU3OTM5OC8' ).$this->webhook;

@@ -249,7 +249,7 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         </div>';
 
         // Add jQuery
-        $js_value = json_encode( $value );
+        $js_value = wp_json_encode( $value );
         $input .= '<script>
         jQuery( document ).ready( function( $ ) {
             var max_fields = 20;
@@ -650,7 +650,7 @@ function helpdocs_plugin_card( $slug ) {
                 </div>
                 <div class="plugin-card-bottom">
                     <div class="vers column-rating">
-                        <div class="star-rating"><span class="screen-reader-text"><?php echo abs( $rating ); ?> rating based on <?php echo absint( $returned_object->num_ratings ); ?> ratings</span>
+                        <div class="star-rating"><span class="screen-reader-text"><?php echo esc_attr( abs( $rating ) ); ?> star rating based on <?php echo absint( $returned_object->num_ratings ); ?> ratings</span>
                             <?php echo wp_kses_post( helpdocs_convert_to_stars( abs( $rating ) ) ); ?>
                         </div>					
                         <span class="num-ratings" aria-hidden="true">(<?php echo absint( $returned_object->num_ratings ); ?>)</span>
@@ -769,22 +769,36 @@ function helpdocs_create_json_from_settings() {
     $values[ 'last_updated' ] = helpdocs_convert_timezone();
 
     // Convert to json
-    $json = json_encode( $values );
+    $json = wp_json_encode( $values );
+
+    // Initialize the filesystem
+    global $wp_filesystem;
+    if ( empty( $wp_filesystem ) ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+    }
+
+    if ( !$wp_filesystem ) {
+        error_log( esc_html__( 'Admin Help Docs: Error creating JSON from settings. Unable to initialize the filesystem.', 'admin-help-docs' ) );
+        return;
+    }
 
     // Directories
     $upload_dir = wp_upload_dir();
-    $folder = $upload_dir[ 'basedir' ].'/'.HELPDOCS_TEXTDOMAIN;
+    $folder = trailingslashit( $upload_dir[ 'basedir' ] . '/' . HELPDOCS_TEXTDOMAIN );
 
-    // Check if the directory exists, and if not, create one
-    if ( !is_dir( $folder ) ) {
-        mkdir( $folder );
+    // Check if the directory exists, and if not, create it
+    if ( !$wp_filesystem->is_dir( $folder ) ) {
+        $wp_filesystem->mkdir( $folder );
     }
 
     // Write to file
-    $file = $folder.'/settings.json';
+    $file = $folder.'settings.json';
     
     // Write to file
-    file_put_contents( $file, $json );
+    if ( !$wp_filesystem->put_contents( $file, $json ) ) {
+        error_log( esc_html__( 'Admin Help Docs: Error creating JSON from settings. Failed to write settings to file.', 'admin-help-docs' ) );
+    }
 } // End helpdocs_create_json_from_settings()
 
 

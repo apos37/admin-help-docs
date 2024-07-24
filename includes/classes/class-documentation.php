@@ -182,45 +182,35 @@ class HELPDOCS_DOCUMENTATION {
      * Register the post type
      */
     public function register_post_type() {
-        // Create names
-        $singular_lc = 'help document';
-        $singular = ucwords( $singular_lc );
-
-        $plural_lc = $singular_lc.'s';
-        $plural = ucwords( $plural_lc );
-
-        $menu_label = $plural;
-        $name_admin_bar = $plural;
-
         // Set the labels
         $labels = [
-            'name'                  => _x( $plural, 'Post Type General Name', 'admin-help-docs' ),
-            'singular_name'         => _x( $singular, 'Post Type Singular Name', 'admin-help-docs' ),
-            'menu_name'             => __( $menu_label, 'admin-help-docs' ),
-            'name_admin_bar'        => __( $name_admin_bar, 'admin-help-docs' ),
-            'archives'              => __( $singular.' Archives', 'admin-help-docs' ),
-            'attributes'            => __( $singular.' Attributes', 'admin-help-docs' ),
-            'parent_item_colon'     => __( 'Parent '.$singular.':', 'admin-help-docs' ),
-            'all_items'             => __( 'All '.$plural, 'admin-help-docs' ),
-            'add_new_item'          => __( 'Add New '.$singular, 'admin-help-docs' ),
+            'name'                  => _x( 'Help Documents', 'Post Type General Name', 'admin-help-docs' ),
+            'singular_name'         => _x( 'Help Document', 'Post Type Singular Name', 'admin-help-docs' ),
+            'menu_name'             => __( 'Help Documents', 'admin-help-docs' ),
+            'name_admin_bar'        => __( 'Help Documents', 'admin-help-docs' ),
+            'archives'              => __( 'Help Document Archives', 'admin-help-docs' ),
+            'attributes'            => __( 'Help Document Attributes', 'admin-help-docs' ),
+            'parent_item_colon'     => __( 'Parent Help Document:', 'admin-help-docs' ),
+            'all_items'             => __( 'All Help Documents', 'admin-help-docs' ),
+            'add_new_item'          => __( 'Add New Help Document', 'admin-help-docs' ),
             'add_new'               => __( 'Add New', 'admin-help-docs' ),
-            'new_item'              => __( 'New '.$singular, 'admin-help-docs' ),
-            'edit_item'             => __( 'Edit '.$singular, 'admin-help-docs' ),
-            'update_item'           => __( 'Update '.$singular, 'admin-help-docs' ),
-            'view_item'             => __( 'View '.$singular, 'admin-help-docs' ),
-            'view_items'            => __( 'View '.$plural, 'admin-help-docs' ),
-            'search_items'          => __( 'Search '.$plural, 'admin-help-docs' ),
+            'new_item'              => __( 'New Help Document', 'admin-help-docs' ),
+            'edit_item'             => __( 'Edit Help Document', 'admin-help-docs' ),
+            'update_item'           => __( 'Update Help Document', 'admin-help-docs' ),
+            'view_item'             => __( 'View Help Document', 'admin-help-docs' ),
+            'view_items'            => __( 'View Help Documents', 'admin-help-docs' ),
+            'search_items'          => __( 'Search Help Documents', 'admin-help-docs' ),
             'not_found'             => __( 'Not found', 'admin-help-docs' ),
             'not_found_in_trash'    => __( 'Not found in Trash', 'admin-help-docs' ),
             'featured_image'        => __( 'Featured Image', 'admin-help-docs' ),
             'set_featured_image'    => __( 'Set featured image', 'admin-help-docs' ),
             'remove_featured_image' => __( 'Remove featured image', 'admin-help-docs' ),
             'use_featured_image'    => __( 'Use as featured image', 'admin-help-docs' ),
-            'insert_into_item'      => __( 'Insert into '.$singular_lc, 'admin-help-docs' ),
-            'uploaded_to_this_item' => __( 'Uploaded to this '.$singular_lc, 'admin-help-docs' ),
-            'items_list'            => __( $singular.' list', 'admin-help-docs' ),
-            'items_list_navigation' => __( $singular.' list navigation', 'admin-help-docs' ),
-            'filter_items_list'     => __( 'Filter '.$singular_lc.' list', 'admin-help-docs' ),
+            'insert_into_item'      => __( 'Insert into help document', 'admin-help-docs' ),
+            'uploaded_to_this_item' => __( 'Uploaded to this help document', 'admin-help-docs' ),
+            'items_list'            => __( 'Help Document list', 'admin-help-docs' ),
+            'items_list_navigation' => __( 'Help Document list navigation', 'admin-help-docs' ),
+            'filter_items_list'     => __( 'Filter help document list', 'admin-help-docs' ),
         ];
 
         // Allow filter for supports and taxonomies
@@ -229,8 +219,8 @@ class HELPDOCS_DOCUMENTATION {
     
         // Set the CPT args
         $args = [
-            'label'                 => __( $name_admin_bar, 'admin-help-docs' ),
-            'description'           => __( $plural, 'admin-help-docs' ),
+            'label'                 => __( 'Help Documents', 'admin-help-docs' ),
+            'description'           => __( 'Help Documents', 'admin-help-docs' ),
             'labels'                => $labels,
             'supports'              => $supports,
             'taxonomies'            => $taxonomies,
@@ -281,26 +271,19 @@ class HELPDOCS_DOCUMENTATION {
         // Make sure it's lowercase
         $taxonomy = $this->folder_taxonomy;
     
-        // Create names
-        $singular_lc = 'folder';
-        $singular = ucwords( $singular_lc );
-
-        $plural_lc = $singular_lc.'s';
-        $plural = ucwords( $plural_lc );
-    
         // Create the labels
         $labels = [
-            'name'              => _x( $singular, 'taxonomy general name' ),
-            'singular_name'     => _x( $singular, 'taxonomy singular name' ),
-            'search_items'      => __( 'Search '.$plural ),
-            'all_items'         => __( 'Add to '.$singular ),
-            'parent_item'       => __( 'Parent '.$singular ),
-            'parent_item_colon' => __( 'Parent '.$singular.': ' ),
-            'edit_item'         => __( 'Edit '.$singular ),
-            'update_item'       => __( 'Update '.$singular ),
-            'add_new_item'      => __( 'Add New '.$singular ),
-            'new_item_name'     => __( 'New '.$singular.' Name' ),
-            'menu_name'         => __( $plural ),
+            'name'              => _x( 'Folder', 'taxonomy general name' ),
+            'singular_name'     => _x( 'Folder', 'taxonomy singular name' ),
+            'search_items'      => __( 'Search Folders' ),
+            'all_items'         => __( 'Add to Folder' ),
+            'parent_item'       => __( 'Parent Folder' ),
+            'parent_item_colon' => __( 'Parent Folder: ' ),
+            'edit_item'         => __( 'Edit Folder' ),
+            'update_item'       => __( 'Update Folder' ),
+            'add_new_item'      => __( 'Add New Folder' ),
+            'new_item_name'     => __( 'New Folder Name' ),
+            'menu_name'         => __( 'Folders' ),
         ]; 	
     
         // Register it as a new taxonomy
@@ -370,8 +353,8 @@ class HELPDOCS_DOCUMENTATION {
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
             'post_type'         => $this->post_type,
-            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-            'meta_value'	    => base64_encode( 'post.php' ),
+            'meta_key'		    => HELPDOCS_GO_PF.'site_location', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value'	    => base64_encode( 'post.php' ),    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_compare'	    => '=',
         ];
 
@@ -429,7 +412,7 @@ class HELPDOCS_DOCUMENTATION {
             // Create the meta box
             add_meta_box( 
                 HELPDOCS_GO_PF.$doc->ID,
-                __( $doc->post_title, 'admin-help-docs' ),
+                esc_html( $doc->post_title ),
                 [ $this, 'post_page_meta_box_content' ],
                 $post_types,
                 $context,
@@ -530,7 +513,7 @@ class HELPDOCS_DOCUMENTATION {
             }
 
             // Strip html
-            $site_location_name = strip_tags( $site_location_name );
+            $site_location_name = wp_strip_all_tags( $site_location_name );
 
             // Add the parent location
             if ( !array_key_exists( $m[2], $submenu ) ) {
@@ -564,7 +547,7 @@ class HELPDOCS_DOCUMENTATION {
                         }
 
                         // Strip html
-                        $sublocation_name = strip_tags( $sublocation_name );
+                        $sublocation_name = wp_strip_all_tags( $sublocation_name );
 
                         // Get the url
                         $url = $this->get_admin_menu_item_url( $s[2] );
@@ -1354,8 +1337,8 @@ class HELPDOCS_DOCUMENTATION {
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
             'post_type'         => $this->post_type,
-            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-            'meta_value'	    => base64_encode( 'index.php' ),
+            'meta_key'		    => HELPDOCS_GO_PF.'site_location', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value'	    => base64_encode( 'index.php' ),   // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_compare'	    => '=',
         ];
         $docs = get_posts( $args );
@@ -1471,8 +1454,8 @@ class HELPDOCS_DOCUMENTATION {
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
             'post_type'         => $this->post_type,
-            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-            'meta_value'	    => base64_encode( 'main' ),
+            'meta_key'		    => HELPDOCS_GO_PF.'site_location', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value'	    => base64_encode( 'main' ),        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_compare'	    => '!=',
         ];
         $docs = get_posts( $args );
@@ -1750,8 +1733,8 @@ class HELPDOCS_DOCUMENTATION {
             'posts_per_page'    => -1,
             'post_status'       => 'publish',
             'post_type'         => $this->post_type,
-            'meta_key'		    => HELPDOCS_GO_PF.'site_location',
-            'meta_value'	    => base64_encode( 'post.php' ),
+            'meta_key'		    => HELPDOCS_GO_PF.'site_location', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value'	    => base64_encode( 'post.php' ),    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_compare'	    => '=',
         ];
 
@@ -2063,7 +2046,7 @@ class HELPDOCS_DOCUMENTATION {
             $handle = HELPDOCS_GO_PF.'sorting-script';
 
             // Sorting draggable docs
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-sorting.js', [ 'jquery', 'jquery-ui-sortable' ], HELPDOCS_VERSION );
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-sorting.js', [ 'jquery', 'jquery-ui-sortable' ], HELPDOCS_VERSION, true );
             wp_localize_script( $handle, 'docSortingAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui-sortable' );
@@ -2086,7 +2069,7 @@ class HELPDOCS_DOCUMENTATION {
             $handle = HELPDOCS_GO_PF.'editing-script';
 
             // Editing docs
-            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-editing.js', [ 'jquery' ], HELPDOCS_VERSION );
+            wp_register_script( $handle, HELPDOCS_PLUGIN_JS_PATH.'doc-editing.js', [ 'jquery' ], HELPDOCS_VERSION, true );
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( $handle );
         }
@@ -2105,6 +2088,9 @@ class HELPDOCS_DOCUMENTATION {
         // Make sure we're in the right place
         if ( $screen->id == 'edit-'.$this->post_type && $post_type == $this->post_type ) {
 
+            // Output a nonce field for security
+            wp_nonce_field( 'filter_admin_columns_action', 'docs_nonce' );
+
             // Get the folders
             $folders = get_terms( [
                 'taxonomy'   => 'help-docs-folder',
@@ -2115,20 +2101,26 @@ class HELPDOCS_DOCUMENTATION {
 
             // Build a custom dropdown list of values to filter by
             echo '<select id="'.esc_attr( $this->folder_taxonomy ).'-filter" name="folder">';
-                echo '<option value="0">'.__( 'All Folders', 'admin-help-docs' ).'</option>';
+                echo '<option value="0">'.esc_html( __( 'All Folders', 'admin-help-docs' ) ).'</option>';
 
                 // Cycle through each group
                 foreach ( $folders as $folder ) {
 
                     // Check if it is selected
-                    if ( isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) == $folder->term_id ) {
+                    if ( isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) == $folder->term_id ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                         $selected = ' selected="selected"';
                     } else {
                         $selected = '';
                     }
-
+                    // Check nonce for security
+                    if ( isset( $_GET[ 'docs_nonce' ] ) && wp_verify_nonce( $_GET[ 'docs_nonce' ], 'filter_admin_columns_action' ) && isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) == $folder->term_id ) {
+                        $selected = ' selected="selected"';
+                    } else {
+                        $selected = '';
+                    }
+                    
                     // Add the option
-                    echo '<option value="'.$folder->term_id.'"'.$selected.'>'.$folder->name.'</option>';
+                    echo '<option value="'.esc_attr( $folder->term_id ).'"'.esc_html( $selected ).'>'.esc_html( $folder->name ).'</option>';
                 }
 
             echo '</select>';
@@ -2148,6 +2140,12 @@ class HELPDOCS_DOCUMENTATION {
         
         // Make sure we're not on front end and we're only looking at trainings
         if ( !is_admin() || $post_type != $this->post_type ) {
+            return;
+        }
+
+        // Check nonce for security
+        if ( !isset( $_GET[ 'docs_nonce' ] ) || !wp_verify_nonce( $_GET[ 'docs_nonce' ], 'filter_admin_columns_action' ) ) {
+            error_log( 'Admin Help Docs: Nonce verification failed in "filter_admin_columns"' );
             return;
         }
 
@@ -2202,7 +2200,7 @@ class HELPDOCS_DOCUMENTATION {
         if ( strtolower( sanitize_text_field( $atts[ 'click_to_copy' ] ) ) == 'false' ) {
             return $text;
         } else {
-            return helpdocs_click_to_copy( uniqid( 'shortcode_' ), $text, null, strip_tags( $text ), true );
+            return helpdocs_click_to_copy( uniqid( 'shortcode_' ), $text, null, wp_strip_all_tags( $text ), true );
         }
     } // End display_shortcode_without_executing()
 

@@ -8,7 +8,7 @@ if ( helpdocs_get( 'settings-updated', '==', 'true' ) && get_option( HELPDOCS_GO
     if ( $import === 'invalid_file' ) {
         ?>
         <div class="notice notice-error is-dismissible">
-            <p><?php _e( 'Sorry, the settings link you provided is not readable. Please try a different link.', 'admin-help-docs' ); ?></p>
+            <p><?php esc_html_e( 'Sorry, the settings link you provided is not readable. Please try a different link.', 'admin-help-docs' ); ?></p>
         </div>
         <?php
     } else {
