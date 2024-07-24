@@ -2,9 +2,9 @@
 Contributors: apos37
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.5.3
+Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -53,6 +53,9 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.4 =
+* Fix: PHP 8.3 deprecation notices
+
 = 1.3.3 =
 * Tweak: Removed checkboxes for adding to Dashboard TOC on imports that are not on Main Doc page
 * Tweak: Updated Add All to Dashboard TOC checkbox on imports to include Main Docs only with notice to enable in settings

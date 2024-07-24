@@ -25,6 +25,7 @@ class HELPDOCS_ADMIN_AREA {
 	 * Constructor
 	 */
 	public function __construct() {
+        
         // Add a settings link to plugins list page
         add_filter( 'plugin_action_links_'.HELPDOCS_TEXTDOMAIN.'/'.HELPDOCS_TEXTDOMAIN.'.php', [ $this, 'settings_link' ] );
 

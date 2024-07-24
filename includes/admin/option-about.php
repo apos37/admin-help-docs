@@ -98,8 +98,8 @@ ul li {
 <?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
     <br><br>
     <h3>Try My Other Plugins</h3>
-    <?php echo wp_kses_post( helpdocs_plugin_card( 'dev-debug-tools' ) ); ?>
-    <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-discord' ) ); ?>
-    <?php echo wp_kses_post( helpdocs_plugin_card( 'gf-msteams' ) ); ?>
-    <?php echo wp_kses_post( helpdocs_plugin_card( 'broken-link-notifier' ) ); ?>
+    <?php helpdocs_plugin_card( 'broken-link-notifier' ); ?>
+    <?php helpdocs_plugin_card( 'dev-debug-tools' ); ?>
+    <?php helpdocs_plugin_card( 'gf-discord' ); ?>
+    <?php helpdocs_plugin_card( 'gf-msteams' ); ?>
 <?php } ?>
