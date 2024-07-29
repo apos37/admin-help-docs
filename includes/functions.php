@@ -501,7 +501,7 @@ function helpdocs_click_to_copy( $unique_link_id, $link_text, $unique_copy_id = 
 /**
  * Get contrast color (black or white) from hex color
  */
-function helpdocs_get_contrast_color( $hexColor ){
+function helpdocs_get_contrast_color( $hexColor ) {
     // hexColor RGB
     $R1 = hexdec(substr($hexColor, 1, 2));
     $G1 = hexdec(substr($hexColor, 3, 2));

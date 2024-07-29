@@ -449,6 +449,25 @@ function helpdocs_wp_kses_allowed_html() {
 
 
 /**
+ * Allow <script> tags </script> in content on docs page only
+ *
+ * @param array $tags
+ * @return array
+ */
+function helpdocs_allow_script_tags( $tags ) {
+    $tags[ 'script' ] = [
+        'type'        => true,
+        'src'         => true,
+        'async'       => true,
+        'defer'       => true,
+        'crossorigin' => true,
+        'integrity'   => true,
+    ];
+    return $tags;
+} // End helpdocs_allow_script_tags()
+
+
+/**
  * Validate that a date is an actual date
  *
  * @param [type] $date

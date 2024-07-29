@@ -209,7 +209,7 @@ ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roma
     font-size: 10px;
     text-decoration: none;
 }
-.click-to-copy-link .extra-bracket {
+.extra-bracket {
     display: none;
 }
 </style>
@@ -603,7 +603,9 @@ echo '<div id="documentation">';
             } else {
                 $post_content = $current_doc->post_content;
             }
+            add_filter( 'wp_kses_allowed_html', 'helpdocs_allow_script_tags', 10, 1 );
             echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $post_content ) ).'</div>';
+            remove_filter( 'wp_kses_allowed_html', 'helpdocs_allow_script_tags', 10, 1 );
 
         // End the toc container
         echo '</div>';

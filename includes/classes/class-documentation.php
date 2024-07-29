@@ -143,9 +143,6 @@ class HELPDOCS_DOCUMENTATION {
 
         // Other locations
         add_action( 'admin_head', [ $this, 'add_to_other_pages' ] );
-        // if ( is_admin() ) {
-        //     $this->add_to_other_pages();
-        // }
 
         // Gutenberg
         add_action( 'admin_footer', [ $this, 'gutenberg_content' ] );
@@ -2143,14 +2140,9 @@ class HELPDOCS_DOCUMENTATION {
             return;
         }
 
-        // Check nonce for security
-        if ( !isset( $_GET[ 'docs_nonce' ] ) || !wp_verify_nonce( $_GET[ 'docs_nonce' ], 'filter_admin_columns_action' ) ) {
-            error_log( 'Admin Help Docs: Nonce verification failed in "filter_admin_columns"' );
-            return;
-        }
-
         // Get the folder
-        if ( isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) > 0 ) {
+        if ( isset( $_GET[ 'docs_nonce' ] ) && wp_verify_nonce( $_GET[ 'docs_nonce' ], 'filter_admin_columns_action' ) &&
+             isset( $_GET[ 'folder' ] ) && absint( $_GET[ 'folder' ] ) > 0 ) {
 
             // Folder id
             $folder_id = absint( $_GET[ 'folder' ] );
