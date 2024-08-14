@@ -603,9 +603,9 @@ echo '<div id="documentation">';
             } else {
                 $post_content = $current_doc->post_content;
             }
-            add_filter( 'wp_kses_allowed_html', 'helpdocs_allow_script_tags', 10, 1 );
+            add_filter( 'wp_kses_allowed_html', 'helpdocs_allow_addt_tags', 10, 1 );
             echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $post_content ) ).'</div>';
-            remove_filter( 'wp_kses_allowed_html', 'helpdocs_allow_script_tags', 10, 1 );
+            remove_filter( 'wp_kses_allowed_html', 'helpdocs_allow_addt_tags', 10, 1 );
 
         // End the toc container
         echo '</div>';

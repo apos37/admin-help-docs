@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 1.3.5.2
+Stable tag: 1.3.5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -53,6 +53,12 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.5.4 =
+* Fix: Contextual help not working on block editor toolbar after v6.6 (props nshower)
+
+= 1.3.5.3 =
+* Fix: Undefined property and array keys on class-imports.php
+
 = 1.3.5.2 =
 * Fix: Shortcodes showing double brackets when not using Click-to-Copy option
 * Fix: Shortcodes showing javascript with Click-to-Copy option (props tenacious_hare_45963)

@@ -972,14 +972,15 @@ function helpdocs_get_imports( $args = null ) {
 
                                     // Check single query
                                     if ( $queries == 1 ) {
-                                        $meta_key = $meta_query[ 'key' ];
-                                        $meta_value = $meta_query[ 'value' ];
-                                        if ( $object->$meta_key == $meta_value ) {
+                                        if ( isset( $meta_query[ 'key' ] ) && isset( $meta_query[ 'value' ] ) ) {
+                                            $meta_key = $meta_query[ 'key' ];
+                                            $meta_value = $meta_query[ 'value' ];
+                                            if ( isset( $object->$meta_key ) && $object->$meta_key == $meta_value ) {
 
-                                            // Add it
-                                            $objects[] = $object;
+                                                // Add it
+                                                $objects[] = $object;
+                                            }
                                         }
-
                                     } elseif ( $queries > 1 ) {
                                         $matches = 0;
                                         foreach ( $meta_query as $query ) {

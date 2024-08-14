@@ -1840,7 +1840,14 @@ class HELPDOCS_DOCUMENTATION {
                         button.style.padding = '16px';
 
                         // Add the button to the toolbar
-                        const toolbarSettings = document.querySelector( '.edit-post-header__settings' );
+                        var toolbarSettings = document.querySelector( '.edit-post-header__settings' );
+                        if ( !toolbarSettings ) {
+                            toolbarSettings = document.querySelector( '.editor-header__settings' );
+                        }
+                        if ( !toolbarSettings ) {
+                            console.log( 'Uh oh! It appears that WordPress changed the toolbar element again. Please contact us to let us know so we can fix it.' );
+                            return;
+                        }
                         toolbarSettings.insertBefore( button, toolbarSettings.firstChild );
 
                         // Create a popover slot
@@ -1891,7 +1898,6 @@ class HELPDOCS_DOCUMENTATION {
                         button.addEventListener( 'click', function() {
                             const infoPopup = document.querySelector( '<?php echo esc_attr( HELPDOCS_GO_PF ); ?>_wrapper' );
                             if ( button.getAttribute( 'aria-pressed' ) == 'false' ) {
-                                console.log( 'open' );
                                 slot.appendChild( container, slot );
                                 setTimeout( function() {
                                     container.style.transform = 'translateY(0em) scale(1) translateZ(0px)';
@@ -1901,7 +1907,6 @@ class HELPDOCS_DOCUMENTATION {
                                 button.setAttribute( 'aria-pressed', 'true' );
                                 
                             } else {
-                                console.log( 'close' );
                                 container.style.transform = 'translateY(0em) scale(0) translateZ(0px)';
                                 container.style.transformOrigin = 'top center 0px';
                                 container.remove();
