@@ -455,17 +455,51 @@ function helpdocs_wp_kses_allowed_html() {
  * @return array
  */
 function helpdocs_allow_addt_tags( $tags ) {
-    return array_merge( $tags, [
+    $tags = array_merge( $tags, [
         'script' => [
-            'type'        => true,
-            'src'         => true,
-            'async'       => true,
-            'defer'       => true,
-            'crossorigin' => true,
-            'integrity'   => true,
+            'type'                      => true,
+            'src'                       => true,
+            'async'                     => true,
+            'defer'                     => true,
+            'crossorigin'               => true,
+            'integrity'                 => true,
+        ],
+        'video' => [
+            'src'                       => true,
+            'controls'                  => true,
+            'autoplay'                  => true,
+            'loop'                      => true,
+            'muted'                     => true,
+            'poster'                    => true,
+            'width'                     => true,
+            'height'                    => true,
+        ],
+        'source' => [
+            'src'                       => true,
+            'type'                      => true,
+        ],
+        'iframe' => [
+            'src'                       => true,
+            'width'                     => true,
+            'height'                    => true,
+            'frameborder'               => true,
+            'allow'                     => true,
+            'allowfullscreen'           => true,
+            'title'                     => true,
+            'referrerpolicy'            => true,
+            'webkitallowfullscreen'     => true,
+            'mozallowfullscreen'        => true,
         ],
     ] );
+
+    // Add support for filter
+    $tags = apply_filters( 'helpdocs_allowed_html', $tags );
+
+    return $tags;
 } // End helpdocs_allow_addt_tags()
+
+
+
 
 
 /**

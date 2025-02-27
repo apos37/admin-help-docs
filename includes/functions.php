@@ -128,7 +128,7 @@ function helpdocs_user_can_view( $user_id = null ) {
  * @param boolean $domain
  * @return string
  */
-function helpdocs_get_current_url( $params = true, $domain = true ){
+function helpdocs_get_current_url( $params = true, $domain = true ) {
     // Are we including the domain?
     if ( $domain == true ) {
 
@@ -152,7 +152,7 @@ function helpdocs_get_current_url( $params = true, $domain = true ){
     }
 
     // Get the URI
-    $uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
+    $uri = esc_url_raw( $_SERVER[ 'REQUEST_URI' ] );
 
     // Put it together
     $full_url = $domain.$uri;

@@ -2,9 +2,9 @@
 Contributors: apos37
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
-Tested up to: 6.6.1
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.5.4
+Stable tag: 1.3.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -29,10 +29,31 @@ By providing easy access to relevant information and guidance, "Admin Help Docs"
 
 == Frequently Asked Questions ==
 = Who can add a help section? =
-Anyone that has the Administrator role, or other roles that you specify.
+Anyone that has the `Administrator` role, or other roles that you specify.
 
 = Can I use the same documentation across multiple sites? =
 Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin.
+
+= Can I add support for additional html elements currently not allowed in my main docs? =
+Yes, you can make a request, or if you know what you're doing you can use the following PHP hook:
+
+`<?php
+add_filter( 'helpdocs_allowed_html', 'helpdocs_allowed_html', 10, 3 );
+function helpdocs_allowed_html( $tags ) {
+	return array_merge( $tags, [
+        'example' => [
+            'arg_1' => true,
+            'arg_2' => true,
+            'arg_3' => true,
+        ],
+        'example2' => [
+            'arg_1' => true,
+            'arg_2' => true,
+            'arg_3' => true,
+        ],
+    ] );
+} // End helpdocs_allowed_html()
+?>`
 
 = Where can I request features and get further support? =
 Join my [Discord support server](https://discord.gg/3HnzNEJVnR)
@@ -53,6 +74,12 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.5.6 =
+* Fix: Main documentation page removes full path from url on some sites
+
+= 1.3.5.5 =
+* Update: Allow embedding videos with embed code (props Dan for suggestion)
+
 = 1.3.5.4 =
 * Fix: Contextual help not working on block editor toolbar after v6.6 (props nshower)
 
