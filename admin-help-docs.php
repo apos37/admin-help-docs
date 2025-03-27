@@ -3,38 +3,52 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://github.com/apos37/admin-help-docs
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             1.3.5.6
- * Requires at least:   5.9.0
+ * Version:             1.3.6
+ * Requires at least:   5.9
  * Tested up to:        6.7
  * Requires PHP:        7.4
- * Author:              Apos37
- * Author URI:          https://apos37.com/
+ * Author:              WordPress Enhanced
+ * Author URI:          https://wordpressenhanced.com/
+ * Support URI:         https://discord.gg/3HnzNEJVnR
  * Text Domain:         admin-help-docs
  * License:             GPLv2 or later
  * License URI:         http://www.gnu.org/licenses/gpl-2.0.txt
+ * Created on:          November 14, 2022
  */
 
-// Exit if accessed directly.
-if ( !defined( 'ABSPATH' ) ) {
-	exit;
-}
+
+/**
+ * Exit if accessed directly.
+ */
+if ( !defined( 'ABSPATH' ) ) exit;
 
 
 /**
  * Defines
  */
+$plugin_data = get_file_data( __FILE__, [
+    'name'         => 'Plugin Name',
+    'description'  => 'Description',
+    'version'      => 'Version',
+    'plugin_uri'   => 'Plugin URI',
+    'requires_php' => 'Requires PHP',
+    'textdomain'   => 'Text Domain',
+    'author'       => 'Author',
+    'author_uri'   => 'Author URI',
+    'support_uri'  => 'Support URI',
+] );
 
 // Versions
-define( 'HELPDOCS_VERSION', '1.3.5.6' );
-define( 'HELPDOCS_MIN_PHP_VERSION', '7.4' );
+define( 'HELPDOCS_VERSION', $plugin_data[ 'version' ] );
+define( 'HELPDOCS_MIN_PHP_VERSION', $plugin_data[ 'requires_php' ] );
 
 // Names
-define( 'HELPDOCS_NAME', 'Admin Help Docs' );
-define( 'HELPDOCS_TEXTDOMAIN', 'admin-help-docs' );
-define( 'HELPDOCS_AUTHOR', 'Apos37' );
+define( 'HELPDOCS_NAME', $plugin_data[ 'name' ] );
+define( 'HELPDOCS_TEXTDOMAIN', $plugin_data[ 'textdomain' ] );
+define( 'HELPDOCS_AUTHOR', $plugin_data[ 'author' ] );
 define( 'HELPDOCS_AUTHOR_EMAIL', 'apos37@pm.me' );
-define( 'HELPDOCS_AUTHOR_URL', 'https://apos37.com/' );
-define( 'HELPDOCS_DISCORD_SUPPORT_URL', 'https://discord.gg/3HnzNEJVnR' );
+define( 'HELPDOCS_AUTHOR_URL', $plugin_data[ 'author_uri' ] );
+define( 'HELPDOCS_DISCORD_SUPPORT_URL', $plugin_data[ 'support_uri' ] );
 
 // Prevent loading the plugin if PHP version is not minimum
 if ( version_compare( PHP_VERSION, HELPDOCS_MIN_PHP_VERSION, '<=' ) ) {

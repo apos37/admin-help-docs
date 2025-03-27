@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.5.6
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,6 +74,10 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.6 =
+* Tweak: Optimization of main file
+* Fix: Deprecated - creation of dynamic property DateInterval::$w (props @georgestephanis)
+
 = 1.3.5.6 =
 * Fix: Main documentation page removes full path from url on some sites
 
