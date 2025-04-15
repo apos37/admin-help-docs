@@ -67,6 +67,7 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'edit_roles',
             'api',
             'curly_quotes',
+            'auto_htoc',
             'user_prefs',
             'gf_merge_tags',
             'copy_from',

@@ -550,6 +550,8 @@ $color_cl = $HELPDOCS_COLORS->get( 'cl' );
 
         <?php echo wp_kses( helpdocs_options_tr( 'curly_quotes', 'Disable Curly Quotes', 'checkbox', 'WP automatically converts straight quotes (") to curly quotes (”), which makes sharing code difficult.' ), $allowed_html ); ?>
 
+        <?php echo wp_kses( helpdocs_options_tr( 'auto_htoc', 'Auto-Generate TOC from Headings', 'checkbox', 'Automatically generate a table of contents from headings (H2–H6) on each documentation page.' ), $allowed_html ); ?>
+
         <?php echo wp_kses( helpdocs_options_tr( 'user_prefs', 'Enable User Preferences', 'checkbox', 'Adds options to user profiles for resetting preferences related to which columns are hidden in admin list tables, which meta boxes are hidden, and where meta boxes are positioned on edit pages.' ), $allowed_html ); ?>
 
         <?php if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) { ?>

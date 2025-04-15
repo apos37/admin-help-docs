@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,7 +74,11 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.7 =
+* Update: Added option to auto-generate TOC from headings on main documentation page (props @cpoakl for suggestion)
+
 = 1.3.6 =
+* Update: Changed author name from Apos37 to WordPress Enhanced, new Author URI
 * Tweak: Optimization of main file
 * Fix: Deprecated - creation of dynamic property DateInterval::$w (props @georgestephanis)
 

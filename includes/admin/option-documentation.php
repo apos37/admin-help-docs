@@ -212,6 +212,31 @@ ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roma
 .extra-bracket {
     display: none;
 }
+#page-toc {
+    margin: 0 0 3rem 0;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    width: fit-content;
+}
+
+#page-toc::before {
+    content: "On this page";
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-size: 1rem;
+}
+#page-toc ul,
+#page-toc ol {
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
 </style>
 
 <?php include 'header-page.php'; ?>
@@ -597,12 +622,58 @@ echo '<div id="documentation">';
                 '.wp_kses_post( $incl_feed ).'</span>
             </div>';
 
-            // Highlight the content
+            // Get the content
             if ( $s != '' ) {
                 $post_content = str_replace( $s, '<span class="highlight">'.$s.'</span>', $current_doc->post_content );
             } else {
                 $post_content = $current_doc->post_content;
             }
+
+            // Auto-Generate TOC from Headings
+            if ( get_option( HELPDOCS_GO_PF.'auto_htoc' ) ) {
+                // Match all h2–h6 tags
+                preg_match_all( '/<h([2-6])[^>]*>(.*?)<\/h\1>/i', $post_content, $matches, PREG_SET_ORDER );
+
+                if ( $matches ) {
+                    $toc = '<div id="page-toc"><ul class="page-toc-list">';
+                    $prev_level = 0;
+
+                    foreach ( $matches as $match ) {
+                        $level = intval( $match[1] );
+                        $heading_text = strip_tags( $match[2] );
+                        $anchor = sanitize_title( $heading_text );
+
+                        // Insert anchor into the heading tag
+                        $post_content = preg_replace(
+                            '/'.preg_quote( $match[0], '/' ).'/',
+                            '<h'.$level.' id="'.$anchor.'">'.$heading_text.'</h'.$level.'>',
+                            $post_content,
+                            1 // Only replace first occurrence
+                        );
+
+                        // Handle nested lists based on heading level
+                        if ( $prev_level && $level > $prev_level ) {
+                            $toc .= str_repeat( '<ul>', $level - $prev_level );
+                        } elseif ( $prev_level && $level < $prev_level ) {
+                            $toc .= str_repeat( '</ul>', $prev_level - $level );
+                        }
+
+                        $toc .= '<li><a href="#'.$anchor.'">'.esc_html( $heading_text ).'</a></li>';
+                        $prev_level = $level;
+                    }
+
+                    // Close any remaining open lists
+                    if ( $prev_level > 0 ) {
+                        $toc .= str_repeat( '</ul>', $prev_level - 1 );
+                    }
+
+                    $toc .= '</ul></div>';
+
+                    echo $toc;
+                }
+            }
+
+            // Highlight the content
             add_filter( 'wp_kses_allowed_html', 'helpdocs_allow_addt_tags', 10, 1 );
             echo '<div id="doc-content">'.wp_kses_post( apply_filters( 'the_content', $post_content ) ).'</div>';
             remove_filter( 'wp_kses_allowed_html', 'helpdocs_allow_addt_tags', 10, 1 );
