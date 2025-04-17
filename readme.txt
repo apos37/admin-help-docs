@@ -1,10 +1,10 @@
 === Admin Help Docs ===
 Contributors: apos37
 Tags: help, documentation, instructions, how-to, admin
-Requires at least: 5.9.0
-Tested up to: 6.7
+Requires at least: 5.9
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,6 +74,10 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.8 =
+* Update: Updated author name and website again per WordPress trademark policy
+* Tweak: Updated default header sizes on main documentation page
+
 = 1.3.7 =
 * Update: Added option to auto-generate TOC from headings on main documentation page (props @cpoakl for suggestion)
 

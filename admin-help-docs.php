@@ -3,12 +3,12 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://github.com/apos37/admin-help-docs
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             1.3.7
+ * Version:             1.3.8
  * Requires at least:   5.9
- * Tested up to:        6.7
+ * Tested up to:        6.8
  * Requires PHP:        7.4
- * Author:              WordPress Enhanced
- * Author URI:          https://wordpressenhanced.com/
+ * Author:              PluginRx
+ * Author URI:          https://pluginrx.com/
  * Support URI:         https://discord.gg/3HnzNEJVnR
  * Text Domain:         admin-help-docs
  * License:             GPLv2 or later

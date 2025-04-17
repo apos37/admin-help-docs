@@ -6,6 +6,10 @@ $color_ti = $HELPDOCS_COLORS->get( 'ti' );
 ?>
 
 <style>
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.4rem; }
+h4 { font-size: 1.3rem; }
+
 #documentation {
     display: flex;
     border-top: 1px solid #ccc;
