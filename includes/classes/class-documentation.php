@@ -474,10 +474,10 @@ class HELPDOCS_DOCUMENTATION {
 
         // Location name changes
         $site_location_names = apply_filters( HELPDOCS_GO_PF.'location_names', [
-            'edit-comments.php' => 'Comments',
-            'site-editor.php' => 'Editor',
-            'plugins.php' => 'Plugins',
-            'dev-debug-tools' => 'Dev Debug Tools',
+            'edit-comments.php'                       => 'Comments',
+            'site-editor.php'                         => 'Editor',
+            'plugins.php'                             => 'Plugins',
+            'dev-debug-tools'                         => 'Dev Debug Tools',
             'admin.php?page=dev-debug-tools&tab=logs' => 'Logs'
         ] );
 

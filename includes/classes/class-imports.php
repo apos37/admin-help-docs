@@ -104,8 +104,8 @@ class HELPDOCS_IMPORTS {
         ];
 
         // Allow filter for supports and taxonomies
-        $supports = apply_filters( HELPDOCS_GO_PF.'post_type_supports', [ 'title', 'excerpt' ] );
-        $taxonomies = apply_filters( HELPDOCS_GO_PF.'post_type_taxonomies', [] );
+        $supports = apply_filters( HELPDOCS_GO_PF.'imports_supports', [ 'title', 'excerpt' ] );
+        $taxonomies = apply_filters( HELPDOCS_GO_PF.'imports_taxonomies', [] );
     
         // Set the CPT args
         $args = [
@@ -361,7 +361,7 @@ class HELPDOCS_IMPORTS {
                                 ?>
                                 <div class="notice notice-success is-dismissible">
                                 <p><?php /* translators: 1: The help document title */
-                                echo esc_html( sprintf( __( 'Great Scott! You have imported the doc entitled "<strong>%s</strong>".', 'admin-help-docs' ), $doc->title ) ); ?> <span class="notice-buttons" style="margin-left: 10px;"><a class="button button-secondary" href="<?php echo esc_url( $import_edit_url ); ?>">Manage Doc</a></span></p>
+                                echo wp_kses_post( sprintf( __( 'Great Scott! You have imported the doc entitled "%s".', 'admin-help-docs' ), '<strong>' . $doc->title . '</strong>' ) ); ?> <span class="notice-buttons" style="margin-left: 10px;"><a class="button button-secondary" href="<?php echo esc_url( $import_edit_url ); ?>">Manage Doc</a></span></p>
                                 </div>
                                 <?php
                             }
@@ -668,6 +668,7 @@ class HELPDOCS_IMPORTS {
                 HELPDOCS_GO_PF.'priority'       => sanitize_text_field( $doc->priority ),
                 HELPDOCS_GO_PF.'custom'         => $custom,
                 HELPDOCS_GO_PF.'addt_params'    => absint( $doc->addt_params ),
+                HELPDOCS_GO_PF.'order'          => 0,
                 HELPDOCS_GO_PF.'post_types'     => sanitize_text_field( $doc->post_types ),
                 HELPDOCS_GO_PF.'imported_from'  => absint( $imported_from_id ),
                 HELPDOCS_GO_PF.'import_id'      => absint( $doc->ID ),

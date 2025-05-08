@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -32,7 +32,7 @@ By providing easy access to relevant information and guidance, "Admin Help Docs"
 Anyone that has the `Administrator` role, or other roles that you specify.
 
 = Can I use the same documentation across multiple sites? =
-Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin.
+Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin. You can do so from the **Help Docs** > **Imports** section.
 
 = Can I add support for additional html elements currently not allowed in my main docs? =
 Yes, you can make a request, or if you know what you're doing you can use the following PHP hook:
@@ -59,7 +59,7 @@ function helpdocs_allowed_html( $tags ) {
 Join my [Discord support server](https://discord.gg/3HnzNEJVnR)
 
 == Demo ==
-https://youtu.be/-V_vyBe6lv0
+https://youtu.be/xC5D894lY00
 
 == Screenshots ==
 1. Main documentation page
@@ -74,6 +74,11 @@ https://youtu.be/-V_vyBe6lv0
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.9 =
+* Fix: Importing doc notice escaping <strong></strong>
+* Fix: Error when importing permanently to main documentation page
+* Tweak: Changed filter names for imports to be unique from the main CPT
+
 = 1.3.8 =
 * Update: Updated author name and website again per WordPress trademark policy
 * Tweak: Updated default header sizes on main documentation page

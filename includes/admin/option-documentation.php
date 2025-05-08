@@ -290,7 +290,7 @@ if ( !$docs ) {
 }
 
 // First we sort by the doc order
-usort( $docs, function( $a, $b ) { 
+usort( $docs, function( $a, $b ) {
     return $a->helpdocs_order - $b->helpdocs_order;
 } );
 
