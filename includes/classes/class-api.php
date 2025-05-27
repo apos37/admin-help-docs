@@ -204,6 +204,7 @@ class HELPDOCS_API {
             'modified_by'       => $incl_modified,
             'desc'              => $doc->post_excerpt,
             'content'           => $doc->post_content,
+            'taxonomies'        => []
         ];
 
         // Additional fields
@@ -219,8 +220,21 @@ class HELPDOCS_API {
             $result[ $field ] = $doc->$key;
         }
 
-        // Allow final modification via filter
-        return apply_filters( 'helpdocs_exports_object', $result, $doc );
+        // Add taxonomy terms
+        $taxonomies = get_object_taxonomies( 'help-docs', 'names' );
+        foreach ( $taxonomies as $taxonomy ) {
+            $terms = get_the_terms( $doc->ID, $taxonomy );
+            if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+                $result[ 'taxonomies' ][ $taxonomy ] = array_map( function( $term ) {
+                    return [
+                        'name' => $term->name,
+                        'slug' => $term->slug,
+                    ];
+                }, $terms );
+            } else {
+                $result[ 'taxonomies' ][ $taxonomy ] = [];
+            }
+        }
 
         // Return the array
         return $result;

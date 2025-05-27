@@ -652,6 +652,8 @@ class HELPDOCS_IMPORTS {
         } else {
             $custom = '';
         }
+
+        $post_type = (new HELPDOCS_DOCUMENTATION())->post_type;
         
         // Gather post data.
         $post = [
@@ -660,7 +662,7 @@ class HELPDOCS_IMPORTS {
             'post_content'  => wp_kses_post( $doc->content ),
             'post_status'   => 'publish',
             'post_author'   => get_current_user_id(),
-            'post_type'     => (new HELPDOCS_DOCUMENTATION)->post_type,
+            'post_type'     => $post_type,
             'post_excerpt'  => sanitize_text_field( $doc->desc ),
             'meta_input'    => [
                 HELPDOCS_GO_PF.'site_location'  => sanitize_text_field( $doc->site_location ),
@@ -679,7 +681,54 @@ class HELPDOCS_IMPORTS {
 
         // Insert the post into the database.
         $post_id = wp_insert_post( $post );
-        // $post_id = 1234;
+
+        if ( $post_id && !is_wp_error( $post_id ) ) {
+            $taxonomies = get_object_taxonomies( $post_type, 'names' );
+
+            if ( isset( $doc->taxonomies ) && is_object( $doc->taxonomies ) ) {
+                foreach ( $doc->taxonomies as $taxonomy => $terms ) {
+                    if ( in_array( $taxonomy, $taxonomies, true ) && is_array( $terms ) ) {
+
+                        $term_slugs = [];
+
+                        foreach ( $terms as $term ) {
+                            if ( is_object( $term ) && isset( $term->name, $term->slug ) ) {
+                                $term_name = sanitize_text_field( $term->name );
+                                $term_slug = sanitize_title( $term->slug );
+
+                                $existing = get_terms( [
+                                    'taxonomy'   => $taxonomy,
+                                    'hide_empty' => false,
+                                    'name'       => $term_name,
+                                ] );
+
+                                $matched = false;
+
+                                if ( !is_wp_error( $existing ) && !empty( $existing ) ) {
+                                    foreach ( $existing as $existing_term ) {
+                                        if ( $existing_term->slug === $term_slug ) {
+                                            $matched = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if ( !$matched ) {
+                                    wp_insert_term( $term_name, $taxonomy, [ 'slug' => $term_slug ] );
+                                }
+
+                                $term_slugs[] = $term_slug;
+                            }
+                        }
+
+                        if ( !empty( $term_slugs ) ) {
+                            wp_set_object_terms( $post_id, $term_slugs, $taxonomy, false );
+                        }
+                    }
+                }
+            }
+        }
+        
         return $post_id;
     } // End import_post()
 
@@ -915,8 +964,8 @@ function helpdocs_get_imports( $args = null ) {
                             }
 
                             // Create the object
-                            $object = apply_filters( 'helpdocs_imports_object', (object)[
-                                'ID'                            => absint( $doc->ID ),
+                            $object = (object)[
+                                'ID'                            => 'import_' . absint( $doc->ID ),
                                 'post_author'                   => sanitize_text_field( $doc->created_by ),
                                 'post_date'                     => sanitize_text_field( $doc->publish_date ),
                                 'post_content'                  => wp_kses_post( $doc->content ),
@@ -933,8 +982,42 @@ function helpdocs_get_imports( $args = null ) {
                                 HELPDOCS_GO_PF.'site_location'  => sanitize_text_field( $doc->site_location ),
                                 HELPDOCS_GO_PF.'toc'            => $toc,
                                 'auto_feed'                     => $import->post_title,
-                                'feed_id'                       => $import->ID
-                            ], $doc, $import );
+                                'feed_id'                       => $import->ID,
+                                'taxonomies'                    => $doc->taxonomies
+                            ];
+
+                            // Create taxonomy terms if needed
+                            if ( isset( $doc->taxonomies ) && is_object( $doc->taxonomies ) ) {
+                                foreach ( $doc->taxonomies as $taxonomy => $terms ) {
+                                    foreach ( $terms as $term ) {
+
+                                        $term_name = sanitize_text_field( $term->name );
+                                        $term_slug = sanitize_title( $term->slug );
+
+                                        // Get existing terms by name
+                                        $existing = get_terms( [
+                                            'taxonomy'   => $taxonomy,
+                                            'hide_empty' => false,
+                                            'name'       => $term_name
+                                        ] );
+
+                                        $matched = false;
+
+                                        if ( !is_wp_error( $existing ) && !empty( $existing ) ) {
+                                            foreach ( $existing as $existing_term ) {
+                                                if ( $existing_term->slug === $term_slug ) {
+                                                    $matched = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if ( !$matched ) {
+                                            wp_insert_term( $term_name, $taxonomy, [ 'slug' => $term_slug ] );
+                                        }
+                                    }
+                                }
+                            }
 
                             // Check for args
                             if ( !is_null( $args ) ) {
@@ -1010,9 +1093,6 @@ function helpdocs_get_imports( $args = null ) {
             }
         }
     }
-
-    // Allow filtering the final output
-    $objects = apply_filters( 'helpdocs_imports_objects', $objects );
 
     // Return the objects
     return $objects;

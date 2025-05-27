@@ -303,8 +303,9 @@ if ( helpdocs_get( 'search' ) ) {
 }
 
 // Get the folders
+$folder_taxonomy = 'help-docs-folder';
 $folders = get_terms( [
-    'taxonomy'   => 'help-docs-folder',
+    'taxonomy'   => $folder_taxonomy,
     'hide_empty' => false,
     'orderby'    => 'meta_value_num',
     'order'      => 'ASC',
@@ -337,21 +338,21 @@ echo '<div id="search-bar">
 </div>';
 
 // Check if we are viewing a doc
-if ( helpdocs_get( 'id' ) ) {
-    $current_doc_id = absint( helpdocs_get( 'id' ) );
+if ( $get_id = helpdocs_get( 'id' ) ) {
+    $current_doc_id = $get_id;
 } elseif ( $s !== '' ) {
     $current_doc_id = false;
 } else {
     // Check if we have a default
     $default_doc_id = get_option( HELPDOCS_GO_PF.'default_doc' );
-    if ( 'publish' == get_post_status( $default_doc_id ) ) {
+    if ( $default_doc_id && 'publish' == get_post_status( $default_doc_id ) ) {
         if ( get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) && get_post_meta( $default_doc_id, HELPDOCS_GO_PF.'site_location', true ) == base64_encode( 'main' ) ) {
             $current_doc_id = $default_doc_id;
         } else {
             $current_doc_id = false;
         }
     } else {
-        $current_doc_id = $docs[0]->ID;
+        $current_doc_id = false;
     }
     if ( $current_doc_id ) {
         helpdocs_add_qs_without_refresh( 'id', $current_doc_id );
@@ -389,8 +390,11 @@ echo '<div id="documentation">';
             // Iter the folders first
             foreach ( $folders as $folder ) {
                     
-                // Get the folder id
+                // Get the folder id and name
                 $folder_id = $folder->term_id;
+                $folder_name = $folder->name;
+                $folder_slug = $folder->slug;
+                $folder_count = $folder->count;
 
                 // Get docs in this folder
                 $folder_doc_args = [
@@ -399,7 +403,7 @@ echo '<div id="documentation">';
                     'post_status'    => 'publish',
                     'tax_query'      => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                         [
-                            'taxonomy' => 'help-docs-folder',
+                            'taxonomy' => $folder_taxonomy,
                             'field'    => 'term_id',
                             'terms'    => $folder_id
                         ]
@@ -408,15 +412,31 @@ echo '<div id="documentation">';
                 ];
                 $folder_docs = get_posts( $folder_doc_args );
 
+                // Add matching imported docs
+                foreach ( $imports as $import ) {
+                    if ( !empty( $import->taxonomies->$folder_taxonomy ) ) {
+                        foreach ( $import->taxonomies->$folder_taxonomy as $term ) {
+                            if (
+                                sanitize_title( $term->slug ) === $folder_slug ||
+                                sanitize_text_field( $term->name ) === $folder_name
+                            ) {
+                                $folder_docs[] = $import->ID;
+                                $folder_count++;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+
                 // Active folder
-                if ( $current_doc_id && in_array( $current_doc_id, $folder_docs ) ) {
+                if ( !$current_doc_id || ( $current_doc_id && in_array( $current_doc_id, $folder_docs ) ) ) {
                     $active_folder = ' active-folder';
                 } else {
                     $active_folder = ' hide-in-folder';
                 }
 
                 // Add the folder
-                echo '<li id="folder-'.absint( $folder_id ).'" class="toc-folder'.esc_attr( $active_folder ).'" data-folder="'.absint( $folder_id ).'"><a href="javascript:void(0);"><span class="folder-icon"></span> '.esc_html( $folder->name ).' (<span class="folder-count">'.absint( $folder->count ).'</span>)</a></li> ';
+                echo '<li id="folder-'.absint( $folder_id ).'" class="toc-folder'.esc_attr( $active_folder ).'" data-folder="'.absint( $folder_id ).'"><a href="javascript:void(0);"><span class="folder-icon"></span> '.esc_html( $folder->name ).' (<span class="folder-count">'.absint( $folder_count ).'</span>)</a></li> ';
 
                 // Loop through each doc
                 foreach ( $docs as $doc ) {
@@ -476,7 +496,7 @@ echo '<div id="documentation">';
                     }
 
                     // Add the item
-                    echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item in-folder'.esc_attr( $active_folder.$active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="'.absint( $folder_id ).'"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
+                    echo '<li id="item-'.esc_attr( $doc->ID ).'" class="toc-item in-folder'.esc_attr( $active_folder.$active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="'.esc_attr( $folder_id ).'"><a href="'.esc_url( $current_url ).'&id='.esc_attr( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
                 }
             }
 
@@ -509,6 +529,7 @@ echo '<div id="documentation">';
             }
 
             // Only keep it if this doc belongs to this folder
+            // if ( ( isset( $doc->feed_id ) && in_array( $doc->feed_id, $folder_docs ) ) || ( !isset( $doc->feed_id ) && in_array( $doc->ID, $folder_docs ) ) ) {
             if ( $s == '' && in_array( $doc->ID, $in_folders ) ) {
                 continue;
             }
@@ -540,7 +561,7 @@ echo '<div id="documentation">';
             }
 
             // Add the item
-            echo '<li id="item-'.absint( $doc->ID ).'" class="toc-item not-in-folder'.esc_attr( $active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="0"><a href="'.esc_url( $current_url ).'&id='.absint( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
+            echo '<li id="item-'.esc_attr( $doc->ID ).'" class="toc-item not-in-folder'.esc_attr( $active ).'" data-import="'.esc_attr( $data_import ).'" data-folder="0"><a href="'.esc_url( $current_url ).'&id='.esc_attr( $doc->ID ).esc_attr( $incl_feed ).'"><span class="'.esc_attr( $file_icon_class ).'"></span> <span class="item-title">'.esc_html( $doc->post_title ).'</span></a></li> ';
         }
 
     // End the toc container

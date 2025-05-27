@@ -75,7 +75,7 @@ https://youtu.be/xC5D894lY00
 
 == Changelog ==
 = 1.3.10 =
-* Update: Added hooks to imports/exports (props pierre_miguel for suggestion)
+* Update: Added ability to import folders (props pierre_miguel for suggestion)
 
 = 1.3.9 =
 * Fix: Importing doc notice escaping <strong></strong>

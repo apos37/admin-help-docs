@@ -68,24 +68,6 @@ class HELPDOCS_MAIN {
         return $links;
     } // End settings_link()
 
-    
-    /**
-     * Global dependencies
-     * Not including scripts
-     * 
-     * @return void
-     */
-    public function load_dependencies() {
-        // Admin Options page
-        require_once HELPDOCS_PLUGIN_ADMIN_PATH . 'global-options.php';
-        
-        // Miscellaneous functions
-        require_once HELPDOCS_PLUGIN_INCLUDES_PATH . 'functions.php';
-        
-        // Rest API end-point
-        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-api.php';
-    } // End load_dependencies()
-
 
     /**
      * Admin-only dependencies
@@ -102,7 +84,6 @@ class HELPDOCS_MAIN {
 
         // Classes
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-colors.php';
-        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-documentation.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-imports.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
@@ -114,6 +95,27 @@ class HELPDOCS_MAIN {
         // Enqueue scripts
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     } // End load_admin_dependencies()
+
+    
+    /**
+     * Global dependencies
+     * Not including scripts
+     * 
+     * @return void
+     */
+    public function load_dependencies() {
+        // Admin Options page
+        require_once HELPDOCS_PLUGIN_ADMIN_PATH . 'global-options.php';
+        
+        // Miscellaneous functions
+        require_once HELPDOCS_PLUGIN_INCLUDES_PATH . 'functions.php';
+
+        // The main doc class where we register the post type and taxonomy
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-documentation.php';
+        
+        // Rest API end-point
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-api.php';
+    } // End load_dependencies()
 
 
     /**
