@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.9
+Stable tag: 1.3.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,6 +74,9 @@ https://youtu.be/xC5D894lY00
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.3.10 =
+* Update: Added hooks to imports/exports (props pierre_miguel for suggestion)
+
 = 1.3.9 =
 * Fix: Importing doc notice escaping <strong></strong>
 * Fix: Error when importing permanently to main documentation page

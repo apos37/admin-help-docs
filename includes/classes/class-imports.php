@@ -915,7 +915,7 @@ function helpdocs_get_imports( $args = null ) {
                             }
 
                             // Create the object
-                            $object = (object)[
+                            $object = apply_filters( 'helpdocs_imports_object', (object)[
                                 'ID'                            => absint( $doc->ID ),
                                 'post_author'                   => sanitize_text_field( $doc->created_by ),
                                 'post_date'                     => sanitize_text_field( $doc->publish_date ),
@@ -934,7 +934,7 @@ function helpdocs_get_imports( $args = null ) {
                                 HELPDOCS_GO_PF.'toc'            => $toc,
                                 'auto_feed'                     => $import->post_title,
                                 'feed_id'                       => $import->ID
-                            ];
+                            ], $doc, $import );
 
                             // Check for args
                             if ( !is_null( $args ) ) {
@@ -1010,6 +1010,9 @@ function helpdocs_get_imports( $args = null ) {
             }
         }
     }
+
+    // Allow filtering the final output
+    $objects = apply_filters( 'helpdocs_imports_objects', $objects );
 
     // Return the objects
     return $objects;

@@ -312,7 +312,7 @@ $folders = get_terms( [
         [ 
             'key'    => HELPDOCS_GO_PF.'order',
             'type'   => 'NUMERIC',
-        ] 
+        ]
     ],
 ] );
 

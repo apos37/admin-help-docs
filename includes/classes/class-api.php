@@ -219,6 +219,9 @@ class HELPDOCS_API {
             $result[ $field ] = $doc->$key;
         }
 
+        // Allow final modification via filter
+        return apply_filters( 'helpdocs_exports_object', $result, $doc );
+
         // Return the array
         return $result;
     } // End return()
