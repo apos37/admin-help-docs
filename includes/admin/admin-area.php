@@ -94,10 +94,10 @@ class HELPDOCS_ADMIN_AREA {
 
             $row_meta = [];
             foreach ( $our_links as $key => $link ) {
-            // translators: %1$s is the link label, %2$s is the plugin name.
-            $aria_label = sprintf( __( '%1$s for %2$s', 'admin-help-docs' ), $link[ 'label' ], $plugin_name );
-            $row_meta[ $key ] = '<a href="' . esc_url( $link[ 'url' ] ) . '" target="_blank" aria-label="' . esc_attr( $aria_label ) . '">' . esc_html( $link[ 'label' ] ) . '</a>';
-        }
+                // translators: %1$s is the link label, %2$s is the plugin name.
+                $aria_label = sprintf( __( '%1$s for %2$s', 'admin-help-docs' ), $link[ 'label' ], $plugin_name );
+                $row_meta[ $key ] = '<a href="' . esc_url( $link[ 'url' ] ) . '" target="_blank" aria-label="' . esc_attr( $aria_label ) . '">' . esc_html( $link[ 'label' ] ) . '</a>';
+            }
 
             // Add the links
             return array_merge( $links, $row_meta );
