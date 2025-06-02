@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.10
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,6 +74,17 @@ https://youtu.be/xC5D894lY00
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.4.0 =
+* Update: Removed feedback form since it's not being utilized
+* Update: New support links
+
+= 1.3.12 =
+* Fix: If a doc is put into a folder and then changed to a different site location, folder still counts it on main doc page
+* Fix: Importing folders only drops 1 doc into the folder (props pierre_miguel)
+
+= 1.3.11 =
+* Fix: If importing site is updated before exporting site, a fatal error occurs on the importing site
+
 = 1.3.10 =
 * Update: Added ability to import folders (props pierre_miguel for suggestion)
 

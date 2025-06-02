@@ -655,6 +655,8 @@ function helpdocs_plugin_card( $slug ) {
                 $returned_object->ratings[5] 
             );
 
+            $active_installs = $returned_object->active_installs ? number_format( $returned_object->active_installs ) . '+' : '<10';
+
             // Link guts
             $link_guts = 'href="https://wordpress.org/plugins/'.esc_attr( $slug ).'/" target="_blank" aria-label="More information about '.$returned_object->name.' '.$returned_object->version.'" data-title="'.$returned_object->name.' '.$returned_object->version.'"';
             ?>
@@ -713,7 +715,7 @@ function helpdocs_plugin_card( $slug ) {
                         <strong>Last Updated:</strong> <?php echo esc_html( $last_updated ); ?>
                     </div>
                     <div class="column-downloaded" data-downloads="<?php echo esc_html( number_format( $returned_object->downloaded ) ); ?>">
-                        <?php echo esc_html( number_format( $returned_object->active_installs ) ); ?>+ Active Installs
+                        <?php echo esc_html( $active_installs ); ?> Active Installs
                     </div>
                     <div class="column-compatibility">
                         <?php echo wp_kses_post( $is_compatible ); ?>				

@@ -394,7 +394,7 @@ echo '<div id="documentation">';
                 $folder_id = $folder->term_id;
                 $folder_name = $folder->name;
                 $folder_slug = $folder->slug;
-                $folder_count = $folder->count;
+                $folder_count = 0;
 
                 // Get docs in this folder
                 $folder_doc_args = [
@@ -414,15 +414,13 @@ echo '<div id="documentation">';
 
                 // Add matching imported docs
                 foreach ( $imports as $import ) {
-                    if ( !empty( $import->taxonomies->$folder_taxonomy ) ) {
+                    if ( isset( $import->taxonomies ) && is_object( $import->taxonomies ) && !empty( $import->taxonomies->$folder_taxonomy ) ) {
                         foreach ( $import->taxonomies->$folder_taxonomy as $term ) {
                             if (
                                 sanitize_title( $term->slug ) === $folder_slug ||
                                 sanitize_text_field( $term->name ) === $folder_name
                             ) {
                                 $folder_docs[] = $import->ID;
-                                $folder_count++;
-                                break 2;
                             }
                         }
                     }
@@ -433,6 +431,15 @@ echo '<div id="documentation">';
                     $active_folder = ' active-folder';
                 } else {
                     $active_folder = ' hide-in-folder';
+                }
+
+                // Count docs
+                foreach ( $docs as $doc ) {
+                    if ( in_array( $doc->ID, $folder_docs ) ) {
+                        $folder_count++;
+                    } else {
+                        continue;
+                    }
                 }
 
                 // Add the folder

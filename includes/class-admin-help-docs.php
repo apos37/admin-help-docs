@@ -88,7 +88,6 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-user-profile.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-bar.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-discord.php';
-        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-feedback.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-gf-mergetags.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-dashboard-toc.php';
 
@@ -190,12 +189,6 @@ class HELPDOCS_MAIN {
         if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
             wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_VERSION, true );
             wp_enqueue_script( HELPDOCS_GO_PF.'settings_script' );
-
-        // Feedback form
-        } elseif ( helpdocs_get( 'tab', '==', 'about' ) ) {
-            wp_register_script( HELPDOCS_GO_PF.'feedback_script', HELPDOCS_PLUGIN_JS_PATH.'feedback.js', [ 'jquery' ], HELPDOCS_VERSION, true );
-            wp_localize_script( HELPDOCS_GO_PF.'feedback_script', 'feedbackAjax', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
-            wp_enqueue_script( HELPDOCS_GO_PF.'feedback_script' );
         }
 
         // Run jQuery, et al

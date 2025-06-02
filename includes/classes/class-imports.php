@@ -983,7 +983,7 @@ function helpdocs_get_imports( $args = null ) {
                                 HELPDOCS_GO_PF.'toc'            => $toc,
                                 'auto_feed'                     => $import->post_title,
                                 'feed_id'                       => $import->ID,
-                                'taxonomies'                    => $doc->taxonomies
+                                'taxonomies'                    => isset( $doc->taxonomies ) ? $doc->taxonomies : []
                             ];
 
                             // Create taxonomy terms if needed

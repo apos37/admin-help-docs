@@ -95,15 +95,14 @@ ul li {
 
 <br><br>
 <h3>Plugin Support</h3>
-<br><img class="admin_helpbox_title" src="<?php echo esc_url( HELPDOCS_PLUGIN_IMG_PATH ); ?>discord.png" width="auto" height="100">
-<p>If you need assistance with this plugin or have suggestions for improving it, please join the Discord server below.</p>
-<?php /* translators: 1: Text for the button (default: Join Our Support Server) */
-echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_DISCORD_SUPPORT_URL ).'" target="_blank">'.esc_html( __( 'Join Our Support Server', 'admin-help-docs' ) ).' »</a><br>'; ?>
 
-<br>
-<p>Or if you would rather get support on WordPress.org, you can do so here:</p>
-<?php /* translators: 1: Text for the button (default: WordPress.org Plugin Support Page) */
-echo '<a class="button button-primary" href="https://wordpress.org/support/plugin/admin-help-docs/" target="_blank">'.esc_html( __( 'WordPress.org Plugin Support Page', 'admin-help-docs' ) ).' »</a><br>'; ?>
+<?php /* translators: 1: Text for the button (default: Join Our Support Server) */
+echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_GUIDE_URL ).'" target="_blank">'.esc_html( __( 'How-To Guide', 'admin-help-docs' ) ).' »</a><br><br>';
+echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_DOCS_URL ).'" target="_blank">'.esc_html( __( 'Developer Docs', 'admin-help-docs' ) ).' »</a><br><br>';
+echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_SUPPORT_URL ).'" target="_blank">'.esc_html( __( 'Website Support Forum', 'admin-help-docs' ) ).' »</a><br><br>';
+echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_DISCORD_URL ).'" target="_blank">'.esc_html( __( 'Discord Support Server', 'admin-help-docs' ) ).' »</a><br><br>'; 
+echo '<a class="button button-primary" href="https://wordpress.org/support/plugin/admin-help-docs/" target="_blank">'.esc_html( __( 'WordPress.org Plugin Support Page', 'admin-help-docs' ) ).' »</a><br>';
+?>
 
 <br><br><br>
 <h3>Like This Plugin?</h3>
@@ -112,28 +111,8 @@ echo '<a class="button button-primary" href="https://wordpress.org/support/plugi
 echo '<a class="button button-primary" href="https://wordpress.org/support/plugin/admin-help-docs/reviews/" target="_blank">'.esc_html( __( 'Rate and Review on WordPress.org', 'admin-help-docs' ) ).' »</a><br>'; ?>
 
 <?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
-    <br><br><br>
-    <h3>How Can We Improve?</h3>
-    <div id="feedback-form">
-        <div class="form-group">
-            <label for="message" style="display: block;">If there was one thing you would change about this plugin, what would it be?</label> 
-            <br><textarea id="feedback-message" name="message" class="form-control input-message" rows="6" style="width: 600px;" placeholder="Your feedback..."></textarea><br>
-        </div>
-        <?php 
-        $nonce = wp_create_nonce( HELPDOCS_GO_PF.'feedback' );
-        $user = get_userdata( get_current_user_id() ); 
-        $display_name = $user->display_name; 
-        $email = $user->user_email; 
-        ?>
-        <button class="button button-secondary submit" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-name="<?php echo esc_attr( $display_name ); ?>" data-email="<?php echo esc_attr( $email ); ?>" disabled>Send Feedback</button>
-        <div id="feedback-sending">Sending</div>
-        <div id="feedback-result"></div>
-    </div>
-<?php } ?>
-
-<?php if ( helpdocs_get_domain() != 'playground.wordpress.net' ) { ?>
     <br><br>
-    <h2><?php echo esc_html__( 'Try My Other Plugins', 'admin-help-docs' ); ?></h2>
+    <h2><?php echo esc_html__( 'Try Our Other Plugins', 'admin-help-docs' ); ?></h2>
     <div class="wp-list-table widefat plugin-install">
         <div id="the-list">
             <?php helpdocs_plugin_card( 'broken-link-notifier' ); ?>

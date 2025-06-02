@@ -66,14 +66,40 @@ class HELPDOCS_ADMIN_AREA {
      * @return array
      */
     public function plugin_row_meta( $links, $file ) {
-        // Only apply to this plugin
-        if ( HELPDOCS_TEXTDOMAIN.'/'.HELPDOCS_TEXTDOMAIN.'.php' == $file ) {
+        $text_domain = HELPDOCS_TEXTDOMAIN;
+        if ( $text_domain . '/' . $text_domain . '.php' == $file ) {
 
-            // Add the link
-            $row_meta = [
-                // 'docs' => '<a href="'.esc_url( HELPDOCS_AUTHOR_URL.'wordpress-admin-help-docs/' ).'" target="_blank" aria-label="'.esc_attr__( 'Plugin Website Link', 'admin-help-docs' ).'">'.esc_html__( 'Website', 'admin-help-docs' ).'</a>',
-                'discord' => '<a href="'.esc_url( HELPDOCS_DISCORD_SUPPORT_URL ).'" target="_blank" aria-label="'.esc_attr__( 'Plugin Support on Discord', 'admin-help-docs' ).'">'.esc_html__( 'Discord Support', 'admin-help-docs' ).'</a>'
+            $guide_url = HELPDOCS_GUIDE_URL;
+            $docs_url = HELPDOCS_DOCS_URL;
+            $support_url = HELPDOCS_SUPPORT_URL;
+            $plugin_name = HELPDOCS_NAME;
+
+            $our_links = [
+                'guide' => [
+                    // translators: Link label for the plugin's user-facing guide.
+                    'label' => __( 'How-To Guide', 'admin-help-docs' ),
+                    'url'   => $guide_url
+                ],
+                'docs' => [
+                    // translators: Link label for the plugin's developer documentation.
+                    'label' => __( 'Developer Docs', 'admin-help-docs' ),
+                    'url'   => $docs_url
+                ],
+                'support' => [
+                    // translators: Link label for the plugin's support page.
+                    'label' => __( 'Support', 'admin-help-docs' ),
+                    'url'   => $support_url
+                ],
             ];
+
+            $row_meta = [];
+            foreach ( $our_links as $key => $link ) {
+            // translators: %1$s is the link label, %2$s is the plugin name.
+            $aria_label = sprintf( __( '%1$s for %2$s', 'admin-help-docs' ), $link[ 'label' ], $plugin_name );
+            $row_meta[ $key ] = '<a href="' . esc_url( $link[ 'url' ] ) . '" target="_blank" aria-label="' . esc_attr( $aria_label ) . '">' . esc_html( $link[ 'label' ] ) . '</a>';
+        }
+
+            // Add the links
             return array_merge( $links, $row_meta );
         }
 

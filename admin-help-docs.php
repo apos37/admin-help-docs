@@ -1,15 +1,15 @@
 <?php
 /**
  * Plugin Name:         Admin Help Docs
- * Plugin URI:          https://github.com/apos37/admin-help-docs
+ * Plugin URI:          https://pluginrx.com/plugin/admin-help-docs/
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             1.3.10
+ * Version:             1.4.0
  * Requires at least:   5.9
  * Tested up to:        6.8
  * Requires PHP:        7.4
  * Author:              PluginRx
  * Author URI:          https://pluginrx.com/
- * Support URI:         https://discord.gg/3HnzNEJVnR
+ * Discord URI:         https://discord.gg/3HnzNEJVnR
  * Text Domain:         admin-help-docs
  * License:             GPLv2 or later
  * License URI:         http://www.gnu.org/licenses/gpl-2.0.txt
@@ -35,7 +35,7 @@ $plugin_data = get_file_data( __FILE__, [
     'textdomain'   => 'Text Domain',
     'author'       => 'Author',
     'author_uri'   => 'Author URI',
-    'support_uri'  => 'Support URI',
+    'discord_uri'  => 'Discord URI'
 ] );
 
 // Versions
@@ -48,7 +48,10 @@ define( 'HELPDOCS_TEXTDOMAIN', $plugin_data[ 'textdomain' ] );
 define( 'HELPDOCS_AUTHOR', $plugin_data[ 'author' ] );
 define( 'HELPDOCS_AUTHOR_EMAIL', 'apos37@pm.me' );
 define( 'HELPDOCS_AUTHOR_URL', $plugin_data[ 'author_uri' ] );
-define( 'HELPDOCS_DISCORD_SUPPORT_URL', $plugin_data[ 'support_uri' ] );
+define( 'HELPDOCS_GUIDE_URL', HELPDOCS_AUTHOR_URL . 'guide/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
+define( 'HELPDOCS_DOCS_URL', HELPDOCS_AUTHOR_URL . 'docs/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
+define( 'HELPDOCS_SUPPORT_URL', HELPDOCS_AUTHOR_URL . 'support/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
+define( 'HELPDOCS_DISCORD_URL', $plugin_data[ 'discord_uri' ] );
 
 // Prevent loading the plugin if PHP version is not minimum
 if ( version_compare( PHP_VERSION, HELPDOCS_MIN_PHP_VERSION, '<=' ) ) {
