@@ -598,7 +598,10 @@ echo '<div id="documentation">';
                 } else {
                     $created_by = $current_doc->post_author;
                 }
-                $incl_created_by = 'Created: '. helpdocs_convert_timezone( $current_doc->post_date ).' by '.$created_by;
+                $incl_created_by = 'Created: ' . date_i18n(
+                    'F j, Y g:i A T',
+                    strtotime( $current_doc->post_date )
+                ) . ' by ' . $created_by;
 
                 // Get the modified by
                 if ( $current_doc->_edit_last ) {
@@ -611,7 +614,10 @@ echo '<div id="documentation">';
                         $modified_by = $current_doc->_edit_last;
                     }
                     
-                    $incl_modified = '<br>Last modified: '.helpdocs_convert_timezone( $current_doc->post_modified ).' by '.esc_attr( $modified_by );
+                    $incl_modified = '<br>Last modified: ' . date_i18n(
+                        'F j, Y g:i A T',
+                        strtotime( $current_doc->post_modified )
+                    ) . ' by ' . esc_attr( $modified_by );
                 } else {
                     $incl_modified = '';
                 }

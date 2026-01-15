@@ -90,6 +90,7 @@ class HELPDOCS_MAIN {
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-discord.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-gf-mergetags.php';
         require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-dashboard-toc.php';
+        require_once HELPDOCS_PLUGIN_CLASSES_PATH . 'class-admin-menu.php';
 
         // Enqueue scripts
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -185,14 +186,20 @@ class HELPDOCS_MAIN {
             return;
         }
 
-        // Sorting draggable docs
+        // Settings page script
         if ( helpdocs_get( 'tab', '==', 'settings' ) ) {
-            wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_VERSION, true );
+            wp_register_script( HELPDOCS_GO_PF.'settings_script', HELPDOCS_PLUGIN_JS_PATH.'settings.js', [ 'jquery' ], HELPDOCS_SCRIPT_VERSION, true );
             wp_enqueue_script( HELPDOCS_GO_PF.'settings_script' );
         }
 
+        // Admin menu script
+        if ( helpdocs_get( 'tab', '==', 'adminmenu' ) ) {
+            wp_register_script( HELPDOCS_GO_PF.'adminmenu_script', HELPDOCS_PLUGIN_JS_PATH.'adminmenu.js', [ 'jquery', 'jquery-ui-sortable' ], HELPDOCS_SCRIPT_VERSION, true );
+            wp_enqueue_script( HELPDOCS_GO_PF.'adminmenu_script' );
+        }
+
         // Run jQuery, et al
-        if ( helpdocs_get( 'tab', '==', 'settings' ) || helpdocs_get( 'tab', '==', 'about' ) ) {
+        if ( helpdocs_get( 'tab', '==', 'settings' ) || helpdocs_get( 'tab', '==', 'adminmenu' ) || helpdocs_get( 'tab', '==', 'about' ) ) {
             wp_enqueue_script( 'jquery' );
         }
     } // End enqueue_scripts()

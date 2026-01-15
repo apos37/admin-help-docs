@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,6 +74,16 @@ https://youtu.be/xC5D894lY00
 10. Settings page with colors changed
 
 == Changelog ==
+= 1.4.3 =
+* Update: Added new Admin Menu tab with an option to sort the admin parent menu items and colorize the separators
+
+= 1.4.2 =
+* Fix: Timezone on main doc page meta was offset (props @eyesofjeremy for pointing it out)
+
+= 1.4.1 =
+* Update: Added support for enqueuing frontend stylesheets in the backend, option to enable it in settings
+* Update: Added support for Gutenberg editor, option to enable it in settings (props @derek for suggestion)
+
 = 1.4.0 =
 * Update: Removed feedback form since it's not being utilized
 * Update: New support links

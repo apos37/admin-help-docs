@@ -58,33 +58,7 @@ class HELPDOCS_MENU {
         }
 
         // The icon
-        // https://developer.wordpress.org/resource/dashicons/
         $icon = get_option( HELPDOCS_GO_PF.'dashicon', 'dashicons-editor-help' );
-        // $icon = HELPDOCS_PLUGIN_IMG_PATH.'icon-15x15.png';
-
-        /**
-         * To make an SVG from a Font Awesome icon:
-         * Go to: http://fontawesome.io/icons/
-         * Pick an icon
-         * Go to: https://github.com/encharm/Font-Awesome-SVG-PNG/tree/master/black/svg
-         * Click the icon, then click <> in Github to see the raw code instead of the image
-         * Copy the <svg><path/></svg> code to use below
-         * Change the width and height to 20x20
-         * Add fill="white" to the path's element
-         */
-
-         /**
-         * To get <svg> for encoding from Adobe Illustrator:
-         * Create the svg and open the .svg in notepad to get the code
-         * Remove the <?xml tag
-         * Replace the id attribute from the <svg> tag with width="20" height="20"
-         * Remove the <defs> tag with the styles inside it
-         * Remove the class from the first path
-         * Combine all of the path d="" attributes together in one long path.
-         * Add fill="#9CA2A7" or fill="white" to the path's element
-         */
-        // $icon_base64 = base64_encode('<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190.32 190.32"><path fill="#9CA2A7" d="M168.96,16.08H21.84c-5.7,0-10.32,4.62-10.32,10.32l-.24,94.56c0,5.7,4.62,10.32,10.32,10.32h46.23l22.21,26.09c2.68,3.15,7.55,3.15,10.23,0l22.21-26.09h46.23c5.7,0,10.32-4.62,10.32-10.32l.24-94.56c0-5.7-4.62-10.32-10.32-10.32Z"/></svg>');
-        // $icon = 'data:image/svg+xml;base64,' . $icon_base64;
 
         // Get the menu title
         $menu_title = helpdocs_menu_title();
@@ -226,10 +200,10 @@ function helpdocs_plugin_menu_items( $slug = null, $desc = false ) {
         'manage'            => [ __( 'Manage', 'admin-help-docs' ), '', true, false, 'edit.php?post_type=help-docs' ],
         'folders'           => [ __( 'Folders', 'admin-help-docs' ), '', true, false, 'edit-tags.php?taxonomy=help-docs-folder' ],
         'imports'           => [ __( 'Imports', 'admin-help-docs' ), '<p>'.__( 'You can easily import documents from another site.' ).'</p>', true, false, 'edit.php?post_type=help-doc-imports' ],
-        'faq'               => [ __( 'FAQ', 'admin-help-docs' ), '<p>'.__( 'Frequently Asked Questions', 'admin-help-docs' ).'</p>', true ],
+        'adminmenu'         => [ __( 'Admin Menu', 'admin-help-docs' ), '<p>'.__( 'Sort the left admin menu parent items.', 'admin-help-docs' ).'</p>', true ],
         'settings'          => [ __( 'Settings', 'admin-help-docs' ), '', true ],
         'settingsie'        => [ __( 'Import/Export Settings', 'admin-help-docs' ), '<p>'.__( 'You can easily import settings from another site. Just copy the settings link from the other site and paste it in the field below.' ).'</p>', false, true ],
-        // 'developer'         => [ __( 'Developer', 'admin-help-docs' ), __( 'Action and filters available for developers.', 'admin-help-docs' ), true ],
+        'faq'               => [ __( 'FAQ', 'admin-help-docs' ), '<p>'.__( 'Frequently Asked Questions', 'admin-help-docs' ).'</p>', true ],
         'about'             => [ __( 'About', 'admin-help-docs' ), '<p>'.__( 'Version', 'admin-help-docs' ).' '.esc_attr( HELPDOCS_VERSION ).' - <a href="'.helpdocs_plugin_options_path( 'changelog' ).'">View the Changelog</a>'.'</p>', true ],
         'changelog'         => [ __( 'Changelog', 'admin-help-docs' ), '<p>'.__( 'Updates to this plugin.', 'admin-help-docs' ).'</p>', false, true ],
     ];

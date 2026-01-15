@@ -88,6 +88,14 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
             border-top: 0 !important;
             padding-top: 0 !important;
         }
+
+        #doc-viewer h3,
+        #doc-viewer .wrap h3 {
+            margin-top: revert !important;
+            border-top: revert !important;
+            padding-top: revert !important;
+        }
+
         .wrap {
             padding: 0 !important;
         }
@@ -314,4 +322,4 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
 
     </style>
 
-<?php }
+<?php } ?>

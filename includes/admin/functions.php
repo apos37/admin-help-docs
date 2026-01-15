@@ -101,11 +101,11 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
     }
 
     // Checkbox
-    if ($type == 'checkbox') {
+    if ( $type == 'checkbox' ) {
         $input = '<input type="checkbox" id="'.esc_attr( $option_name ).'" name="'.esc_attr( $option_name ).'" value="1" '.checked( 1, $value, false ).''.$required.'/>';
 
     // Checkboxes
-    } elseif ($type == 'checkboxes') {
+    } elseif ( $type == 'checkboxes' ) {
         if ( !is_null( $args ) ) {
             $options = $args[ 'options' ];
             $class = isset( $args[ 'class' ] ) ? ' class="'.esc_attr( $args[ 'class' ] ).'"' : '';
@@ -291,6 +291,47 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         $input = '<input class="regular-text" id="'.esc_attr( $option_name ).'" name="'.esc_attr( $option_name ).'" type="text" value="'.esc_attr( $value ).'"/>
         <input class="button dashicons-picker" type="button" value="Choose Icon" data-target="#'.esc_attr( $option_name ).'" />';
 
+    } elseif ( $type == 'sorter' ) {
+
+        if ( empty( $args ) || ! is_array( $args ) ) {
+            return false;
+        }
+
+        if ( ! is_array( $value ) ) {
+            $value = [];
+        }
+
+        $items_by_value = [];
+        foreach ( $args as $item ) {
+            if ( empty( $item['value' ] ) ) {
+                continue;
+            }
+
+            $items_by_value[ $item['value' ] ] = $item['label' ] ?? $item['value' ];
+        }
+
+        if ( ! empty( $value ) ) {
+            $ordered_items = [];
+            foreach ( $value as $menu_slug ) {
+                if ( isset( $items_by_value[ $menu_slug ] ) ) {
+                    $ordered_items[ $menu_slug ] = $items_by_value[ $menu_slug ];
+                    unset( $items_by_value[ $menu_slug ] );
+                }
+            }
+            $items_by_value = $ordered_items + $items_by_value;
+        }
+
+        $input  = '<ul class="helpdocs-sorter" data-option="'.esc_attr( $option_name ).'">';
+        foreach ( $items_by_value as $menu_slug => $label ) {
+            $input .= '
+                <li class="helpdocs-sorter-item" data-value="'.esc_attr( $menu_slug ).'">
+                    <span class="dashicons dashicons-menu helpdocs-sort-handle"></span>
+                    <span class="helpdocs-sort-label">'.esc_html( wp_strip_all_tags( $label ) ).'</span>
+                    <input type="hidden" name="'.esc_attr( $option_name ).'[]" value="'.esc_attr( $menu_slug ).'">
+                </li>';
+        }
+        $input .= '</ul>';
+
     // Otherwise return false
     } else {
         return false;
@@ -442,7 +483,15 @@ function helpdocs_wp_kses_allowed_html() {
             'id' => []
         ],
         'em' => [],
-        'strong' => []
+        'strong' => [],
+        'ul' => [
+            'class' => [],
+            'data-option' => []
+        ],
+        'li' => [
+            'class' => [],
+            'data-value' => []
+        ]
     ];
     return $allowed_html;
 } // End helpdocs_options_tr_allowed_html()
@@ -806,6 +855,7 @@ function helpdocs_get_five_point_rating ( $r1, $r2, $r3, $r4, $r5 ) {
 function helpdocs_create_json_from_settings() {
     // Get all of the settings
     $keys = (new HELPDOCS_GLOBAL_OPTIONS)->settings_general;
+    $keys = array_merge( $keys, [ 'colorize_separators', 'color_admin_menu_sep' ] );
 
     // Store the values here
     $values = [];
@@ -886,12 +936,14 @@ function helpdocs_import_settings_from_json( $file ) {
     // Get our setting meta keys for validation
     // Get all of the settings
     $keys = (new HELPDOCS_GLOBAL_OPTIONS)->settings_general;
+    $keys = array_merge( $keys, [ 'colorize_separators', 'color_admin_menu_sep' ] );
 
     // Bools
     $bools = [
         'admin_bar',
         'hide_version',
-        'disable_user_prefs'
+        'disable_user_prefs',
+        'colorize_separators'
     ];
 
     // Numbers

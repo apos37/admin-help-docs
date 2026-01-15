@@ -95,8 +95,7 @@ ul li {
 
 <br><br>
 <h3>Plugin Support</h3>
-
-<?php /* translators: 1: Text for the button (default: Join Our Support Server) */
+<?php
 echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_GUIDE_URL ).'" target="_blank">'.esc_html( __( 'How-To Guide', 'admin-help-docs' ) ).' »</a><br><br>';
 echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_DOCS_URL ).'" target="_blank">'.esc_html( __( 'Developer Docs', 'admin-help-docs' ) ).' »</a><br><br>';
 echo '<a class="button button-primary" href="'.esc_url( HELPDOCS_SUPPORT_URL ).'" target="_blank">'.esc_html( __( 'Website Support Forum', 'admin-help-docs' ) ).' »</a><br><br>';

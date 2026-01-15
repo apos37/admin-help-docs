@@ -37,6 +37,14 @@ class HELPDOCS_GLOBAL_OPTIONS {
 
 
     /**
+     * Admin menu setting keys
+     *
+     * @var array
+     */
+    public $settings_adminmenu = [];
+
+
+    /**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -54,6 +62,8 @@ class HELPDOCS_GLOBAL_OPTIONS {
         $this->settings_general = [
             'admin_bar',
             'dashboard_toc',
+            'gutenberg_editor',
+            'enqueue_frontend_styles',
             'dashicon',
             'logo',
             'page_title',
@@ -74,7 +84,17 @@ class HELPDOCS_GLOBAL_OPTIONS {
             'default_doc',
             'hide_doc_meta'
         ];
+        
+        // Merge colors into general settings
         $this->settings_general = array_merge( $this->settings_general, $this->colors );
+
+        // Define the admin menu keys
+        $this->settings_adminmenu = [
+            'enable_admin_menu_sorting',
+            'colorize_separators',
+            'color_admin_menu_sep',
+            'admin_menu_order'
+        ];
 
         // Call register settings function
         add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -94,6 +114,9 @@ class HELPDOCS_GLOBAL_OPTIONS {
 
         // Settings Import/Export
         $this->register_group_settings( 'settingsie', [ 'import_link' ] );
+
+        // Admin Menu Order
+        $this->register_group_settings( 'adminmenu', $this->settings_adminmenu );
     } // End register_settings()
 
 

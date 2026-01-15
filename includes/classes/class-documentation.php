@@ -114,8 +114,13 @@ class HELPDOCS_DOCUMENTATION {
         // Register taxonomy
         $this->register_taxonomy();
 
-        // Disable block editor
-        add_filter( 'use_block_editor_for_post_type', [ $this, 'disable_gutenberg' ], 10, 2 );
+        // Either enqueue block editor styles or disable block editor
+        if ( ! get_option( 'helpdocs_gutenberg_editor' ) ) {
+            add_filter( 'use_block_editor_for_post_type', [ $this, 'disable_gutenberg' ], 10, 2 );
+        }
+
+        // Enqueue back-end styles
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_styles' ] );
 
         // Add the header to the top of the admin list page
         add_action( 'load-edit.php', [ $this, 'add_header' ] );
@@ -241,6 +246,58 @@ class HELPDOCS_DOCUMENTATION {
 
 
     /**
+     * Enqueue admin styles.
+     */
+    public function enqueue_admin_styles() {
+        // Add block styles
+        if ( get_option( 'helpdocs_gutenberg_editor' ) ) {
+            wp_enqueue_style(
+                'wp-block-library-frontend',
+                includes_url( 'css/dist/block-library/style.css' ),
+                [],
+                false
+            );
+        }
+
+        // Enqueuing frontend styles
+        if ( get_option( 'helpdocs_enqueue_frontend_styles' ) ) {
+            
+            // Add theme styles
+            global $wp_styles;
+
+            do_action( 'wp_enqueue_scripts' );
+
+            $skip = [ 'wp-block-library', 'wp-admin', 'colors', 'dashicons' ];
+
+            foreach ( $wp_styles->queue as $handle ) {
+                if ( in_array( $handle, $skip, true ) ) {
+                    continue;
+                }
+
+                $style = $wp_styles->registered[ $handle ] ?? null;
+
+                if ( $style && ! wp_style_is( $handle, 'enqueued' ) ) {
+                    wp_enqueue_style(
+                        $handle,
+                        $style->src,
+                        $style->deps,
+                        $style->ver
+                    );
+                }
+            }
+
+            // Add our own fixes
+            wp_enqueue_style(
+                'helpdocs-backend-styles',
+                HELPDOCS_PLUGIN_CSS_PATH . 'style.css',
+                [],
+                false
+            );
+        }
+    } // End enqueue_admin_styles()
+
+
+    /**
      * Disable Gutenberg while allowing rest
      *
      * @param [type] $current_status
@@ -251,12 +308,12 @@ class HELPDOCS_DOCUMENTATION {
 
         // Disabled post types
         $disabled_post_types = [ $this->post_type ];
-    
+
         // Change $can_edit to false for any post types in the disabled post types array
         if ( in_array( $post_type, $disabled_post_types, true ) ) {
             $current_status = false;
         }
-    
+
         return $current_status;
     } // End disable_gutenberg()
 
@@ -488,7 +545,7 @@ class HELPDOCS_DOCUMENTATION {
         foreach ( $menu as $m ) {
 
             // Skip separators
-            if ( str_starts_with( $m[2], 'separator' ) ) {
+            if ( str_starts_with( $m[2], 'separator' ) || $m[2] == 'hp_separator' || ( isset( $m[4] ) && strpos( $m[4], 'wp-menu-separator' ) !== false ) ) {
                 continue;
             }
 
@@ -510,7 +567,7 @@ class HELPDOCS_DOCUMENTATION {
             }
 
             // Strip html
-            $site_location_name = wp_strip_all_tags( $site_location_name );
+            $site_location_name = $this->strip_admin_menu_counters( $site_location_name );
 
             // Add the parent location
             if ( !array_key_exists( $m[2], $submenu ) ) {
@@ -544,7 +601,7 @@ class HELPDOCS_DOCUMENTATION {
                         }
 
                         // Strip html
-                        $sublocation_name = wp_strip_all_tags( $sublocation_name );
+                        $sublocation_name = $this->strip_admin_menu_counters( $sublocation_name );
 
                         // Get the url
                         $url = $this->get_admin_menu_item_url( $s[2] );
@@ -923,6 +980,33 @@ class HELPDOCS_DOCUMENTATION {
 
 
     /**
+     * Strip admin menu counters from a label
+     *
+     * @param string $label
+     * @return string
+     */
+    private function strip_admin_menu_counters( $label ) {
+        if ( !is_string( $label ) ) {
+            return $label;
+        }
+
+        // Remove update badges (nested spans included)
+        $label = preg_replace( '/<span[^>]*class="[^"]*\b(update-plugins|awaiting-mod|count-[0-9]+|bubble)\b[^"]*"[^>]*>.*?<\/span>/i', '', $label );
+
+        // Remove any remaining HTML
+        $label = wp_strip_all_tags( $label );
+
+        // Decode entities then trim
+        $label = trim( html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ) );
+
+        // Remove trailing counts like "85", "(85)", "[85]", "{85}"
+        $label = preg_replace( '/(?:\s*[\(\[\{]\s*\d+\s*[\)\]\}])|\s*\d+\s*$/', '', $label );
+
+        return trim( $label );
+    } // End strip_admin_menu_counters()
+
+
+    /**
      * Get admin page title from url
      *
      * @param string $url
@@ -978,7 +1062,7 @@ class HELPDOCS_DOCUMENTATION {
                     $parent_id = $k;
 
                     // Set the child default name that is not changed
-                    $child_default_name = $s[0];
+                    $child_default_name = $this->strip_admin_menu_counters( $s[0] );
 
                     // Set the child name
                     if ( array_key_exists( base64_decode( $url ), $site_location_names ) ) {
@@ -1012,7 +1096,7 @@ class HELPDOCS_DOCUMENTATION {
                     if ( array_key_exists( $m[2], $site_location_names ) ) {
                         $parent = $site_location_names[ $m[2] ];
                     } else {
-                        $parent = $m[0];
+                        $parent = $this->strip_admin_menu_counters( $m[0] );
                     }
                 }
             }
@@ -1034,7 +1118,7 @@ class HELPDOCS_DOCUMENTATION {
                         if ( array_key_exists( base64_decode( $url ), $site_location_names ) ) {
                             $parent = $site_location_names[ base64_decode( $url ) ];
                         } else {
-                            $parent = $m[0];
+                            $parent = $this->strip_admin_menu_counters( $m[0] );
                         }
                     }
                 } else {
@@ -1048,7 +1132,7 @@ class HELPDOCS_DOCUMENTATION {
                         if ( array_key_exists( base64_decode( $url ), $site_location_names ) ) {
                             $parent = $site_location_names[ base64_decode( $url ) ];
                         } else {
-                            $parent = $m[0];
+                            $parent = $this->strip_admin_menu_counters( $m[0] );
                         }
                     }
                 }
