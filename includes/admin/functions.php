@@ -312,22 +312,22 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
 
         if ( ! empty( $value ) ) {
             $ordered_items = [];
-            foreach ( $value as $menu_slug ) {
-                if ( isset( $items_by_value[ $menu_slug ] ) ) {
-                    $ordered_items[ $menu_slug ] = $items_by_value[ $menu_slug ];
-                    unset( $items_by_value[ $menu_slug ] );
+            foreach ( $value as $slug ) {
+                if ( isset( $items_by_value[ $slug ] ) ) {
+                    $ordered_items[ $slug ] = $items_by_value[ $slug ];
+                    unset( $items_by_value[ $slug ] );
                 }
             }
             $items_by_value = $ordered_items + $items_by_value;
         }
 
         $input  = '<ul class="helpdocs-sorter" data-option="'.esc_attr( $option_name ).'">';
-        foreach ( $items_by_value as $menu_slug => $label ) {
+        foreach ( $items_by_value as $slug => $sort_label ) {
             $input .= '
-                <li class="helpdocs-sorter-item" data-value="'.esc_attr( $menu_slug ).'">
+                <li class="helpdocs-sorter-item" data-value="'.esc_attr( $slug ).'">
                     <span class="dashicons dashicons-menu helpdocs-sort-handle"></span>
-                    <span class="helpdocs-sort-label">'.esc_html( wp_strip_all_tags( $label ) ).'</span>
-                    <input type="hidden" name="'.esc_attr( $option_name ).'[]" value="'.esc_attr( $menu_slug ).'">
+                    <span class="helpdocs-sort-label">'.esc_html( wp_strip_all_tags( $sort_label ) ).'</span>
+                    <input type="hidden" name="'.esc_attr( $option_name ).'[]" value="'.esc_attr( $slug ).'">
                 </li>';
         }
         $input .= '</ul>';
