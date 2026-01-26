@@ -34,4 +34,13 @@ jQuery( $ => {
         console.log( 'Separator color updated.' );
     } );
 
+    // Show the sublabels
+    $( document ).on( 'change', '#helpdocs-view-sublabels-toggle-admin-menu-order', function () {
+        if ( $( this ).is( ':checked' ) ) {
+            $( 'html' ).addClass( 'helpdocs-view-sublabels' );
+        } else {
+            $( 'html' ).removeClass( 'helpdocs-view-sublabels' );
+        }
+    } );
+
 } )

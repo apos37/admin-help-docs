@@ -41,9 +41,34 @@
 }
 .helpdocs-sort-handle {
     cursor: grab;
+    flex-shrink: 0;
+}
+.helpdocs-sort-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
 }
 .helpdocs-sorter-item.ui-sortable-helper {
     box-shadow: 0 4px 12px rgba( 0, 0, 0, 0.15 );
+}
+.helpdocs-sort-label {
+    font-weight: 500;
+}
+.helpdocs-sort-sublabel {
+    font-size: 0.65em;
+    font-style: italic;
+    color: #666;
+    margin-top: 2px;
+    display: none;
+}
+html.helpdocs-view-sublabels .helpdocs-sort-sublabel {
+    display: block;
+}
+.helpdocs-th-label {
+    display: block;
+}
+.form-table th label {
+    font-weight: normal;
 }
 </style>
 
@@ -128,10 +153,25 @@ if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
             'separator-last'
         ];
 
+        // Your extra separators
+        $extra_separators = [
+            'separator-helpdocs-extra1',
+            'separator-helpdocs-extra2',
+            'separator-helpdocs-extra3'
+        ];
+
+        // Keep only allowed separators
+        $allowed_separators = array_merge( $default_separators, $extra_separators );
+
         // Build current menu items array
         $admin_menu_items = [];
         foreach ( $menu as $menu_item ) {
             $slug = $menu_item[2] ?? '';
+
+            // Skip any separator not in allowed list
+            if ( str_starts_with( (string) $slug, 'separator' ) && ! in_array( $slug, $allowed_separators, true ) ) {
+                continue;
+            }
 
             if ( str_starts_with( (string) $slug, 'separator' ) ) {
                 $label = '-- Separator -- (place at bottom to hide)';
@@ -142,8 +182,9 @@ if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
             }
 
             $admin_menu_items[ $slug ] = [
-                'label' => $label,
-                'value' => $slug
+                'label'    => $label,
+                'sublabel' => $slug,
+                'value'    => $slug
             ];
         }
 
@@ -151,37 +192,32 @@ if ( helpdocs_get( 'settings-updated', '==', 'true' ) ) {
         foreach ( $default_separators as $slug ) {
             if ( ! isset( $admin_menu_items[ $slug ] ) ) {
                 $admin_menu_items[ $slug ] = [
-                    'label' => '-- Separator -- (place at bottom to hide)',
-                    'value' => $slug
+                    'label'    => '-- Separator -- (place at bottom to hide)',
+                    'sublabel' => $slug,
+                    'value'    => $slug
                 ];
             }
         }
 
         // Add your extra separators
-        for ( $i = 1; $i <= 3; $i++ ) {
-            $extra_slug = "separator-helpdocs-extra{$i}";
-            $admin_menu_items[ $extra_slug ] = [
-                'label' => '-- Separator -- (place at bottom to hide)',
-                'value' => $extra_slug
+        foreach ( $extra_separators as $slug ) {
+            $admin_menu_items[ $slug ] = [
+                'label'    => '-- Separator -- (place at bottom to hide)',
+                'sublabel' => $slug,
+                'value'    => $slug
             ];
         }
 
         // Re-index to numeric array for your sorter
         $admin_menu_items = array_values( $admin_menu_items );
 
-        // $saved_order = get_option( HELPDOCS_GO_PF . 'admin_menu_order' );
-
-        // if ( ! empty( $saved_order ) && is_array( $saved_order ) ) {
-        //     $saved_order = array_filter( $saved_order, function( $slug ) {
-        //         return $slug !== 'separator-helpdocs-extra';
-        //     });
-
-        //     // Save the cleaned array back to the option
-        //     update_option( HELPDOCS_GO_PF . 'admin_menu_order', $saved_order );
-        // }
+        $sorter_args = [
+            'choices' => $admin_menu_items,
+            'sublabel_checkbox' => 'Show Slugs'
+        ];
         ?>
-        
-        <?php echo wp_kses( helpdocs_options_tr( 'admin_menu_order', 'Parent Menu Items', 'sorter', '', $admin_menu_items ), $allowed_html ); ?>
+
+        <?php echo wp_kses( helpdocs_options_tr( 'admin_menu_order', 'Parent Menu Items', 'sorter', '', $sorter_args ), $allowed_html ); ?>
 
     </table>
     

@@ -291,9 +291,10 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         $input = '<input class="regular-text" id="'.esc_attr( $option_name ).'" name="'.esc_attr( $option_name ).'" type="text" value="'.esc_attr( $value ).'"/>
         <input class="button dashicons-picker" type="button" value="Choose Icon" data-target="#'.esc_attr( $option_name ).'" />';
 
+    // Sorter Field
     } elseif ( $type == 'sorter' ) {
 
-        if ( empty( $args ) || ! is_array( $args ) ) {
+        if ( empty( $args ) || ! is_array( $args ) || ! isset( $args[ 'choices' ] ) ) {
             return false;
         }
 
@@ -302,12 +303,15 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         }
 
         $items_by_value = [];
-        foreach ( $args as $item ) {
-            if ( empty( $item['value' ] ) ) {
+        foreach ( $args[ 'choices' ] as $item ) {
+            if ( empty( $item[ 'value' ] ) ) {
                 continue;
             }
 
-            $items_by_value[ $item['value' ] ] = $item['label' ] ?? $item['value' ];
+            $items_by_value[ $item[ 'value' ] ] = [
+                'label'    => $item[ 'label' ] ?? $item[ 'value' ],
+                'sublabel' => $item[ 'sublabel' ] ?? ''
+            ];
         }
 
         if ( ! empty( $value ) ) {
@@ -322,14 +326,23 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         }
 
         $input  = '<ul class="helpdocs-sorter" data-option="'.esc_attr( $option_name ).'">';
-        foreach ( $items_by_value as $slug => $sort_label ) {
-            $input .= '
-                <li class="helpdocs-sorter-item" data-value="'.esc_attr( $slug ).'">
-                    <span class="dashicons dashicons-menu helpdocs-sort-handle"></span>
-                    <span class="helpdocs-sort-label">'.esc_html( wp_strip_all_tags( $sort_label ) ).'</span>
-                    <input type="hidden" name="'.esc_attr( $option_name ).'[]" value="'.esc_attr( $slug ).'">
-                </li>';
-        }
+            foreach ( $items_by_value as $slug => $data ) {
+                $input .= '
+                    <li class="helpdocs-sorter-item" data-value="'.esc_attr( $slug ).'">
+                        <span class="dashicons dashicons-menu helpdocs-sort-handle"></span>
+                        <span class="helpdocs-sort-text">
+                            <span class="helpdocs-sort-label">'.esc_html( wp_strip_all_tags( $data[ 'label' ] ) ).'</span>';
+
+                if ( ! empty( $data[ 'sublabel' ] ) ) {
+                    $input .= '
+                            <small class="helpdocs-sort-sublabel">'.esc_html( $data[ 'sublabel' ] ).'</small>';
+                }
+
+                $input .= '
+                        </span>
+                        <input type="hidden" name="'.esc_attr( $option_name ).'[]" value="'.esc_attr( $slug ).'">
+                    </li>';
+            }
         $input .= '</ul>';
 
     // Otherwise return false
@@ -361,10 +374,18 @@ function helpdocs_options_tr( $option_name, $label, $type, $comments = null, $ar
         $submit_button = '';
     }
 
+    // Build the label HTML with optional checkbox
+    $label_html = '<span class="helpdocs-th-label">' . esc_html( $label ) . '</span>';
+
+    if ( ! empty( $args['sublabel_checkbox'] ) && is_string( $args['sublabel_checkbox'] ) ) {
+        $checkbox_id = 'helpdocs-view-sublabels-toggle-' . esc_attr( str_replace( 'helpdocs-', '', str_replace( '_', '-', $option_name ) ) );
+        $label_html .= '<br><label><input type="checkbox" id="' . $checkbox_id . '" class="helpdocs-view-sublabels-toggle"> ' . esc_html( $args['sublabel_checkbox'] ) . '</label>';
+    }
+
     // Build the row
     $row = '<tr valign="top">
-        <th scope="row">'.$label.'</th>
-        <td>'.$input.$submit_button.' '.$incl_comments.'</td>
+        <th scope="row">' . $label_html . '</th>
+        <td>' . $input . $submit_button . ' ' . $incl_comments . '</td>
     </tr>';
     
     // Return the row
@@ -381,7 +402,8 @@ function helpdocs_wp_kses_allowed_html() {
     $allowed_html = [
         'div' => [
             'id' => [],
-            'class' => []
+            'class' => [],
+            'style' => []
         ],
         'p' => [
             'id' => [],
@@ -491,7 +513,10 @@ function helpdocs_wp_kses_allowed_html() {
         'li' => [
             'class' => [],
             'data-value' => []
-        ]
+        ],
+        'small' => [
+            'class' => []
+        ],
     ];
     return $allowed_html;
 } // End helpdocs_options_tr_allowed_html()

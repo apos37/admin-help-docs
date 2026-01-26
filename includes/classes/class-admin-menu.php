@@ -26,8 +26,8 @@ class HELPDOCS_ADMIN_MENU {
 	public function __construct() {
 
         add_filter( 'custom_menu_order', [ $this, 'enable_custom_menu_order' ] );
-        add_action( 'admin_menu', [ $this, 'separators' ], 999 );
-        add_filter( 'menu_order', [ $this, 'apply_menu_order' ] );
+        add_action( 'admin_menu', [ $this, 'separators' ], PHP_INT_MAX  );
+        add_filter( 'menu_order', [ $this, 'apply_menu_order' ], PHP_INT_MAX );
         add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_separator_styles' ] );
 
@@ -53,28 +53,28 @@ class HELPDOCS_ADMIN_MENU {
             return;
         }
 
-        // Add extra separators if they don't exist
+        $allowed = [
+            'separator1',
+            'separator2',
+            'separator-last',
+            'separator-helpdocs-extra1',
+            'separator-helpdocs-extra2',
+            'separator-helpdocs-extra3'
+        ];
+
         foreach ( $saved_order as $slug ) {
-            if ( str_starts_with( (string) $slug, 'separator' ) ) {
-                if ( ! $this->separator_exists( $slug ) ) {
-                    $menu[] = [
-                        '',                 // page title
-                        'read',             // capability
-                        $slug,              // menu slug
-                        '',                 // menu title
-                        'wp-menu-separator' // class
-                    ];
-                }
-            }
-        }
-
-        // Compute last index of a real menu item
-        $last_non_separator_index = $this->get_last_non_separator_index( $menu );
-
-        // Add a "hidden" class to separators below the last real item
-        foreach ( $menu as $index => $item ) {
-            if ( isset( $item[4] ) && $item[4] === 'wp-menu-separator' && $index > $last_non_separator_index ) {
-                $menu[ $index ][4] .= ' helpdocs-hidden-separator';
+            if (
+                str_starts_with( $slug, 'separator' ) &&
+                in_array( $slug, $allowed, true ) &&
+                ! $this->separator_exists( $slug )
+            ) {
+                $menu[] = [
+                    '',
+                    'read',
+                    $slug,
+                    '',
+                    'wp-menu-separator ' . $slug
+                ];
             }
         }
     } // End separators()
@@ -85,10 +85,14 @@ class HELPDOCS_ADMIN_MENU {
      */
     private function get_last_non_separator_index( $menu ) {
         for ( $i = count( $menu ) - 1; $i >= 0; $i-- ) {
-            if ( empty( $menu[ $i ][4] ) || $menu[ $i ][4] !== 'wp-menu-separator' ) {
+            if (
+                empty( $menu[ $i ][4] ) ||
+                ! str_contains( $menu[ $i ][4], 'wp-menu-separator' )
+            ) {
                 return $i;
             }
         }
+
         return -1;
     } // End get_last_non_separator_index()
 
@@ -112,46 +116,26 @@ class HELPDOCS_ADMIN_MENU {
      */
     public function apply_menu_order( $menu_order ) {
         $saved_order = get_option( HELPDOCS_GO_PF . 'admin_menu_order' );
+
         if ( empty( $saved_order ) || ! is_array( $saved_order ) ) {
             return $menu_order;
         }
 
-        $ordered = [];
-        $remaining = [];
+        $final = [];
+        $seen  = [];
 
-        // Separate out any extra separators
-        $extra_separators = [];
         foreach ( $saved_order as $slug ) {
-            if ( str_starts_with( (string) $slug, 'separator' ) ) {
-                $extra_separators[] = $slug;
-            }
+            $final[] = $slug;
+            $seen[ $slug ] = true;
         }
 
-        // Collect remaining items
         foreach ( $menu_order as $slug ) {
-            if ( in_array( $slug, $saved_order, true ) ) {
-                continue;
-            }
-            $remaining[] = $slug;
-        }
-
-        // Build ordered list
-        foreach ( $saved_order as $slug ) {
-            if ( in_array( $slug, $menu_order, true ) || str_starts_with( (string) $slug, 'separator' ) ) {
-                $ordered[] = $slug;
+            if ( ! isset( $seen[ $slug ] ) ) {
+                $final[] = $slug;
             }
         }
 
-        // Inject an extra separator above remaining items if any
-        if ( ! empty( $remaining ) && ! empty( $extra_separators ) ) {
-            foreach ( $extra_separators as $sep ) {
-                if ( ! in_array( $sep, $ordered, true ) ) {
-                    array_unshift( $remaining, $sep );
-                }
-            }
-        }
-
-        return array_merge( $ordered, $remaining );
+        return $final;
     } // End apply_menu_order()
 
 

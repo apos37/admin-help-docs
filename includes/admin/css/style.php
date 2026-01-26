@@ -201,7 +201,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
         --------------------------------------------- */
 
         /* Checkboxes and Radios */
-        input[type="checkbox"],
+        input[type="checkbox"]:not(#helpdocs-view-sublabels-toggle-admin-menu-order),
         input[type="radio"] {
             background-color: <?php echo esc_attr( $color_bg ); ?>;
             filter: brightness( 95% );
@@ -215,7 +215,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
             cursor: pointer;
             transition: all 1s ease;
         }
-        input[type="checkbox"]:checked:before {
+        input[type="checkbox"]:not(#helpdocs-view-sublabels-toggle-admin-menu-order):checked:before {
             color: <?php echo esc_attr( $color_bg ); ?>;
             content: '\2713';
             margin: 15px 3px !important;
@@ -229,7 +229,7 @@ if ( ( $current_screen->id == $options_page ) || ( $current_screen->id == 'edit-
             width: 20px;
             height: 20px;
         }
-        input[type="checkbox"]:checked,
+        input[type="checkbox"]:not(#helpdocs-view-sublabels-toggle-admin-menu-order):checked,
         input[type="radio"]:checked {
             background: <?php echo esc_attr( $color_ac ); ?>
         }
