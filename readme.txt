@@ -12,13 +12,27 @@ Site developers and operators can easily create help documentation and notices f
 
 == Description ==
 
-The "Admin Help Docs" WordPress plugin is a brilliant tool for streamlining administrative tasks and empowering website management! It allows you to create custom, contextual help documentation for your WordPress admin dashboard, making it easy to guide yourself or other administrators through complex tasks and settings.
+The "Admin Help Docs" WordPress plugin is a brilliant tool for streamlining administrative tasks and empowering website management! It allows you to create custom help documentation for your WordPress admin dashboard, making it easy to remind yourself or guide other administrators through complex tasks and settings.
 
 With this plugin, you can:
 
-* Create custom help docs for specific admin pages or sections
-* Add clear, concise instructions and explanations
-* Use multimedia like images, videos, and links to enhance understanding
+* Add a section to your admin area where users can go to browse or search through help documentation that you create.
+* Add instructions/notes to ANY admin page at the top, bottom, or other areas of the page.
+* Add custom dashboard widgets, or replace your entire WordPress dashboard with help docs.
+* Brand your help section and docs with your own logo and colors.
+* Import and auto-feed docs remotely from other sites.
+* Change the footer text in the admin area.
+* Reorganize your admin menu in an order that makes more sense.
+* Add a simple Support Contact form for your clients to contact you directly.
+
+Page locations include:
+
+* Top
+* Bottom
+* Side (if on post/page edit screens)
+* Contextual help tab
+* Next to specific elements (using a CSS selector)
+* Anywhere else you can hook into if you're a developer by using a function
 
 By providing easy access to relevant information and guidance, "Admin Help Docs" saves time, reduces confusion, and makes WordPress administration more efficient and enjoyable! It's perfect for developers, designers, and site owners who want to simplify website management and focus on creating amazing content!
 
@@ -31,8 +45,11 @@ By providing easy access to relevant information and guidance, "Admin Help Docs"
 = Who can add a help section? =
 Anyone that has the `Administrator` role, or other roles that you specify.
 
+= Who can view help docs? =
+Anyone role or capability you specify in settings. You can also override the default role on a per-doc basis.
+
 = Can I use the same documentation across multiple sites? =
-Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin. You can do so from the **Help Docs** > **Imports** section.
+Yes, you can choose to automatically feed documents or copy them locally from a remote site with the same plugin. You can do so from the **Help Docs** > **Imports** section.
 
 = Where can I request features and get further support? =
 We recommend using our [website support forum](https://pluginrx.com/support/plugin/admin-help-docs/) as the primary method for requesting features and getting help. You can also reach out via our [Discord support server](https://discord.gg/3HnzNEJVnR) or the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-help-docs/), but please note that WordPress.org doesn’t always notify us of new posts, so it’s not ideal for time-sensitive issues.

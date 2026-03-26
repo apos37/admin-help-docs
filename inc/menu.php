@@ -554,9 +554,9 @@ class Menu {
                     'fetch_nonce'    => wp_create_nonce( "helpdocs_{$current_tab}_fetch_nonce" ),
                     'clone_nonce'    => wp_create_nonce( "helpdocs_{$current_tab}_clone_nonce" ),
                     'fetching_text' => __( 'Fetching', 'admin-help-docs' ),
-                    'importing_text' => __( 'Importing', 'admin-help-docs' ),
-                    'imported_text'  => __( 'Import Complete!', 'admin-help-docs' ),
-                    'error_text'     => __( 'An error occurred during import.', 'admin-help-docs' ),
+                    'importing_text' => __( 'Cloning', 'admin-help-docs' ),
+                    'imported_text'  => __( 'Copy Complete!', 'admin-help-docs' ),
+                    'error_text'     => __( 'An error occurred during cloning.', 'admin-help-docs' ),
                     'saving_text'    => __( 'Saving', 'admin-help-docs' ),
                 ] );
             }

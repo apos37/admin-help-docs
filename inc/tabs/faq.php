@@ -37,7 +37,6 @@ class FAQ {
             <ul>
                 <li>Head over to the <a href="<?php echo esc_url( Bootstrap::tab_url( 'manage' ) ); ?>">Manage</a> tab and add a new Help Document.</li>
                 <li>Include the title and content for the document.</li>
-                <li>If you want to add a separate description for the document so you can reference what it is for, add it the Description section.</li>
                 <li>The "Location" box is where you specify where you want the document to show up.</li>
                 <li><strong>Site Location</strong> includes all pages that are in your admin menu:
                     <ul>
@@ -67,24 +66,24 @@ class FAQ {
             <br><br>
             <h3>Why isn't my document showing up?</h3>
             <ul>
-                <li>When adding or updating a document, make sure the "Location" box is filled out correctly. By default, the site location is set to "None" so that you don't accidentally post something you didn't mean to. Furthermore, if you are using Post/Page screens, be sure you are using the setting the correct post type(s); these can be confusing sometimes.</li>
+                <li>When adding or updating a document, make sure the "Location" box is filled out correctly. By default, the site location is set to "None" so that you don't accidentally post something you didn't mean to. Furthermore, if you are using Post/Page screens, be sure you are setting the correct post type(s); these can be confusing sometimes.</li>
                 <li><em>Note: it is recommended to test adding a document to common locations to ensure that you're setting everything correctly.</em></li>
             </ul>
 
             <br><br>
             <h3>How do I use the same documentation across multiple sites?</h3>
             <ul>
-                <li>On the site that has the document you want to share, edit the document and set "Allow Public" to "Yes". Alternatively, you may allow all of your documents to be public by default from <a href="<?php echo esc_url( Bootstrap::tab_url( 'settings' ) ); ?>">Settings</a>.</li>
-                <li>On the site in which you want to display the document, go to the <a href="<?php echo esc_url( Bootstrap::tab_url( 'imports' ) ); ?>">Imports</a> tab, add a new import, and enter the site URL of the site the document is coming from. Then update the import.</li>
-                <li>You may then choose to automatically feed all of the documents that are public from the other site, or you can feed specific documents only. You also have the option to import it locally so you don't have to feed it remotely.</li>
+                <li>On the site that has the document you want to share, edit the document and set "Allow Public" to "Yes". Alternatively, you may allow all of your documents to be public by default from <a href="<?php echo esc_url( Bootstrap::tab_url( 'settings' ) ); ?>">Settings</a>. You can also optionally generate an API key in Settings for secure access.</li>
+                <li>On the site in which you want to display the document, go to the <a href="<?php echo esc_url( Bootstrap::tab_url( 'imports' ) ); ?>">Imports</a> tab, add a new import, and enter the site URL of the site the document is coming from. Then hit "Fetch Docs."</li>
+                <li>When the docs appear, you may choose to automatically feed all of them that are public from the other site, or you can feed specific docs only. You also have the option to copy it locally so you don't have to feed it remotely.</li>
             </ul>
 
             <br>
             <h3>How do I add documents to the admin bar menu?</h3>
             <ul>
-                <li>First, enable the admin bar menu quick link from <a href="<?php echo esc_url( Bootstrap::tab_url( 'settings' ) ); ?>">Settings</a>.</li>
+                <li>First, enable the admin bar menu from <a href="<?php echo esc_url( Bootstrap::tab_url( 'settings' ) ); ?>">Settings</a>.</li>
                 <li>From the document edit screen, choose "Admin Bar Menu" from the Site Location dropdown, and then save it. That's it!</li>
-                <li>The submenu item will display as "Document Title — Document Content" with all html tags stripped out.</li>
+                <li>The submenu item will display as "Document Title — Document Content" with all html tags stripped out. Note that the document content can be turned on or off in Settings.</li>
                 <li>If you just want to link the menu item to a page, paste only the URL in the content box without anything else.</li>
             </ul>
 
@@ -103,19 +102,14 @@ class FAQ {
             <br><br>
             <h3>How do I add documents to folders on the main documentation page?</h3>
             <ul>
-                <li>Edit a document.</li>
-                <li>Navigate to the "Folder" meta box.</li>
-                <li>Add a new folder if one doesn't exist.</li>
-                <li>Select the folder you want to put it in.</li>
-                <li>You may also manage folders by clicking on the <a href="<?php echo esc_url( Bootstrap::tab_url( 'folders' ) ); ?>">Folders</a> tab.</li>
-                <li>You may also drag and drop documents into different folders from the main documentation page.</li>
-                <li>Import feeds cannot be added to folders since they cannot be assigned taxonomies. You must clone them onto your site to add them to folders.</li>
+                <li>To create a folder, you can do so in the <a href="<?php echo esc_url( Bootstrap::tab_url( 'folders' ) ); ?>">Folders</a> tab.</li>
+                <li>Go back to the main docs page and drag and drop documents into different folders.</li>
             </ul>
 
             <br><br>
             <h3>If I delete a folder with documents, will I lose all of the documents inside the folder?</h3>
             <ul>
-                <li>No. Deleting a folder simply removes the documents from the folder and places them outside of the folder area on the main documentation page. If you want to delete all of the documents inside a folder, the easiest way to do so is to go to the <a href="<?php echo esc_url( Bootstrap::tab_url( 'manage' ) ); ?>">Manage</a> tab, filter by folder, delete all of documents in that folder, <em>then</em> delete the folder from the <a href="<?php echo esc_url( Bootstrap::tab_url( 'folders' ) ); ?>">Folders</a> tab.</li>
+                <li>No. Deleting a folder simply removes the documents from the folder and places them outside of the folder area on the main documentation page.</li>
             </ul>
 
             <br><br>

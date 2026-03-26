@@ -362,7 +362,7 @@ class ImportEditor {
                 </td>
                 <td class="column-action">
                     <button type="button" class="button button-secondary helpdocs-clone-individual" data-id="<?php echo esc_attr( $doc_id ); ?>">
-                        <?php esc_html_e( 'Import Now', 'admin-help-docs' ); ?>
+                        <?php esc_html_e( 'Copy to Local', 'admin-help-docs' ); ?>
                     </button>
                 </td>
             </tr>
