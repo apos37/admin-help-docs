@@ -61,13 +61,11 @@ https://youtu.be/xC5D894lY00
 1. Main documentation page
 2. Page locations
 3. Gutenburg contextual help and side locations
-4. Classic contextual help and side meta box 
-5. Gutenberg contextual help and side meta box
-6. Dashboard meta box with custom colors
-7. Manage the help docs like any other post
-8. Import documents from another site
-9. Settings page
-10. Settings page with colors changed
+4. Replacing the WordPress Dashboard
+5. Organize your admin menu
+6. Settings page
+7. Contact Support form
+8. Flexible branding options
 
 == Changelog ==
 = 2.0.0 =
