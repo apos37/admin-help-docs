@@ -290,7 +290,7 @@ class HelpDocs {
         ];
 
         // Allow filter for supports and taxonomies
-        $supports = apply_filters( 'helpdocs_post_type_supports', [ 'title', 'editor', 'author', 'revisions', 'excerpt' ] );
+        $supports = apply_filters( 'helpdocs_post_type_supports', [ 'title', 'editor' ] );
         $taxonomies = apply_filters( 'helpdocs_post_type_taxonomies', [] );
     
         // Set the CPT args

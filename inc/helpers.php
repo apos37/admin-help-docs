@@ -1334,23 +1334,71 @@ class Helpers {
      * @return void Outputs the HTML directly
      */
     public static function output_doc( $doc_id, $doc_title, $doc_content, $page_location ) {
-        ob_start();
-        
-        // If it's the placeholder, we don't want to try fetching a real title
         $title = ( '{doc_id}' === $doc_id ) ? '{doc_title}' : $doc_title;
-        ?>
-        <div class="helpdocs-doc-wrapper helpdocs-<?php echo esc_attr( $page_location ); ?>-doc">
-            <div class="helpdocs-doc-title">
-                <?php echo wp_kses_post( self::maybe_include_logo() ); ?>
-                <h2><?php echo esc_html( $title ); ?></h2>
+        $logo  = self::maybe_include_logo();
+        $location = esc_attr( $page_location );
+        $safe_title = esc_html( $title );
+
+        return "<div class='helpdocs-doc-wrapper helpdocs-{$location}-doc'>
+            <div class='helpdocs-doc-title'>
+                {$logo}
+                <h2>{$safe_title}</h2>
             </div>
-            <div class="helpdocs-doc-content">
-                <?php echo wp_kses_post( $doc_content ); ?>
+            <div class='helpdocs-doc-content'>
+                {$doc_content}
             </div>
-        </div>
-        <?php
-        return ob_get_clean();
+        </div>";
     } // End output_doc()
+
+
+    /**
+     * Allow additional tags for content feed embeds
+     *
+     * @param array $tags The allowed tags
+     * @return array The modified allowed tags
+     */
+    public static function allow_addt_tags( $tags ) {
+        $tags = array_merge( $tags, [
+            'script' => [
+                'type'                      => true,
+                'src'                       => true,
+                'async'                     => true,
+                'defer'                     => true,
+                'crossorigin'               => true,
+                'integrity'                 => true,
+            ],
+            'video' => [
+                'src'                       => true,
+                'controls'                  => true,
+                'autoplay'                  => true,
+                'loop'                      => true,
+                'muted'                     => true,
+                'poster'                    => true,
+                'width'                     => true,
+                'height'                    => true,
+            ],
+            'source' => [
+                'src'                       => true,
+                'type'                      => true,
+            ],
+            'iframe' => [
+                'src'                       => true,
+                'width'                     => true,
+                'height'                    => true,
+                'frameborder'               => true,
+                'allow'                     => true,
+                'allowfullscreen'           => true,
+                'title'                     => true,
+                'referrerpolicy'            => true,
+                'webkitallowfullscreen'     => true,
+                'mozallowfullscreen'        => true,
+                'loading'                   => true,
+                'style'                     => true,
+            ],
+        ] );
+
+        return apply_filters( 'helpdocs_allowed_html', $tags );
+    } // End allow_addt_tags()
 
 
     /**

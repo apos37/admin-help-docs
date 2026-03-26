@@ -40,10 +40,14 @@ class Bottom {
             return;
         }
 
+        $allowed_tags = Helpers::allow_addt_tags( wp_kses_allowed_html( 'post' ) );
+
         echo '<div class="helpdocs-bottom-wrapper" style="display:none;">';
         foreach ( $this->docs as $doc ) {
             $content = apply_filters( 'the_content', $doc->post_content );
-            echo wp_kses_post( Helpers::output_doc( $doc->ID, $doc->post_title, $content, 'bottom' ) );
+            $html    = Helpers::output_doc( $doc->ID, $doc->post_title, $content, 'bottom' );
+
+            echo wp_kses( $html, $allowed_tags );
         }
         echo '</div>';
     } // End render()

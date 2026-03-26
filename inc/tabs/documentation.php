@@ -530,14 +530,10 @@ class Documentation {
                     echo '<hr class="helpdocs-title-hr">';
                 }
 
-                // Highlight the content
-                add_filter( 'wp_kses_allowed_html', [ __CLASS__, 'allow_addt_tags' ] );
+                $allowed_tags = wp_kses_allowed_html( 'post' );
+                $allowed_tags = Helpers::allow_addt_tags( $allowed_tags );
                 ?>
-                <div id="helpdoc-content"><?php echo wp_kses_post( apply_filters( 'the_content', $post_content ) ); ?></div>
-                <?php
-                remove_filter( 'wp_kses_allowed_html', [ __CLASS__, 'allow_addt_tags' ] );
-
-            ?>
+                <div id="helpdoc-content"><?php echo wp_kses( apply_filters( 'the_content', $post_content ), $allowed_tags ); ?></div>
             </div>
             <?php
 
@@ -554,54 +550,6 @@ class Documentation {
             // wp_safe_redirect( Bootstrap::tab_url( 'documentation' ) );
         }
     } // End render_tab()
-
-
-    /**
-     * Allow additional tags for content feed embeds
-     *
-     * @param array $tags The allowed tags
-     * @return array The modified allowed tags
-     */
-    public static function allow_addt_tags( $tags ) {
-        $tags = array_merge( $tags, [
-            'script' => [
-                'type'                      => true,
-                'src'                       => true,
-                'async'                     => true,
-                'defer'                     => true,
-                'crossorigin'               => true,
-                'integrity'                 => true,
-            ],
-            'video' => [
-                'src'                       => true,
-                'controls'                  => true,
-                'autoplay'                  => true,
-                'loop'                      => true,
-                'muted'                     => true,
-                'poster'                    => true,
-                'width'                     => true,
-                'height'                    => true,
-            ],
-            'source' => [
-                'src'                       => true,
-                'type'                      => true,
-            ],
-            'iframe' => [
-                'src'                       => true,
-                'width'                     => true,
-                'height'                    => true,
-                'frameborder'               => true,
-                'allow'                     => true,
-                'allowfullscreen'           => true,
-                'title'                     => true,
-                'referrerpolicy'            => true,
-                'webkitallowfullscreen'     => true,
-                'mozallowfullscreen'        => true,
-            ],
-        ] );
-
-        return apply_filters( 'helpdocs_allowed_html', $tags );
-    } // End allow_addt_tags()
 
 
     /**

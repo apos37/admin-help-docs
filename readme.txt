@@ -59,8 +59,8 @@ https://youtu.be/xC5D894lY00
 
 == Screenshots ==
 1. Main documentation page
-2. Add a doc to the top of any page as a notification 
-3. Bottom page placement
+2. Page locations
+3. Gutenburg contextual help and side locations
 4. Classic contextual help and side meta box 
 5. Gutenberg contextual help and side meta box
 6. Dashboard meta box with custom colors

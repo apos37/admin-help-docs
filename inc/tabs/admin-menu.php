@@ -281,7 +281,7 @@ class AdminMenu {
         $slug_display = get_option( 'helpdocs_show_menu_item_slugs', false ) ? 'block' : 'none';
         ?>
         <ul class="helpdocs-sorter">
-            <?php foreach ( $ordered_items as $data ) : ?>
+            <?php foreach ( $admin_menu_items as $data ) : ?>
                 <li class="helpdocs-sorter-item" draggable="true" data-value="<?php echo esc_attr( $data[ 'value' ] ); ?>">
                     <span class="dashicons dashicons-menu helpdocs-sort-handle"></span>
                     <span class="helpdocs-sort-text">

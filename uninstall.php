@@ -9,7 +9,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
 
-$helpdocs_remove_all = get_option( 'helpdocs_remove_data_on_uninstall', false );
+$helpdocs_remove_all = get_option( 'helpdocs_remove_on_uninstall', false );
 if ( ! $helpdocs_remove_all ) {
     return;
 }

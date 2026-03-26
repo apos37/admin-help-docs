@@ -88,7 +88,12 @@ class WPDashboard {
                             <div class="helpdoc-header">
                                 <h2><?php echo wp_kses_post( Helpers::convert_merge_tags( $doc->post_title ) ); ?></h2><?php echo wp_kses_post( $incl_edit ); ?>
                             </div>
-                            <div class="helpdoc-content"><?php echo wp_kses_post( apply_filters( 'the_content', Helpers::convert_merge_tags( $post_content ) ) ); ?></div>
+                            <div class="helpdoc-content"><?php 
+                            $allowed_tags = wp_kses_allowed_html( 'post' );
+                            $allowed_tags = Helpers::allow_addt_tags( $allowed_tags );
+                            
+                            echo wp_kses( apply_filters( 'the_content', Helpers::convert_merge_tags( $post_content ) ), $allowed_tags );
+                            ?></div>
                         </div>
                     <?php endforeach; ?>
                     

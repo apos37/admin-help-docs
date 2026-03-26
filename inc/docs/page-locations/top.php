@@ -53,10 +53,14 @@ class Top {
             return;
         }
 
+        $allowed_tags = Helpers::allow_addt_tags( wp_kses_allowed_html( 'post' ) );
+
         echo '<div class="helpdocs-top-wrapper helpdocs-' . esc_attr( str_replace( '_', '-', $this->placement ) ) . '">';
         foreach ( $this->docs as $doc ) {
             $content = apply_filters( 'the_content', $doc->post_content );
-            echo wp_kses_post( Helpers::output_doc( $doc->ID, $doc->post_title, $content, 'top' ) );
+            $html    = Helpers::output_doc( $doc->ID, $doc->post_title, $content, 'top' );
+
+            echo wp_kses( $html, $allowed_tags );
         }
         echo '</div>';
     } // End render()
