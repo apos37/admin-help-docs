@@ -1,5 +1,0 @@
-/* Fixing WordPress admin toolbar spacing issues */
-
-html.wp-toolbar {
-    padding-top: 0 !important;
-}

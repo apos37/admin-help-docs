@@ -1,0 +1,27 @@
+/* Lists */
+#admin-help-docs #faq ul {
+    list-style: none;
+    padding: revert;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+#admin-help-docs #faq ul li {
+    padding-inline-start: 1ch;
+    position: relative;
+}
+
+#admin-help-docs #faq ul li::before {
+    content: "→";
+    position: absolute;
+    left: -15px;
+    color: var(--helpdocs-color-accent);
+}
+
+/* Headings */
+
+#faq .helpdocs-full-width-box h3 {
+    margin: 1em 0 !important;
+    padding: 0 !important;
+    border-top: 0 !important;
+}

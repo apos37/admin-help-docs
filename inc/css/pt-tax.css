@@ -1,0 +1,24 @@
+/* Hide default title and "Add New" button */
+.wrap h1.wp-heading-inline,
+.wrap .subtitle,
+.wrap .page-title-action {
+    display: none;
+}
+
+/* Adjust the main content area */
+#wpbody-content {
+    margin: 0 0 0 -20px !important;
+}
+
+#wpbody-content .wrap {
+    padding: 60px 30px !important;
+    margin: 0 -20px 0 0px !important;
+}
+
+#contextual-help-wrap, #screen-options-wrap {
+    padding: 8px 30px 20px !important;
+}
+
+#screen-meta-links {
+    margin: 0 10px 0 0 !important;
+}

@@ -2,9 +2,9 @@
 Contributors: apos37
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
-Tested up to: 6.8
-Requires PHP: 7.4
-Stable tag: 1.4.3.2
+Tested up to: 6.9
+Requires PHP: 8.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -34,27 +34,6 @@ Anyone that has the `Administrator` role, or other roles that you specify.
 = Can I use the same documentation across multiple sites? =
 Yes, you can choose to automatically feed documents or import them locally from a remote site with the same plugin. You can do so from the **Help Docs** > **Imports** section.
 
-= Can I add support for additional html elements currently not allowed in my main docs? =
-Yes, you can make a request, or if you know what you're doing you can use the following PHP hook:
-
-`<?php
-add_filter( 'helpdocs_allowed_html', 'helpdocs_allowed_html', 10, 3 );
-function helpdocs_allowed_html( $tags ) {
-	return array_merge( $tags, [
-        'example' => [
-            'arg_1' => true,
-            'arg_2' => true,
-            'arg_3' => true,
-        ],
-        'example2' => [
-            'arg_1' => true,
-            'arg_2' => true,
-            'arg_3' => true,
-        ],
-    ] );
-} // End helpdocs_allowed_html()
-?>`
-
 = Where can I request features and get further support? =
 We recommend using our [website support forum](https://pluginrx.com/support/plugin/admin-help-docs/) as the primary method for requesting features and getting help. You can also reach out via our [Discord support server](https://discord.gg/3HnzNEJVnR) or the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-help-docs/), but please note that WordPress.org doesn’t always notify us of new posts, so it’s not ideal for time-sensitive issues.
 
@@ -74,6 +53,35 @@ https://youtu.be/xC5D894lY00
 10. Settings page with colors changed
 
 == Changelog ==
+= 2.0.0 =
+* Update: Complete rebuild for better performance and UI
+* Update: Added ability to reset colors and all settings before save to test before keeping changes
+* Update: Removed import/export settings API and replaced it with JSON upload/download
+* Update: Added color themes and more color options
+* Update: Added option for downloading/uploading colors only so people can share themes easily
+* Update: Added more access control options, including per doc viewing roles
+* Update: Added "Remove All Plugin Data on Uninstall" option
+* Update: Removed Gravity Form User Merge Tags option as it has no place here; same functionality added to our other plugin, "Advanced Tools for Gravity Forms"
+* Update: Removed "Hide Version" option and moved it to title attribute when hovering over logo and page title
+* Update: Changed settings save functionality to ajax without refreshing the page, added Ctrl+S/Cmd+S capability as well
+* Update: Added style option for main docs page navigation
+* Update: Added support for multiple locations on a single help doc
+* Update: Split option for enabling admin bar menu into backend and frontend enabling
+* Update: Added option to include doc content in admin bar menu
+* Fix: Footer text wasn't updating properly
+* Update: Added a separate doc logo field and an option to hide it
+* Update: Removed support for [helpdocs_css] shortcode, and added a css field in settings for the whole main docs page
+* Tweak: Changed the [dont_do_shortcode] shortcode to allow wrapping shortcodes instead of only requiring them being in a content attribute with curly braces (see help guide)
+* Fix: Gutenberg docs weren't showing up where they should be
+* Update: Removed priority option from side page location and fixed it to the top of the sidebars so it can't be moved by the user
+* Update: Added option to replace the WP Dashboard entirely
+* Update: Redid the import page entirely; fetching data is now live with ajax and cached
+* Update: Added an optional public access api key to secure sharing and importing
+* Update: Added support for sorting imported docs on the main docs page
+* Update: Removed User Preferences option as help docs on the post/page edit screen no longer use meta boxes that can be moved around
+* Update: Added a bunch of developer hooks for further customization
+* Update: All help guides and developer docs updated
+
 = 1.4.3.2 =
 * Fix: Default icon causing php warning "Undefined variable $di"
 

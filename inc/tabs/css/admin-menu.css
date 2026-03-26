@@ -1,0 +1,71 @@
+.helpdocs-sorter {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.helpdocs-sorter-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    background: #ffffff;
+    border: 1px solid #ccd0d4;
+    cursor: grab;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.helpdocs-sorter-item:active {
+    cursor: grabbing;
+}
+
+.helpdocs-sorter-item.is-dragging {
+    opacity: 0.4;
+}
+
+.helpdocs-sorter-placeholder {
+    height: 42px;
+    margin-bottom: 6px;
+    border: 2px dashed #2271b1;
+    background: rgba( 34, 113, 177, 0.08 );
+}
+
+.helpdocs-sorter-item.drag-over {
+    border-color: #2271b1;
+}
+
+.helpdocs-sort-handle {
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.helpdocs-sort-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.helpdocs-sort-label {
+    font-weight: 500;
+}
+
+.helpdocs-sort-sublabel {
+    font-size: 0.9em !important;
+    font-style: italic;
+    color: #000000;
+    opacity: 0.7;
+    margin-top: 2px;
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+}
+
+html.helpdocs-view-sublabels .helpdocs-sort-sublabel {
+    display: block;
+}

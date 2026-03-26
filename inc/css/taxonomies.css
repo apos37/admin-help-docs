@@ -1,0 +1,83 @@
+/* Style the page */
+
+#col-left .col-wrap,
+#col-right .col-wrap {
+    padding: 0;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, .1);
+}
+
+#col-left .col-wrap h2 {
+    padding: 20px;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #1d2939;
+    border-bottom: 1px solid #eaecf0;
+}
+
+#col-left .col-wrap form {
+    padding: 10px 20px 5px;
+}
+
+#col-right .col-wrap form {
+    padding: 10px 20px 20px;
+}
+
+#col-left .col-wrap form .submit {
+    margin-top: 20px;
+}
+
+#col-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#col-left,
+#col-right {
+    float: none;
+}
+
+#col-left {
+    flex: 0 0 400px;
+}
+
+#col-right {
+    margin-left: 30px;
+    flex: 1;
+}
+
+/* Hide the default search box */
+
+#wpbody-content .wrap .search-form {
+    display: none;
+}
+
+/* Edit Term Page */
+
+.term-php #wpbody-content .wrap {
+    padding: 0 !important;
+    margin: 60px 10px 0 30px !important;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, .1);
+}
+
+.term-php #wpbody-content .wrap h1 {
+    padding: 20px;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #1d2939;
+    border-bottom: 1px solid #eaecf0;
+}
+
+.term-php #wpbody-content .wrap #edittag {
+    padding: 20px;
+}

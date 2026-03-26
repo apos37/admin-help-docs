@@ -1,0 +1,82 @@
+/* Advanced Buttons */
+#helpdocs_field_upload_download_colors,
+#helpdocs_field_upload_download_settings,
+#helpdocs_field_reset_settings {
+    margin-top: 1rem;
+}
+
+#helpdocs_field_upload_download_colors .helpdocs-html-content,
+#helpdocs_field_upload_download_settings .helpdocs-html-content,
+#helpdocs_field_reset_settings .helpdocs-html-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.helpdocs-settings-grid .helpdocs-button {
+    width: fit-content;
+    cursor: pointer;
+    line-height: revert !important;
+}
+
+#helpdocs-upload-colors-filename,
+#helpdocs-upload-filename {
+    display: none;
+    font-family: Consolas, Monaco, monospace;
+    font-weight: 600;
+    margin-left: 10px;
+    padding: 4px 8px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Custom CSS Editor */
+#helpdocs_field_main_docs_css .CodeMirror {
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    height: 150px;
+    max-height: 500px;
+    margin-top: 5px;
+}
+
+#helpdocs_field_main_docs_css .CodeMirror-focused {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+#helpdocs_field_main_docs_css .CodeMirror-gutters {
+    border-right: 1px solid #dcdcde;
+    background-color: #f0f0f1;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.helpdocs-color-grid {
+    margin-bottom: 20px;
+}
+
+/* API Key Field */
+
+#helpdocs_api_key_display {
+    padding: 8px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    background: #ffffff;
+    margin-bottom: 10px;
+}
+
+.helpdocs-api-key-box.has-key {
+    font-family: Consolas, Monaco, monospace;
+    direction: ltr;
+    unicode-bidi: embed;
+    background: #F2F2F2 !important;
+}

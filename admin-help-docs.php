@@ -3,10 +3,10 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://pluginrx.com/plugin/admin-help-docs/
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             1.4.3.2
+ * Version:             2.0.0
  * Requires at least:   5.9
- * Tested up to:        6.8
- * Requires PHP:        7.4
+ * Tested up to:        6.9
+ * Requires PHP:        8.0
  * Author:              PluginRx
  * Author URI:          https://pluginrx.com/
  * Discord URI:         https://discord.gg/3HnzNEJVnR
@@ -17,186 +17,362 @@
  */
 
 
-/**
- * Exit if accessed directly.
- */
-if ( !defined( 'ABSPATH' ) ) exit;
+namespace PluginRx\AdminHelpDocs;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
- * Defines
+ * BOOTSTRAP
+ *
+ * Loads plugin metadata, performs environment checks, and initializes the plugin.
  */
-$plugin_data = get_file_data( __FILE__, [
-    'name'         => 'Plugin Name',
-    'description'  => 'Description',
-    'version'      => 'Version',
-    'plugin_uri'   => 'Plugin URI',
-    'requires_php' => 'Requires PHP',
-    'textdomain'   => 'Text Domain',
-    'author'       => 'Author',
-    'author_uri'   => 'Author URI',
-    'discord_uri'  => 'Discord URI'
-] );
+final class Bootstrap {
 
-// Versions
-define( 'HELPDOCS_VERSION', $plugin_data[ 'version' ] );
-define( 'HELPDOCS_SCRIPT_VERSION', time() );
-define( 'HELPDOCS_MIN_PHP_VERSION', $plugin_data[ 'requires_php' ] );
+    /**
+     * Plugin files to load.
+     *
+     * This array contains the paths to all plugin files that need to be included.
+     */
+    public const FILES = [
+        'plugins-page.php',
+        'helpers.php',
+        'colors.php',
+        'post-type-help-doc-imports.php',
+        'post-type-help-docs.php',
+        'taxonomy-folders.php',
+        'tabs/settings.php',
+        'tabs/admin-menu.php',
+        'tabs/documentation.php',
+        'tabs/faq.php',
+        'tabs/support.php',
+        'tabs/import.php',
+        'menu.php',
+        'shortcodes.php',
+        'api.php',
+        'deprecated.php',
+        'cleanup.php',
+    ];
 
-// Names
-define( 'HELPDOCS_NAME', $plugin_data[ 'name' ] );
-define( 'HELPDOCS_TEXTDOMAIN', $plugin_data[ 'textdomain' ] );
-define( 'HELPDOCS_AUTHOR', $plugin_data[ 'author' ] );
-define( 'HELPDOCS_AUTHOR_EMAIL', 'apos37@pm.me' );
-define( 'HELPDOCS_AUTHOR_URL', $plugin_data[ 'author_uri' ] );
-define( 'HELPDOCS_GUIDE_URL', HELPDOCS_AUTHOR_URL . 'guide/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
-define( 'HELPDOCS_DOCS_URL', HELPDOCS_AUTHOR_URL . 'docs/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
-define( 'HELPDOCS_SUPPORT_URL', HELPDOCS_AUTHOR_URL . 'support/plugin/' . HELPDOCS_TEXTDOMAIN . '/' );
-define( 'HELPDOCS_DISCORD_URL', $plugin_data[ 'discord_uri' ] );
 
-// Prevent loading the plugin if PHP version is not minimum
-if ( version_compare( PHP_VERSION, HELPDOCS_MIN_PHP_VERSION, '<=' ) ) {
-    add_action( 'admin_init', static function() {
-        deactivate_plugins( plugin_basename( __FILE__ ) );
-    } );
-    add_action( 'admin_notices', static function() {
-        /* translators: 1: Plugin name, 2: Minimum PHP version */
-        $message = sprintf( __( '"%1$s" requires PHP %2$s or newer.', 'admin-help-docs' ),
-            HELPDOCS_NAME,
-            HELPDOCS_MIN_PHP_VERSION
+    /**
+     * Plugin header keys for get_file_data()
+     */
+    public const HEADER_KEYS = [
+        'name'         => 'Plugin Name',
+        'description'  => 'Description',
+        'version'      => 'Version',
+        'plugin_uri'   => 'Plugin URI',
+        'requires_php' => 'Requires PHP',
+        'textdomain'   => 'Text Domain',
+        'author'       => 'Author',
+        'author_uri'   => 'Author URI',
+        'discord_uri'  => 'Discord URI'
+    ];
+
+
+    /**
+     * @var array Plugin metadata from file header
+     */
+    private array $meta;
+
+
+    /**
+     * @var Bootstrap|null Singleton instance
+     */
+    private static ?Bootstrap $instance = null;
+
+
+    /**
+     * Get instance
+     *
+     * @return self
+     */
+    public static function instance() : self {
+        return self::$instance ??= new self();
+    } // End instance()
+
+
+    /**
+     * Constructor
+     */
+    private function __construct() {
+        $this->meta = $this->load_meta();
+        $this->check_environment();
+        add_action( 'plugins_loaded', [ $this, 'load_files' ] );
+    } // End __construct()
+
+
+    /**
+     * Check if test mode is enabled
+     *
+     * @return bool
+     */
+    public static function is_test_mode() : bool {
+        return filter_var( apply_filters( 'helpdocs_test_mode', get_option( 'ddtt_test_mode' ) ), FILTER_VALIDATE_BOOLEAN );
+    } // End is_test_mode()
+
+
+    /**
+     * Load plugin metadata
+     *
+     * @return array
+     */
+    private function load_meta() : array {
+        return get_file_data( __FILE__, self::HEADER_KEYS );
+    } // End load_meta()
+
+
+    /**
+     * Check environment requirements
+     *
+     * @return void
+     */
+    private function check_environment() : void {
+        if ( version_compare( PHP_VERSION, $this->meta[ 'requires_php' ], '<' ) ) {
+            deactivate_plugins( plugin_basename( __FILE__ ) );
+            wp_die( sprintf(
+                /* translators: %1$s is plugin name, %2$s is required PHP version */
+                esc_html( __( '%1$s requires PHP %2$s or higher.', 'dev-debug-tools' ) ),
+                esc_html( $this->meta[ 'name' ] ),
+                esc_html( $this->meta[ 'requires_php' ] )
+            ) );
+        }
+    } // End check_environment()
+
+
+    /**
+     * Load all required plugin files
+     *
+     * @return void
+     */
+    public function load_files() : void {
+        foreach ( self::FILES as $file ) {
+            $file_path = __DIR__ . '/inc/' . $file;
+            if ( file_exists( $file_path ) ) {
+                require_once $file_path;
+            } else {
+                _doing_it_wrong(
+                    __METHOD__,
+                    sprintf( 'File not found: %s', esc_html( $file_path ) ),
+                    esc_html( $this->version() )
+                );
+            }
+        }
+
+        // Autoload all files in the "inc/docs/page-locations" directory
+        $docs_dir = __DIR__ . '/inc/docs/page-locations/';
+        if ( is_dir( $docs_dir ) ) {
+            foreach ( glob( $docs_dir . '*.php' ) as $file ) {
+                require_once $file;
+            }
+        } else {
+            _doing_it_wrong(
+                __METHOD__,
+                sprintf( 'Directory not found: %s', esc_html( $docs_dir ) ),
+                esc_html( $this->version() )
+            );
+        }
+
+        // Autoload all files in the "inc/docs" directory
+        $docs_dir = __DIR__ . '/inc/docs/';
+        if ( is_dir( $docs_dir ) ) {
+            foreach ( glob( $docs_dir . '*.php' ) as $file ) {
+                require_once $file;
+            }
+        } else {
+            _doing_it_wrong(
+                __METHOD__,
+                sprintf( 'Directory not found: %s', esc_html( $docs_dir ) ),
+                esc_html( $this->version() )
+            );
+        }
+    } // End load_files()
+
+
+    /**
+     * Get admin URL
+     *
+     * @param string $path
+     * @param string $scheme
+     * @return string
+     */
+    public static function admin_url( $path = '', $scheme = 'admin' ) {
+         return is_network_admin() ? network_admin_url( $path, $scheme ) : admin_url( $path, $scheme );
+    } // End admin_url()
+
+
+    /**
+     * Get metadata value
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function meta( string $key ) : string {
+        return self::$instance->meta[ $key ] ?? '';
+    } // End meta()
+
+
+    /**
+     * Get plugin URL
+     *
+     * @param string $append
+     * @return string
+     */
+    public static function url( string $append = '' ) : string {
+        return plugin_dir_url( __FILE__ ) . ltrim( $append, '/' );
+    } // End url()
+
+
+    /**
+     * Get plugin path
+     *
+     * @param string $append
+     * @return string
+     */
+    public static function path( string $append = '' ) : string {
+        return plugin_dir_path( __FILE__ ) . ltrim( $append, '/' );
+    } // End path()
+
+
+    /**
+     * Get a page URL
+     *
+     * @param string $append
+     * @return string
+     */
+    public static function tab_url( $slug ) : string {
+        $slug = sanitize_key( $slug );
+
+        switch ( $slug ) {
+            case 'manage':
+                return add_query_arg(
+                    [ 'post_type' => HelpDocs::$post_type ],
+                    self::admin_url( 'edit.php' )
+                );
+
+            case 'folders':
+                return add_query_arg(
+                    [ 'taxonomy' => Folders::$taxonomy ],
+                    self::admin_url( 'edit-tags.php' )
+                );
+
+            case 'imports':
+                return add_query_arg(
+                    [ 'post_type' => Imports::$post_type ],
+                    self::admin_url( 'edit.php' )
+                );
+
+            case 'main':
+                $slug = 'documentation';
+                break;
+
+            case 'adminmenu':
+                $slug = 'admin-menu';
+                break;
+        }
+
+        return add_query_arg(
+            [
+                'page' => self::textdomain(),
+                'tab'  => $slug,
+            ],
+            self::admin_url( 'admin.php' )
         );
-        echo '<div class="notice notice-error"><p>'.esc_html( $message ).'</p></div>';
-    } );
-    return;
-}
-
-// Prefixes
-define( 'HELPDOCS_PF', 'HELPDOCS_' ); // Plugin prefix
-define( 'HELPDOCS_GO_PF', 'helpdocs_' ); // Global options prefix
-
-// Fetch site url only once
-$site_url = site_url( '/' );
-
-// Paths
-define( 'HELPDOCS_ADMIN_URL', str_replace( $site_url, '', rtrim( helpdocs_admin_url(), '/' ) ) );           //: wp-admin || wp-admin/network
-define( 'HELPDOCS_CONTENT_URL', str_replace( $site_url, '', content_url() ) );                              //: wp-content
-define( 'HELPDOCS_INCLUDES_URL', str_replace( $site_url, '', rtrim( includes_url(), '/' ) ) );              //: wp-includes
-define( 'HELPDOCS_PLUGINS_URL', str_replace( $site_url, '', plugins_url() ) );                              //: wp-content/plugins
-define( 'HELPDOCS_PLUGIN_ABSOLUTE', __FILE__ );                                                             //: /home/.../public_html/wp-content/plugins/admin-help-docs/admin-help-docs.php)
-define( 'HELPDOCS_PLUGIN_ROOT', plugin_dir_path( __FILE__ ) );                                              //: /home/.../public_html/wp-content/plugins/admin-help-docs/
-define( 'HELPDOCS_PLUGIN_DIR', plugins_url( '/'.HELPDOCS_TEXTDOMAIN.'/' ) );                                //: https://domain.com/wp-content/plugins/admin-help-docs/
-define( 'HELPDOCS_PLUGIN_SHORT_DIR', str_replace( site_url(), '', HELPDOCS_PLUGIN_DIR ) );                  //: /wp-content/plugins/admin-help-docs/
-define( 'HELPDOCS_PLUGIN_ASSETS_PATH', HELPDOCS_PLUGIN_ROOT.'assets/' );                                    //: /home/.../public_html/wp-content/plugins/admin-help-docs/assets/
-define( 'HELPDOCS_PLUGIN_IMG_PATH', HELPDOCS_PLUGIN_DIR.'includes/admin/img/' );                            //: https://domain.com/wp-content/plugins/admin-help-docs/includes/admin/img/
-define( 'HELPDOCS_PLUGIN_INCLUDES_PATH', HELPDOCS_PLUGIN_ROOT.'includes/' );                                //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/
-define( 'HELPDOCS_PLUGIN_ADMIN_PATH', HELPDOCS_PLUGIN_INCLUDES_PATH.'admin/' );                             //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/admin/
-define( 'HELPDOCS_PLUGIN_CLASSES_PATH', HELPDOCS_PLUGIN_INCLUDES_PATH.'classes/' );                         //: /home/.../public_html/wp-content/plugins/admin-help-docs/includes/classes/
-define( 'HELPDOCS_PLUGIN_CSS_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/admin/css/' );                      //: /wp-content/plugins/admin-help-docs/includes/admin/css/
-define( 'HELPDOCS_PLUGIN_JS_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/admin/js/' );                        //: /wp-content/plugins/admin-help-docs/includes/admin/js/
-define( 'HELPDOCS_PLUGIN_FILES_PATH', HELPDOCS_PLUGIN_SHORT_DIR.'includes/files/' );                        //: /wp-content/plugins/admin-help-docs/includes/files/
+    } // End tab_url()
 
 
-/**
- * Get admin URL (handles multisite)
- *
- * @param string $path
- * @param string $scheme
- * @return string
- */
-function helpdocs_admin_url( $path = '', $scheme = 'admin' ) {
-    if ( is_network_admin() ) {
-        $admin_url = network_admin_url( $path, $scheme );
-    } else {
-        $admin_url = admin_url( $path, $scheme );
-    }
-    return $admin_url;
-} // End helpdocs_admin_url()
+    /**
+     * Get plugin name
+     *
+     * @return string
+     */
+    public static function name() : string {
+        return self::meta( 'name' );
+    } // End name()
 
 
-/**
- * Get a path to one of our options pages
- * https://domain.com/wp-admin/admin.php?page=admin-help-docs%2Fincludes%2Fadmin%2Foptions.php
- * https://domain.com/wp-admin/admin.php?page=admin-help-docs%2Fincludes%2Fadmin%2Foptions.php&tab=testing
- *
- * @param string $tab
- * @return string
- */
-function helpdocs_plugin_options_path( $tab = null ) {
-    $incl_tab = !is_null( $tab ) ? '&tab='.sanitize_html_class( $tab ) : '';
-    return helpdocs_admin_url( 'admin.php?page='.HELPDOCS_TEXTDOMAIN.$incl_tab );
-} // End helpdocs_plugin_options_path()
+    /**
+     * Get plugin version
+     *
+     * @return string
+     */
+    public static function version() : string {
+        return self::meta( 'version' );
+    } // End version()
 
 
-/**
- * Get a short path to our options pages
- * admin-help-docs/includes/admin/options.php
- * admin-help-docs/includes/admin/options.php&tab=testing
- *
- * @param string $tab
- * @return string
- */
-function helpdocs_plugin_options_short_path( $tab = null ) {
-    $incl_tab = !is_null( $tab ) ? '&tab='.sanitize_html_class( $tab ) : '';
-    return HELPDOCS_TEXTDOMAIN.$incl_tab;
-} // End helpdocs_plugin_options_short_path()
+    /**
+     * Get script/style version for cache busting.
+     * Returns timestamp if TEST_MODE is enabled, otherwise plugin version.
+     *
+     * @return string
+     */
+    public static function script_version() : string {
+        if ( self::is_test_mode() ) {
+            return 'TEST-' . time();
+        }
+        return self::version();
+    } // End script_version()
 
 
-/**
- * Multisite verbiage
- *
- * @return string
- */
-function helpdocs_multisite_suffix() {
-    if ( is_network_admin() ) {
-        $sfx = ' <em>' . __( '- Network', 'admin-help-docs' ) . '</em>';
-    } elseif ( is_multisite() && is_main_site() ) {
-        $sfx = ' <em>' . __( '- Primary', 'admin-help-docs' ) . '</em>';
-    } elseif ( is_multisite() && !is_main_site() ) {
-        $sfx = ' <em>' . __( '- Subsite', 'admin-help-docs' ) . '</em>';
-    } else {
-        $sfx = '';
-    }
-    return $sfx;
-} // End helpdocs_multisite_suffix()
+    /**
+     * Get plugin text domain
+     *
+     * @return string
+     */
+    public static function textdomain() : string {
+        return self::meta( 'textdomain' );
+    } // End textdomain()
 
 
-
-/**
- * Activate
- */
-register_activation_hook( __FILE__, 'helpdocs_activate_plugin' );
-function helpdocs_activate_plugin() {
-    // Log when this plugin was installed
-    if ( !get_option( HELPDOCS_GO_PF.'plugin_installed' ) ) {
-        update_option( HELPDOCS_GO_PF.'plugin_installed', gmdate( 'Y-m-d H:i:s' ) );
-    }
-
-	// Log when this plugin was last activated
-    update_option( HELPDOCS_GO_PF.'plugin_activated', gmdate( 'Y-m-d H:i:s' ) );
-
-    // Uninstall
-    register_uninstall_hook( __FILE__, HELPDOCS_GO_PF.'uninstall_plugin' );
-} // End helpdocs_activate_plugin()
+    /**
+     * Get plugin author
+     *
+     * @return string
+     */
+    public static function author() : string {
+        return self::meta( 'author' );
+    } // End author()
 
 
-/**
- * Uninstall
- * Registered inside register_activation_hook above
- */
-function helpdocs_uninstall_plugin() {
-    // Delete options
-    delete_option( HELPDOCS_GO_PF.'plugin_activated' ); // Date the plugin was last activated
-} // End helpdocs_uninstall_plugin()
+    /**
+     * Get plugin URI
+     *
+     * @return string
+     */
+    public static function plugin_uri() : string {
+        return self::meta( 'plugin_uri' );
+    } // End plugin_uri()
 
 
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require HELPDOCS_PLUGIN_INCLUDES_PATH . 'class-'. HELPDOCS_TEXTDOMAIN .'.php';
+    /**
+     * Get author URI
+     *
+     * @return string
+     */
+    public static function author_uri() : string {
+        return self::meta( 'author_uri' );
+    } // End author_uri()
 
 
-/**
- * Begin execution of the plugin
- */
-new HELPDOCS_MAIN();
+    /**
+     * Get Discord URI
+     *
+     * @return string
+     */
+    public static function discord_uri() : string {
+        return self::meta( 'discord_uri' );
+    } // End discord_uri()
+
+
+    /**
+     * Prevent cloning and unserializing
+     */
+    public function __clone() {}
+    public function __wakeup() {}
+
+} // End Bootstrap
+
+
+Bootstrap::instance();

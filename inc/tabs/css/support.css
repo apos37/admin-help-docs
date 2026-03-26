@@ -1,0 +1,188 @@
+/* Header Support Info */
+
+#helpdocs-header-support-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #646970;
+    background: #f0f0f1;
+    padding: 6px 15px;
+    border-radius: 4px;
+    border: 1px solid #dcdcde;
+    font-weight: 500;
+}
+
+#helpdocs-header-support-info span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.helpdocs-support-name {
+    color: #1d2327;
+    font-weight: 600;
+}
+
+.helpdocs-support-phone {
+    font-family: monospace;
+    letter-spacing: 0.5px;
+}
+
+#helpdocs-header-support-info::after {
+    content: "";
+}
+
+#helpdocs-support-response {
+    display: block;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+/* Response Messages */
+
+#helpdocs-support-response.success {
+    border-left: 4px solid #28a745;
+    background: #e7f5fe;
+}
+
+#helpdocs-support-response.error {
+    border-left: 4px solid #dc3545;
+    background: #fbeaea;
+}
+
+/* Support Logs Container */
+
+#helpdocs-support-logs .helpdocs-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+#helpdocs-support-logs .helpdocs-settings-header h2 {
+    margin: 0;
+}
+
+#helpdocs-clear-logs {
+    display: flex;
+    align-items: center;
+}
+
+#helpdocs-clear-logs .dashicons {
+    height: 14px !important;
+    width: 14px !important;
+    margin-right: 6px;
+    font-size: 14px !important;
+}
+
+/* Table Styling */
+
+.helpdocs-logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #fff;
+    font-size: 13px;
+    table-layout: fixed;
+}
+
+.helpdocs-logs-table th:nth-child(1) { width: 150px; } /* Date */
+.helpdocs-logs-table th:nth-child(2) { width: auto;  } /* Subject (Flexible) */
+.helpdocs-logs-table th:nth-child(3) { width: 140px; } /* Reason */
+.helpdocs-logs-table th:nth-child(4) { width: 120px; } /* Sent By */
+
+.helpdocs-logs-table th {
+    text-align: left;
+    padding: 12px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dcdcde;
+    color: #2c3338;
+}
+
+.helpdocs-logs-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f1;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.helpdocs-logs-table tr:hover td {
+    background: #f6f7f7;
+}
+
+/* Log Column Specifics */
+
+.log-date {
+    color: #646970;
+    white-space: nowrap;
+}
+
+.log-subject strong {
+    color: #1d2327;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.helpdocs-toggle-message {
+    color: #2271b1;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.helpdocs-toggle-message:hover {
+    color: #135e96;
+    text-decoration: underline;
+}
+
+/* Expanded Message Row */
+
+.log-message-row td {
+    padding: 0 12px 15px 12px;
+    background: #f9f9f9;
+}
+
+.log-message-row .log-message {
+    padding: 12px;
+    border-left: 3px solid #dcdcde;
+    background: #fff;
+    font-style: italic;
+    white-space: pre-wrap;
+    color: #50575e;
+    line-height: 1.5;
+}
+
+.log-attachments-container {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #50575e;
+}
+
+/* Reason Badge */
+
+.log-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #e5e5e5;
+    color: #444;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Visibility Utility */
+
+.condition-hide {
+    display: none !important;
+}
+
+/* Required Field Indicator */
+
+.helpdocs-required-field {
+    color: #d63638;
+    margin-left: 4px;
+    font-weight: bold;
+}

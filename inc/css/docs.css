@@ -1,0 +1,503 @@
+/* ----------------------------------------- */
+/* ---------------- Buttons ---------------- */
+/* ----------------------------------------- */
+
+.helpdocs-button,
+#screen-options-apply,
+#submit {
+    background: var(--helpdocs-color-button) !important;
+    color: var(--helpdocs-color-button-font) !important;
+    line-height: 1 !important;
+    padding: 8px 12px !important;
+    border: 1px solid transparent;
+    border-radius: 6px !important;
+    text-decoration: none;
+    font-size: 0.80rem !important;
+    font-weight: 500 !important;
+    transition: background 0.3s ease;
+    margin-bottom: 0 !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.helpdocs-button:hover,
+#screen-options-apply:hover,
+#submit:hover {
+    background: var(--helpdocs-color-button-hover) !important;
+}
+
+.helpdocs-button.button-secondary {
+    background: #f6f7f7 !important;
+    color: #1d2327 !important;
+}
+
+.helpdocs-button.button-secondary:hover {
+    background: #e1e4e6 !important;
+}
+
+.helpdocs-button:disabled {
+    background: #ccc !important;
+    background: var(--helpdocs-color-button-disabled, #d5d5d5) !important;
+    color: #999 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: none !important;
+}
+
+.helpdocs-button:disabled:hover {
+    background: var(--helpdocs-color-button-disabled, #d5d5d5) !important;
+}
+
+.tablenav .button {
+    border-radius: 6px !important;
+}
+
+.helpdocs-button.button.updating-message {
+    padding: 8px 12px 5px !important;
+}
+
+.helpdocs-button.button.updating-message:before {
+    margin: 0px 5px 0 -2px !important;
+    color: var(--helpdocs-color-button-font) !important;
+}
+
+
+/* ----------------------------------------- */
+/* ------------- Click to Copy ------------- */
+/* ----------------------------------------- */
+
+/* The container */
+.helpdocs-click-to-copy {
+    cursor: pointer;
+    position: relative; /* Essential for absolute positioning of the tip */
+    display: inline-block;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Optional: subtle hover effect to indicate it's interactive */
+.helpdocs-click-to-copy:hover {
+    color: #2271b1; /* WordPress Blue */
+}
+
+/* The "Copied!" tip */
+.helpdocs-click-to-copy .helpdocs-copied-tip {
+    position: absolute;
+    bottom: 125%; /* Position it above the text */
+    left: 50%;
+    transform: translateX( -50% );
+    background: #32373c; /* WordPress Dark Grey */
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 1;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none; /* Prevents the tip from interfering with clicks */
+    box-shadow: 0 2px 4px rgba( 0, 0, 0, 0.2 );
+    z-index: 100;
+}
+
+/* The small arrow pointing down from the tip */
+.helpdocs-click-to-copy .helpdocs-copied-tip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #32373c transparent transparent transparent;
+}
+
+
+/* ----------------------------------------- */
+/* ------------- Dashboard Menu ------------ */
+/* ----------------------------------------- */
+
+#menu-dashboard a[href*="page=admin-help-dashboard"] {
+    display: none !important;
+}
+
+/* Force the 'Home' link (the first item) to show the active color */
+#menu-dashboard.wp-menu-open ul.wp-submenu li.wp-first-item a {
+    color: #fff !important;
+    font-weight: 600 !important;
+}
+
+/* Ensure the top-level Dashboard stays highlighted */
+#menu-dashboard.menu-top > a.wp-menu-open {
+    background-color: var( --wp-admin-theme-color-darker, #2271b1 ) !important;
+    color: #fff !important;
+}
+
+
+/* ----------------------------------------- */
+/* ----------- Dashboard Widgets ----------- */
+/* ----------------------------------------- */
+
+.index-php .helpdocs-dashboard-widget-link {
+    display: contents;
+}
+
+.index-php .helpdocs-dashboard-widget-link a {
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: filter 0.15s, color 0.15s;
+    opacity: 0.5;
+}
+
+.index-php .helpdocs-dashboard-widget-link a:hover {
+    opacity: 1;
+}
+
+.index-php #admin-help-docs.postbox {
+    background: #F6F7F8 !important;
+}
+
+.index-php #admin-help-docs .helpdocs-dashboard-widget-link a:hover {
+    filter: brightness( 0.97 );
+}
+
+.index-php div[id^="helpdocs_"].postbox {
+    background: var( --helpdocs-color-doc-bg ) !important;
+    color: var( --helpdocs-color-doc-font ) !important;
+}
+
+.index-php div[id^="helpdocs_"] .helpdocs-dashboard-widget-link a {
+    color: var(--helpdocs-color-doc-title) !important;
+}
+
+.index-php div[id^="helpdocs_"] .order-higher-indicator,
+.index-php div[id^="helpdocs_"] .order-lower-indicator,
+.index-php div[id^="helpdocs_"] .toggle-indicator {
+    color: var(--helpdocs-color-doc-accent) !important;
+}
+.index-php div[id^="helpdocs_"] .postbox-header h2 {
+    color: var(--helpdocs-color-doc-title) !important;
+}
+.index-php div[id^="helpdocs_"] .postbox-header h2 span {
+    color: revert !important;
+}
+.index-php div[id^="helpdocs_"] a:not(.helpdocs-dashboard-widget-link a) {
+    color: var(--helpdocs-color-doc-link) !important;
+}
+
+
+/* ----------------------------------------- */
+/* -------- Table of Contents Widget ------- */
+/* ---------------------------------------- */
+
+.index-php #admin-help-docs .toc-cont ul {
+    margin-bottom: 0;
+}
+
+.index-php #admin-help-docs .toc-cont ul li {
+    margin: 4px 0;
+}
+
+.index-php #admin-help-docs .toc-item {
+    display: block;
+    width: calc( 100% - 20px );
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: #ffffff;
+    color: #1d2327;
+    font-size: 13.5px;
+    border: 1px solid #e2e4e7;
+    transition: background 0.15s ease;
+}
+
+.index-php #admin-help-docs .toc-item:hover {
+    background: #f0f2f4;
+}
+
+.index-php #admin-help-docs .toc-item .dashicons {
+    font-size: 18px;
+    margin-right: 3px;
+    color: #999999;
+}
+
+
+/* ----------------------------------------- */
+/* -------------- Docs General ------------- */
+/* ----------------------------------------- */
+
+:root {
+    --helpdocs-radius-large: 10px;
+    --helpdocs-radius-small: 8px;
+    --helpdocs-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+
+.helpdocs-doc-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-left: 4px solid var(--helpdocs-color-doc-accent) !important;
+}
+
+.helpdocs-doc-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.helpdocs-doc-logo img {
+    height: 30px;
+}
+
+.helpdocs-doc-content p:first-child {
+    margin-top: 0;
+}
+
+.helpdocs-doc-content p:last-child {
+    margin-bottom: 0;
+}
+
+.helpdocs-doc-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ----------------------------------------- */
+/* -------- Standard (Top/Bottom/Manual) ---- */
+/* ----------------------------------------- */
+
+.helpdocs-top-doc, 
+.helpdocs-bottom-doc, 
+.helpdocs-manual-doc {
+    background: var(--helpdocs-color-doc-bg);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--helpdocs-shadow);
+    border-radius: var(--helpdocs-radius-large);
+    border: 1px solid var(--helpdocs-color-doc-accent);
+}
+
+.helpdocs-top-doc:last-child, 
+.helpdocs-bottom-doc:last-child, 
+.helpdocs-manual-doc:last-child {
+    margin-bottom: 0;
+}
+
+.helpdocs-top-doc h2, 
+.helpdocs-bottom-doc h2, 
+.helpdocs-manual-doc h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--helpdocs-color-doc-title);
+    display: flex;
+    align-items: center;
+}
+
+.helpdocs-top-content, 
+.helpdocs-bottom-content, 
+.helpdocs-manual-content {
+    font-size: 13px;
+    color: var(--helpdocs-color-doc-font);
+    line-height: 1.6;
+}
+
+.helpdocs-top-content a, 
+.helpdocs-bottom-content a, 
+.helpdocs-manual-content a {
+    color: var(--helpdocs-color-doc-link);
+}
+
+/* ----------------------------------------- */
+/* -------------- Manual Only -------------- */
+/* ----------------------------------------- */
+
+.helpdocs-manual-wrapper {
+    clear: both;
+    margin: 20px 0;
+    width: 100%;
+}
+
+/* ----------------------------------------- */
+/* -------------- Top Specific ------------- */
+/* ----------------------------------------- */
+
+.helpdocs-top-wrapper.helpdocs-admin-notices {
+    clear: both;
+    margin: 40px 20px 20px 0;
+    overflow: hidden;
+}
+
+.helpdocs-top-wrapper.helpdocs-gutenberg-top {
+    margin: 20px 20px;
+}
+
+.helpdocs-top-wrapper.helpdocs-in-admin-header {
+    margin: 0 0 0 -20px;
+}
+
+.helpdocs-top-wrapper.helpdocs-in-admin-header .helpdocs-doc-wrapper {
+    border-left-width: 0 !important;
+}
+
+.helpdocs-in-admin-header .helpdocs-top-doc {
+    border-bottom: 1px solid #c3c4c7;
+    border-radius: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+/* ----------------------------------------- */
+/* ------------ Bottom Specific ------------ */
+/* ----------------------------------------- */
+
+.helpdocs-bottom-wrapper {
+    clear: both;
+    overflow: hidden;
+}
+
+.helpdocs-bottom-wrapper:not(.helpdocs-gutenberg-bottom) {
+    order: 999;
+    width: calc(100% - 20px);
+    margin: 40px 20px 20px 0;
+}
+
+.helpdocs-bottom-wrapper.helpdocs-gutenberg-bottom {
+    display: block !important;
+    position: relative !important;
+    z-index: 10;
+    flex: 1 1 100%;
+    align-self: flex-start;
+    margin: 20px 0;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ----------------------------------------- */
+/* --------------- Side Docs --------------- */
+/* ----------------------------------------- */
+
+.helpdocs-side-wrapper {
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.helpdocs-side-wrapper:not(.helpdocs-gutenberg-side) {
+    margin-bottom: 20px;
+}
+
+.helpdocs-side-wrapper.helpdocs-gutenberg-side {
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+    margin-bottom: 0;
+}
+
+#side-sortables .helpdocs-side-wrapper {
+    margin: 10px 0 20px 0;
+}
+
+.helpdocs-side-doc {
+    background: var(--helpdocs-color-doc-bg);
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    box-shadow: var(--helpdocs-shadow);
+    border-radius: var(--helpdocs-radius-small);
+    border: 1px solid var(--helpdocs-color-doc-accent);
+}
+
+.helpdocs-side-doc h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--helpdocs-color-doc-title);
+    padding: 0 !important;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.helpdocs-side-doc .helpdocs-doc-logo img {
+    height: 22px;
+}
+
+.helpdocs-side-content {
+    font-size: 12px;
+    color: var(--helpdocs-color-doc-font);
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.helpdocs-side-content p {
+    margin-bottom: 10px;
+}
+
+/* ----------------------------------------- */
+/* ------------- Element Item -------------- */
+/* ----------------------------------------- */
+
+.helpdocs-element-item {
+    display: block;
+    margin: 8px 0;
+    padding: 12px 15px;
+    background: var(--helpdocs-color-doc-bg, #f9f9f9);
+    border: 1px solid var(--helpdocs-color-doc-accent, #2271b1);
+    border-left-width: 4px;
+    border-radius: 4px;
+    color: var(--helpdocs-color-doc-font, #3c434a);
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    width: fit-content;
+    max-width: 500px;
+}
+
+.helpdocs-element-item a {
+    text-decoration: underline;
+    color: var(--helpdocs-color-doc-link);
+}
+
+input + .helpdocs-element-item {
+    margin-top: 10px;
+}
+
+td > .helpdocs-element-item {
+    margin-left: 5px;
+}
+
+
+/* ----------------------------------------- */
+/* -------------- Admin Bar ---------------- */
+/* ----------------------------------------- */
+
+.has-add-new-link #wp-admin-bar-helpdocs_admin_bar-default {
+    padding-bottom: 0 !important;
+}
+
+#wp-admin-bar-helpdocs_add_new .ab-item {
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-right: 15px !important; /* Extra breathing room on the right */
+}
+
+#wp-admin-bar-helpdocs_add_new {
+    margin-top: 6px !important;
+    background: #3C434A !important;
+    padding: 3px 0 !important;
+}
+
+#wp-admin-bar-helpdocs_add_new .ab-icon {
+    padding: 0 5px 0 0 !important;
+}
+
+#wp-admin-bar-helpdocs_add_new:hover,
+#wp-admin-bar-helpdocs_add_new:hover .ab-item {
+    background: #4a525a !important;
+}

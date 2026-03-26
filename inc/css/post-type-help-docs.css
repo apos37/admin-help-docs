@@ -1,0 +1,116 @@
+#helpdocs-location-repeater {
+    margin-bottom: 20px;
+}
+
+.helpdocs-location-row {
+    position: relative;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.helpdocs-row-main,
+.helpdocs-custom-url {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.helpdocs-location-row span:not(.dashicons),
+.helpdocs-custom-url {
+    margin-top: 20px;
+}
+
+.helpdocs-row-main label {
+    display: block;
+}
+
+.helpdocs-location-row label:not(.helpdocs-checkboxes label),
+.helpdocs-global-settings label:not(.helpdocs-checkboxes label) {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.helpdocs-row-main select,
+.helpdocs-row-main input[type="text"],
+.helpdocs-row-main input[type="number"] {
+    height: 30px;
+    line-height: 1;
+}
+
+input[name*="[order]"] {
+    width: 65px !important;
+}
+
+input[name*="[custom]"] {
+    width: auto;
+    display: block;
+    margin-top: 5px;
+}
+
+.remove-location.button {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    margin-top: 10px;
+    color: #b32d2e;
+    border-color: #b32d2e;
+}
+
+.remove-location.button:hover {
+    background: #b32d2e;
+    color: #fff;
+    border-color: #8a2424;
+}
+
+.helpdocs-checkboxes {
+    display: flex;
+    gap: 10px;
+    background: #f6f7f7;
+    padding: 12px;
+    border: 1px solid #dcdcde;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.helpdocs-view-roles {
+    margin-top: 20px;
+}
+
+.helpdocs-global-settings {
+    background: #f0f0f1;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #c3c4c7;
+    margin-top: 20px;
+}
+
+.helpdocs-global-settings > label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.helpdocs-location-row span:not(.dashicons) {
+    display: block;
+    background: #e7f5fe;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.helpdocs-location-row span.info {
+    border-left: 4px solid #0366d6;
+}
+
+.helpdocs-location-row span.warning {
+    border-left: 4px solid #FFD700;
+}

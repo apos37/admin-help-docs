@@ -1,0 +1,455 @@
+h2 { font-size: 1.6rem; color: #1d2327; margin: 2em 0 0.5rem; }
+h3 { font-size: 1.4rem; color: #1d2327; margin: 2em 0 0.5rem; }
+h4 { font-size: 1.2rem; color: #1d2327; margin: 2em 0 0.5rem; }
+
+#documentation {
+    display: flex;
+    gap: 30px;
+}
+
+/* Sidebar */
+
+#helpdocs-sidebar {
+    background: #f6f7f8;
+    padding: 16px 12px;
+    border-right: 1px solid #e2e4e7;
+}
+
+#helpdocs-docs-list {
+    width: 280px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.helpdocs-folder:not(:first-child) {
+    margin-top: 18px;
+}
+
+.helpdocs-folder {
+    margin-bottom: 14px;
+    padding: 6px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.04 );
+}
+
+.helpdocs-folder > a {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    background: var( --helpdocs-color-header-tab );
+    color: var( --helpdocs-color-header-font ) !important;
+    transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.helpdocs-folder > a:hover {
+    filter: brightness( 0.95 );
+    transform: translateY( -1px );
+}
+
+.folder-count {
+    opacity: 0.75;
+    font-weight: 500;
+}
+
+.helpdocs-sidebar-item.in-folder {
+    display: none;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+.helpdocs-sidebar-item.in-folder.active {
+    display: block;
+}
+
+.helpdocs-sidebar-item.in-folder a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: #f6f7f8;
+    color: #1d2327;
+    font-size: 13.5px;
+}
+
+.helpdocs-sidebar-item.in-folder:not(.active) a {
+    transition: background 0.15s ease, padding-left 0.1s ease;
+}
+
+.helpdocs-sidebar-item.in-folder:not(.active) a:hover {
+    background: #eceff1;
+    padding-left: 14px;
+}
+
+.helpdocs-sidebar-item.active a {
+    box-shadow: inset 0 2px 4px rgba( 0, 0, 0, 0.08 ),
+                inset 0 1px 2px rgba( 0, 0, 0, 0.05 );
+    transform: translateY( 1px );
+    font-weight: 600;
+    position: relative;
+    cursor: default;
+    pointer-events: none;
+}
+
+.helpdocs-sidebar-item.active a::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 3px;
+}
+
+.invisible-folder {
+    margin: 18px 0 8px 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #646970;
+    border-top: 1px solid #e2e4e7;
+}
+
+.helpdocs-sidebar-item.not-in-folder {
+    margin: 4px 0;
+}
+
+.helpdocs-sidebar-item.not-in-folder a {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: #ffffff;
+    color: #1d2327;
+    font-size: 13.5px;
+    border: 1px solid #e2e4e7;
+    transition: background 0.15s ease;
+}
+
+.helpdocs-sidebar-item.not-in-folder a:hover {
+    background: #f0f2f4;
+}
+
+.folder-icon:before {
+    content: "\1F4C1";
+    margin-right: 6px;
+}
+
+.active-folder .folder-icon:before {
+    content: "\1F4C2";
+}
+
+.file-icon:before {
+    content: "\1F4C4";
+    opacity: 0.7;
+}
+
+.file-import-icon:before {
+    content: "\1F4F0";
+    opacity: 0.8;
+}
+
+#helpdocs-docs-list li:not(.helpdocs-folder) {
+    padding-inline-start: 0;
+}
+
+#helpdocs-docs-list li.helpdocs-folder,
+#helpdocs-docs-list li.in-folder {
+    padding-inline-start: 1ch;
+}
+
+#helpdocs-docs-list li[ draggable="true" ] {
+    cursor: grab;
+}
+
+#helpdocs-docs-list li.dragging {
+    opacity: 0.5;
+}
+
+#helpdocs-docs-list li.drag-over {
+    outline: 2px dashed var( --helpdocs-color-header-tab );
+    outline-offset: -4px;
+}
+
+/* Document Viewer */
+
+#helpdocs-document-viewer {
+    flex: 1 1 0;
+    padding: 2rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+#helpdoc-header {
+    margin-bottom: 2rem;
+}
+
+#helpdoc-header h2 {
+    font-size: 2rem; 
+    border-top: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 1.5rem;
+    display: inline;
+    line-height: 1.2;
+}
+
+#edit-link {
+    float: right;
+    margin-left: 1rem;
+}
+
+#edit-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    background: #F6F7F8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: filter 0.15s, color 0.15s;
+}
+
+#edit-link a:hover {
+    filter: brightness( 0.97 );
+}
+#helpdocs-meta {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: italic;
+    font-size: 0.73rem;
+    opacity: 0.73;
+}
+#helpdoc-content ul {
+    list-style: square;
+    padding: revert;
+}
+#helpdoc-content ol {
+    margin-left: 35px;
+}
+#helpdoc-content ol li {
+    padding-left: 10px;
+}
+#helpdoc-content ul li {
+    padding-inline-start: 1ch;
+}
+#helpdoc-content ul, #helpdoc-content ol {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+#helpdoc-content ol li ol { list-style-type: lower-alpha !important; }
+#helpdoc-content ol li ol li ol { list-style-type: lower-roman !important; }
+#helpdoc-content ol li ol li ol li ol { list-style-type: decimal !important; }
+#helpdoc-content ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+#helpdoc-content ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+#helpdoc-content ol li ol li ol li ol li ol li ol li ol { list-style-type: decimal !important; }
+#helpdoc-content ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+#helpdoc-content ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+
+#helpdocs-document-viewer img {
+    max-width:100%;
+    height: auto;
+    object-fit: contain;
+}
+#search-bar {
+    float: right;
+    margin-right: 20px;
+    margin-top: -7px;
+}
+#no-docs-found {
+    padding: 3rem;
+    font-style: italic;
+}
+.helpdocs_form_sending {
+    line-height: 2.25;
+    font-style: italic;
+    margin-left: 10px;
+    display: none;
+}
+.helpdocs_form_sending:after {
+    display: inline-block;
+    animation: dotty steps(1,end) 1s infinite;
+    content: '';
+}
+@keyframes dotty {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
+}
+.helpdocs_form_result {
+    color: white;
+    font-weight: 500;
+    width: fit-content;
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+.helpdocs_form_result.success {
+    background-color: green;
+    display: inline-block;
+    margin-left: 10px;
+}
+.helpdocs_form_result.fail {
+    background-color: red;
+    margin-top: 10px;
+}
+.action-links {
+    display: inline-block;
+    margin-right: 10px;
+}
+.highlight {
+    background: yellow;
+}
+.extra-bracket {
+    display: none;
+}
+
+/* Page TOC */
+
+#page-toc {
+    margin: 0 0 4rem 0;
+    padding: 20px 22px 18px;
+    background: linear-gradient( to bottom, #ffffff, #f6f7f8 );
+    border: 1px solid #d0d5da;
+    border-radius: 12px;
+    box-shadow: 0 1px 0 rgba( 255, 255, 255, 0.9 ) inset,
+                0 2px 4px rgba( 0, 0, 0, 0.05 );
+    max-width: 520px;
+}
+
+#page-toc::before {
+    content: "On this page";
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    margin-bottom: 14px;
+}
+
+#page-toc ul,
+#page-toc ol {
+    list-style-position: outside;
+    margin: 0;
+    padding: 0 0 0 20px;
+}
+
+#page-toc ul {
+    list-style-type: square;
+}
+
+#page-toc ol {
+    list-style-type: decimal;
+}
+
+#page-toc li {
+    margin: 4px 0;
+    line-height: 1.45;
+    position: relative;
+}
+
+#page-toc li > ul,
+#page-toc li > ol {
+    margin-top: 6px;
+}
+
+#page-toc ol li ol { list-style-type: lower-alpha; }
+#page-toc ol li ol li ol { list-style-type: lower-roman; }
+#page-toc ol li ol li ol li ol { list-style-type: decimal; }
+
+#page-toc a {
+    display: block;
+    padding: 2px 8px;
+    margin-left: -8px;
+    border-radius: 6px;
+    transition: background 0.12s ease,
+                box-shadow 0.12s ease,
+                transform 0.05s ease;
+}
+
+#page-toc a:hover {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.08 );
+    transform: translateY( -1px );
+    text-decoration: none;
+}
+
+#page-toc a:active {
+    background: #eef1f3;
+    box-shadow: inset 0 2px 4px rgba( 0, 0, 0, 0.08 );
+    transform: translateY( 1px );
+}
+
+/* Alerts */
+
+#helpdocs-alert-imports {
+    display: none;
+    position: fixed;
+    bottom: 3rem;
+    right: 2rem;
+    background: red;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    box-shadow: 4px 4px 16px;
+    font-weight: 600;
+    font-size: medium;
+}
+#helpdocs-alert-imports .close {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    border: 2px solid black;
+    color: black !important;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 0 5px;
+    font-size: 10px;
+    text-decoration: none;
+}
+
+/* Drag & Drop */
+
+.drag-placeholder {
+    background: #e2e4e7;
+    border: 2px dashed #999;
+    margin: 5px 0;
+    list-style: none;
+    pointer-events: none; /* Crucial: ensures dragover hits the items behind it */
+    border-radius: 8px;
+}
+
+.folder-placeholder {
+    background: rgba(var(--helpdocs-color-header-tab-rgb), 0.1);
+    border-color: var(--helpdocs-color-header-tab);
+}
+
+#helpdocs-docs-list li.dragging {
+    opacity: 0.3;
+}
+
+/* Folder Expand/Collapse */
+ul.folder-children {
+    display: none;
+    margin-left: 1ch; /* optional, aligns child items */
+}
+
+ul.folder-children.visible {
+    display: block;
+}

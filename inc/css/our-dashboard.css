@@ -1,0 +1,158 @@
+/* Container */
+
+#helpdocs-custom-dashboard {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Boxes */
+
+.helpdocs-box {
+    flex: 1 1 0;
+    padding: 2rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba( 16, 24, 40, .1 );
+}
+
+/* Headers */
+
+h2 { font-size: 1.6rem; color: #1d2327; margin: 2em 0 0.5rem; }
+h3 { font-size: 1.4rem; color: #1d2327; margin: 2em 0 0.5rem; }
+h4 { font-size: 1.2rem; color: #1d2327; margin: 2em 0 0.5rem; }
+
+.helpdoc-header {
+    margin-bottom: 2rem;
+}
+
+.helpdoc-header h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    display: inline;
+    line-height: 1.2;
+}
+
+.helpdoc-header .edit-link {
+    float: right;
+    margin-left: 1rem;
+}
+
+.helpdoc-header .edit-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    background: #F6F7F8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: filter 0.15s, color 0.15s;
+}
+
+.helpdoc-header .edit-link a:hover {
+    filter: brightness( 0.97 );
+}
+
+.helpdoc-content ul {
+    list-style: square;
+    padding: revert;
+}
+.helpdoc-content ol {
+    margin-left: 35px;
+}
+.helpdoc-content ol li {
+    padding-left: 10px;
+}
+.helpdoc-content ul li {
+    padding-inline-start: 1ch;
+}
+.helpdoc-content ul, .helpdoc-content ol {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.helpdoc-content ol li ol { list-style-type: lower-alpha !important; }
+.helpdoc-content ol li ol li ol { list-style-type: lower-roman !important; }
+.helpdoc-content ol li ol li ol li ol { list-style-type: decimal !important; }
+.helpdoc-content ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+.helpdoc-content ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+.helpdoc-content ol li ol li ol li ol li ol li ol li ol { list-style-type: decimal !important; }
+.helpdoc-content ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-alpha !important; }
+.helpdoc-content ol li ol li ol li ol li ol li ol li ol li ol li ol { list-style-type: lower-roman !important; }
+
+.helpdoc-content img {
+    max-width:100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.highlight {
+    background: yellow;
+}
+
+/* No Docs Placeholder */
+
+#dashboard-no-docs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* Horizontal centering */
+    justify-content: center;  /* Vertical centering */
+    min-height: 80vh;        /* Uses 80% of screen height to account for admin bar/margins */
+    text-align: center;
+}
+
+#dashboard-no-docs h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1d2327;
+}
+
+#dashboard-no-docs p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Table of Contents */
+
+#helpdocs-dashboard-toc {
+    padding: 0;
+    margin: 20px 0;
+    max-width: 500px;
+}
+
+#helpdocs-dashboard-toc .toc-cont ul {
+    margin-bottom: 0;
+}
+
+#helpdocs-dashboard-toc .toc-cont ul li {
+    margin: 4px 0;
+}
+
+#helpdocs-dashboard-toc .toc-item {
+    display: block;
+    width: calc( 100% - 20px );
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: #ffffff;
+    color: #1d2327;
+    font-size: 13.5px;
+    border: 1px solid #e2e4e7;
+    transition: background 0.15s ease;
+}
+
+#helpdocs-dashboard-toc .toc-item:hover {
+    background: #f0f2f4;
+}
+
+#helpdocs-dashboard-toc .toc-item .dashicons {
+    font-size: 18px;
+    margin-right: 3px;
+    color: #999999;
+}
