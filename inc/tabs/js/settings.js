@@ -378,10 +378,10 @@ jQuery( document ).ready( function( $ ) {
             const target = $( '#helpdocs-header .logo' );
             const url = $field.val();
             url ? target.attr( 'src', url ).show() : target.hide();
-        } else if ( id === 'left_footer' || id === 'right_footer' ) {
-            const target = id === 'left_footer' ? $( '#footer-left' ) : $( '#footer-upgrade' );
+        } else if ( id === 'helpdocs_footer_left' || id === 'helpdocs_footer_right' ) {
+            const target = id === 'helpdocs_footer_left' ? $( '#footer-left' ) : $( '#footer-upgrade' );
             let value = $field.val();
-            if ( id === 'right_footer' ) value = value.replace( /{version}/g, helpdocs_settings.wp_version );
+            if ( id === 'helpdocs_footer_right' ) value = value.replace( /{version}/g, helpdocs_settings.wp_version );
             target.html( value.length ? value : '...' );
         }
 
@@ -536,7 +536,12 @@ jQuery( document ).ready( function( $ ) {
 
             if ( field.type === 'html' || field.name === 'default_doc' ) return;
 
-            const $field = $( '#' + field.name );
+            let field_id = field.name;
+            if ( field.name.startsWith( 'footer_' ) ) {
+                field_id = 'helpdocs_' + field.name;
+            }
+
+            const $field = $( '#' + field_id );
 
             let value;
             switch ( field.type ) {
@@ -580,7 +585,12 @@ jQuery( document ).ready( function( $ ) {
 
                     if ( field.type === 'html' || field.name === 'default_doc' ) return;
 
-                    const $field = $( '#' + field.name );
+                    let field_id = field.name;
+                    if ( field.name.startsWith( 'footer_' ) ) {
+                        field_id = 'helpdocs_' + field.name;
+                    }
+
+                    const $field = $( '#' + field_id );
 
                     if ( ! uploadedSettings.hasOwnProperty( field.name ) ) return;
 
@@ -603,11 +613,13 @@ jQuery( document ).ready( function( $ ) {
                             break;
 
                         default:
-                            if ( field.name === 'main_docs_css' && cssEditor ) {
+                            if ( field.name === 'main_docs_css' && typeof cssEditor !== 'undefined' && cssEditor.codemirror ) {
                                 cssEditor.codemirror.setValue( value || '' );
+                                cssEditor.codemirror.save();
+                            } else {
+                                $field.val( value ).trigger( 'change' );
                             }
-                            
-                            $field.val( value );
+                            break;
                     }
 
                 });
