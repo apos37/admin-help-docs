@@ -343,8 +343,8 @@ class Colors {
         $option_map = [
             'doc_accent' => 'helpdocs_color_ac',
             'doc_bg'     => 'helpdocs_color_bg',
-            'doc_title'  => 'helpdocs_color_fg',
-            'doc_font'   => 'helpdocs_color_ti',
+            'doc_title'  => 'helpdocs_color_ti',
+            'doc_font'   => 'helpdocs_color_fg',
             'doc_link'   => 'helpdocs_color_cl',
         ];
 
@@ -399,8 +399,8 @@ class Colors {
         $option_map = [
             'doc_accent' => 'helpdocs_color_ac',
             'doc_bg'     => 'helpdocs_color_bg',
-            'doc_title'  => 'helpdocs_color_fg',
-            'doc_font'   => 'helpdocs_color_ti',
+            'doc_title'  => 'helpdocs_color_ti',
+            'doc_font'   => 'helpdocs_color_fg',
             'doc_link'   => 'helpdocs_color_cl',
         ];
 

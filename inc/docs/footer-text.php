@@ -45,7 +45,7 @@ class FooterText {
      * @return string The modified footer text
      */
     public function render_left_footer( $text ) {
-        $option = get_option( 'helpdocs_left_footer' );
+        $option = get_option( 'helpdocs_footer_left' );
         if ( ! $option ) {
             return $text;
         }
@@ -65,7 +65,7 @@ class FooterText {
      * @return string The modified footer text
      */
     public function render_right_footer( $text ) {
-        $option = get_option( 'helpdocs_right_footer' );
+        $option = get_option( 'helpdocs_footer_right' );
         if ( ! $option ) {
             return $text;
         }

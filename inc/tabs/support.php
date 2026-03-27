@@ -171,7 +171,7 @@ class Support {
     private function __construct() {
 
         // Store the contact info
-        self::get_support_contact_info();
+        add_action( 'init', [ $this, 'get_support_contact_info' ] );
 
         // Logging
         self::$logging_enabled = apply_filters( 'helpdocs_support_logging_enabled', self::$logging_enabled );
@@ -199,6 +199,10 @@ class Support {
      * @return array
      */
     public function get_support_contact_info() {
+        if ( ! class_exists( Helpers::class ) || ! class_exists( Menu::class ) || ! Menu::is_our_tab( 'support' ) ) {
+            return;
+        }
+
         self::$contact_info = apply_filters(
             'helpdocs_support_contact_info',
             [

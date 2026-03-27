@@ -96,6 +96,7 @@ https://youtu.be/8_JHpyOSunU
 * Update: Removed User Preferences option as help docs on the post/page edit screen no longer use meta boxes that can be moved around
 * Update: Added a bunch of developer hooks for further customization
 * Update: All help guides and developer docs updated
+* Update: Recorded new video tutorial
 
 = 1.4.3.2 =
 * Fix: Default icon causing php warning "Undefined variable $di"

@@ -234,7 +234,7 @@ class HelpDocs {
         add_action( 'helpdocs_subheader_right', [ $this, 'render_search_box' ] );
 
         // Add the meta box
-        add_action( 'add_meta_boxes', [ $this, 'meta_boxes' ] );
+        add_action( 'add_meta_boxes', [ $this, 'meta_boxes' ], 999 );
 
         // Rename excerpt meta box
         add_filter( 'gettext', [ $this, 'excerpt_meta_box' ], 10, 2 );
@@ -381,14 +381,49 @@ class HelpDocs {
      * @return void
      */
     public function meta_boxes() {
-        add_meta_box( 
-            'helpdocs_locations',
-            __( 'Location', 'admin-help-docs' ),
-            [ $this, 'meta_box_content' ],
-            self::$post_type,
-            'advanced',
-			'high'
-        );
+        global $wp_meta_boxes;
+
+        $screen = get_current_screen();
+        if ( $screen && $screen->post_type === self::$post_type ) {
+            
+            // Define the IDs we want to KEEP
+            $whitelist = [
+                'submitdiv',                    // The Publish box
+                'formatdiv',                    // Post Formats
+                'categorydiv',                  // Standard Category box
+                'tagsdiv-post_tag',             // Standard Tags box
+                'pageparentdiv',                // Page Attributes
+                'postimagediv',                 // Featured Image
+                'tagsdiv-' . Folders::$taxonomy // Folders taxonomy box
+            ];
+
+            // Loop through all contexts (normal, advanced, side)
+            foreach ( [ 'normal', 'advanced', 'side' ] as $context ) {
+                foreach ( [ 'high', 'core', 'default', 'low' ] as $priority ) {
+                    
+                    if ( ! isset( $wp_meta_boxes[ self::$post_type ][ $context ][ $priority ] ) ) {
+                        continue;
+                    }
+
+                    foreach ( $wp_meta_boxes[ self::$post_type ][ $context ][ $priority ] as $box_id => $box_data ) {
+                        // If the box ID is NOT in our whitelist, remove it
+                        if ( ! in_array( $box_id, $whitelist ) ) {
+                            remove_meta_box( $box_id, self::$post_type, $context );
+                        }
+                    }
+                }
+            }
+
+            // 2. Now that the deck is clear, add ONLY your meta box
+            add_meta_box( 
+                'helpdocs_locations',
+                __( 'Location', 'admin-help-docs' ),
+                [ $this, 'meta_box_content' ],
+                self::$post_type,
+                'advanced',
+                'high'
+            );
+        }
     } // End meta_boxes()
 
 
@@ -624,7 +659,11 @@ class HelpDocs {
                 <select name="helpdocs_api" id="<?php echo esc_attr( $id_api ); ?>">
                     <?php
                         $get_default_api    = get_option( 'helpdocs_api' );
-                        $default_api_choice = $get_default_api ? 'yes' : 'no';
+                        if ( $get_default_api === 'yes' || $get_default_api === true ) {
+                            $default_api_choice = 'yes';
+                        } else {
+                            $default_api_choice = 'no';
+                        }
                         $api_choices        = [
                             'default' => sprintf( __( 'Default ( %s )', 'admin-help-docs' ), ucwords( $default_api_choice ) ),
                             'no'      => __( 'No', 'admin-help-docs' ),
@@ -1033,6 +1072,11 @@ class HelpDocs {
             $api = sanitize_key( get_post_meta( $post_id, 'helpdocs_api', true ) );
             if ( empty( $api ) || 'default' === $api ) {
                 $default_api = get_option( 'helpdocs_api' );
+                if ( $default_api === 'yes' || $default_api === true ) {
+                    $default_api = true;
+                } else {
+                    $default_api = false;
+                }
                 $api = $default_api ? __( 'Default (Yes)', 'admin-help-docs' ) : __( 'Default (No)', 'admin-help-docs' );
             } else {
                 $api = ucwords( $api );

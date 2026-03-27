@@ -105,12 +105,13 @@ class Helpers {
         if ( in_array( $admin_role, $user_roles, true ) ) {
             $can_edit = true;
         } else {
-            // Check if any of the user's roles are in the edit roles option
             $edit_roles = (array) get_option( 'helpdocs_edit_roles', [] );
             
             if ( ! empty( $edit_roles ) ) {
-                // Using array_intersect for a cleaner check than a foreach loop
-                if ( array_intersect( $user_roles, array_keys( $edit_roles ) ) ) {
+                $first_key = key( $edit_roles );
+                $allowed_roles = is_numeric( $first_key ) ? $edit_roles : array_keys( $edit_roles );
+
+                if ( array_intersect( $user_roles, $allowed_roles ) ) {
                     $can_edit = true;
                 }
             }
@@ -608,7 +609,9 @@ class Helpers {
             'open-folder', 'pdf', 'pets', 'privacy', 'superhero', 'superhero-alt', 'edit-page', 'fullscreen-alt', 'fullscreen-exit-alt'
         ];
 
-        return apply_filters( 'helpdocs_dashicons', $dashicons );
+        $dashicons = apply_filters( 'helpdocs_dashicons', $dashicons );
+        sort( $dashicons );
+        return $dashicons;
     } // End get_dashicons()
 
 
@@ -658,8 +661,13 @@ class Helpers {
         ];
         if ( ! empty( $docs ) ) {
             foreach ( $docs as $doc ) {
+                $label = $doc->post_title;
+                if ( strpos( (string) $doc->ID, 'import_' ) !== false ) {
+                    $label .= ' (' . __( 'Imported', 'admin-help-docs' ) . ')';
+                }
+                
                 $options[] = [
-                    'label' => get_the_title( $doc->ID ),
+                    'label' => $label,
                     'value' => $doc->ID,
                 ];
             }
@@ -836,7 +844,7 @@ class Helpers {
      * }
      * @return array List of matching post objects.
      */
-    public static function get_docs( $loc_args = [], $group_by_location = false ) {
+    public static function get_docs( $loc_args = [], $group_by_location = false ) : array {
         $site_location = $loc_args[ 'site_location' ] ?? '';
         if ( empty( $site_location ) ) {
             return [];
@@ -850,6 +858,14 @@ class Helpers {
         $is_admin           = in_array( self::admin_role(), $current_user_roles, true );
 
         if ( ! $test_mode ) {
+            $cache_version = get_option( 'helpdocs_cache_version', '1.0' );
+            $user_seed = $is_admin ? 'admin' : implode( '-', $current_user_roles );
+            $cache_key = 'helpdocs_loc_' . md5( wp_json_encode( $loc_args ) . $user_seed . $cache_version );
+            $cached = get_transient( $cache_key );
+            if ( false !== $cached ) {
+                return $cached;
+            }
+            
             $user_seed = $is_admin ? 'admin' : implode( '-', $current_user_roles );
             $cache_key = 'helpdocs_loc_' . md5( wp_json_encode( $loc_args ) . $user_seed );
             $cached    = get_transient( $cache_key );
@@ -1406,6 +1422,9 @@ class Helpers {
      */
     public static function flush_location_cache() : void {
         global $wpdb;
+
+        // Update a separate cache version to allow for quick invalidation checks
+        update_option( 'helpdocs_cache_version', microtime() );
 
         // Delete the transients and their timeout entries from the options table
         $wpdb->query( // phpcs:ignore

@@ -358,6 +358,25 @@ class Menu {
     } // End admin_header()
 
 
+    public static function is_our_tab( $tab ) : bool {
+        // Check if it's one of our pages first
+        $is_current_page = self::get_current_page() === Bootstrap::textdomain();
+        if ( ! $is_current_page ) {
+            return false;
+        }
+        
+        // Then check if the tab matches
+        $is_current_tab = self::get_current_tab() === $tab;
+        if ( ! $is_current_tab ) {
+            return false;
+        }
+        
+        // Finally, check if the tab exists in our tabs array
+        $tabs = self::tabs();
+        return isset( $tabs[ $tab ] );
+    } // End is_our_tab()
+
+
     /**
      * Get the current page slug
      *

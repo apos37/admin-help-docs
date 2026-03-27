@@ -228,7 +228,7 @@ class Documentation {
 
         if ( isset( $_GET[ 'id' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $current_doc_id = sanitize_key( $_GET[ 'id' ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $is_import = str_starts_with( $current_doc_id, 'import_' );
+            $is_import = str_starts_with( (string) $current_doc_id, 'import_' );
             if ( ! in_array( $current_doc_id, $doc_ids ) || ( ! $is_import && ! get_post_status( $current_doc_id ) ) ) {
                 $current_doc_id = false;
             }
@@ -236,11 +236,9 @@ class Documentation {
 
         if ( ! $s && ! $current_doc_id ) {
             $default_doc_id = get_option( 'helpdocs_default_doc' );
-            if ( $default_doc_id && 'publish' == get_post_status( $default_doc_id ) ) {
-                $site_location = get_post_meta( $default_doc_id, 'helpdocs_site_location', true );
-                if ( $site_location && $site_location == base64_encode( 'main' ) ) {
-                    $current_doc_id = $default_doc_id;
-                }
+            $is_import = str_starts_with( (string) $default_doc_id, 'import_' );
+            if ( $default_doc_id && ( $is_import || 'publish' == get_post_status( $default_doc_id ) ) ) {
+                $current_doc_id = $default_doc_id;
             } else {
                 if ( ! empty( $docs ) ) {
                     $current_doc_id = $docs[0]->ID;
@@ -658,7 +656,7 @@ class Documentation {
                     ];
 
                     // Cleanup legacy keys now that we've migrated
-                    $legacy_keys = [ 'site_location', 'page_location', 'custom', 'addt_params', 'post_types', 'order', 'toc', 'css_selector' ];
+                    $legacy_keys = [ 'site_location', 'page_location', 'custom', 'addt_params', 'post_types', 'order', 'toc', 'priority' ];
                     foreach ( $legacy_keys as $key ) {
                         delete_post_meta( $item_id, 'helpdocs_' . $key );
                     }

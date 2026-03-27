@@ -1,6 +1,6 @@
-h2 { font-size: 1.6rem; color: #1d2327; margin: 2em 0 0.5rem; }
-h3 { font-size: 1.4rem; color: #1d2327; margin: 2em 0 0.5rem; }
-h4 { font-size: 1.2rem; color: #1d2327; margin: 2em 0 0.5rem; }
+h2 { font-size: 1.6rem; color: #1d2327; margin: 1em 0 0.5rem; }
+h3 { font-size: 1.4rem; color: #1d2327; margin: 1em 0 0.5rem; }
+h4 { font-size: 1.2rem; color: #1d2327; margin: 1em 0 0.5rem; }
 
 #documentation {
     display: flex;
@@ -225,6 +225,7 @@ h4 { font-size: 1.2rem; color: #1d2327; margin: 2em 0 0.5rem; }
 #edit-link a:hover {
     filter: brightness( 0.97 );
 }
+
 #helpdocs-meta {
     display: block;
     margin-top: 0.5rem;
@@ -232,6 +233,11 @@ h4 { font-size: 1.2rem; color: #1d2327; margin: 2em 0 0.5rem; }
     font-size: 0.73rem;
     opacity: 0.73;
 }
+
+#helpdoc-content {
+    padding-top: 1rem;
+}
+
 #helpdoc-content ul {
     list-style: square;
     padding: revert;

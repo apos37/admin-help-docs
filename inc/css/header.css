@@ -97,8 +97,9 @@
     gap: 10px;
 }
 
-.helpdocs-admin-screen #screen-meta {
-    margin: 0 -22px -1px -2px;
+.helpdocs-admin-screen #screen-meta,
+.helpdocs-admin-screen #screen-meta-links {
+    display: none;
 }
 
 #helpdocs-subheader .subheader-right {

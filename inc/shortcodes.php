@@ -61,8 +61,8 @@ class Shortcodes {
         // Support legacy method of passing content as an attribute with curly braces instead of square brackets
         if ( empty( $content ) && ! empty( $atts[ 'content' ] ) ) {
             $content = $atts[ 'content' ];
-            $content = str_replace( '{', '[', $content );
-            $content = str_replace( '}', ']', $content );
+            $content = str_replace( '{', '[[', $content );
+            $content = str_replace( '}', ']]', $content );
         }
 
         $click_to_copy_class = $click_to_copy ? ' helpdocs-click-to-copy' : '';

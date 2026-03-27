@@ -28,10 +28,6 @@
     letter-spacing: 0.5px;
 }
 
-#helpdocs-header-support-info::after {
-    content: "";
-}
-
 #helpdocs-support-response {
     display: block;
     padding: 8px 12px;

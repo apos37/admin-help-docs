@@ -43,6 +43,10 @@ class Settings {
             ];
         }
 
+        $legacy_cap   = get_option( 'helpdocs_user_view_cap' );
+        $current_type = get_option( 'helpdocs_user_view_type' );
+        $view_default = ( false !== $legacy_cap && false === $current_type ) ? 'capability' : 'role';
+
         $fields = [
             // Interface
             [
@@ -209,7 +213,7 @@ class Settings {
                 'label'       => __( 'Default Document on Main Docs Page', 'admin-help-docs' ),
                 'type'        => 'select',
                 'choices'     => Helpers::get_main_helpdoc_options(),
-                'sanitize'    => 'absint',
+                'sanitize'    => 'sanitize_text_field',
                 'box'         => 'content_output',
             ],
             [
@@ -276,7 +280,7 @@ class Settings {
                 'default'     => 'admin_notices',
             ],
             [
-                'name'        => 'left_footer',
+                'name'        => 'footer_left',
                 'label'       => __( 'Left Footer Text', 'admin-help-docs' ),
                 'desc'        => __( 'Supports HTML. Default: "Thank you for creating with WordPress."', 'admin-help-docs' ),
                 'type'        => 'textarea',
@@ -285,7 +289,7 @@ class Settings {
                 'default'     => '<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>',
             ],
             [
-                'name'        => 'right_footer',
+                'name'        => 'footer_right',
                 'label'       => __( 'Right Footer Text', 'admin-help-docs' ),
                 'desc'        => __( 'Use <code>{version}</code> to display the current WordPress version', 'admin-help-docs' ),
                 'type'        => 'textarea',
@@ -322,7 +326,7 @@ class Settings {
                 ],
                 'sanitize'    => 'sanitize_text_field',
                 'box'         => 'access_control',
-                'default'     => 'role',
+                'default'     => $view_default,
                 'has_condition' => true,
             ],
             [
@@ -906,7 +910,7 @@ class Settings {
                         <label>
                             <input type="checkbox"
                                 name="helpdocs_<?php echo esc_attr( $field[ 'name' ] ); ?>[]"
-                                value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( $key, $values, true ) ); ?>>
+                                value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( $key, $values, true ) || in_array( $key, array_keys( $values ), true ) ); ?>>
                             <?php echo esc_html( $label ); ?>
                         </label>
                     <?php
