@@ -51,7 +51,7 @@ class Settings {
                 'type'        => 'text',
                 'sanitize'    => 'sanitize_text_field',
                 'box'         => 'interface',
-                'default'     => Helpers::get_menu_title(),
+                'default'     => 'Help Docs',
             ],
             [
                 'name'        => 'dashicon',
@@ -95,7 +95,7 @@ class Settings {
                 'type'        => 'text',
                 'sanitize'    => 'sanitize_text_field',
                 'box'         => 'interface',
-                'default'     => Helpers::get_page_or_default_logo_url(),
+                'default'     => Helpers::get_default_logo_url(),
             ],
             [
                 'name'        => 'themes',

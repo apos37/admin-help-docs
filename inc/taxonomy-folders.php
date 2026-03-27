@@ -50,6 +50,9 @@ class Folders {
 
         // Move the search box to the subheader
         add_action( 'helpdocs_subheader_right', [ $this, 'render_search_box' ] );
+
+        // Remove the description column
+        add_filter( 'manage_edit-' . self::$taxonomy . '_columns', [ $this, 'remove_description_column' ] );
         
     } // End __construct()
 
@@ -75,7 +78,7 @@ class Folders {
     
         // Register it as a new taxonomy
         register_taxonomy( self::$taxonomy, HelpDocs::$post_type, [
-            'hierarchical'       => true,
+            'hierarchical'       => false,
             'labels'             => $labels,
             'show_ui'            => true,
             'show_in_rest'       => false,
@@ -140,6 +143,18 @@ class Folders {
         </form>
         <?php
     } // End render_search_box()
+
+
+    /**
+     * Remove the description column from the folders list table
+     *
+     * @param array $columns The existing columns
+     * @return array The modified columns
+     */
+    public function remove_description_column( $columns ) {
+        unset( $columns[ 'description' ] );
+        return $columns;
+    } // End remove_description_column()
 
 }
 

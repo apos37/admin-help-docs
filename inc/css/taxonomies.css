@@ -51,6 +51,13 @@
     flex: 1;
 }
 
+/* Hide the slug and description on the add new page */
+
+.edit-tags-php #addtag .form-field.term-slug-wrap,
+.form-field.term-description-wrap {
+    display: none !important;
+}
+
 /* Hide the default search box */
 
 #wpbody-content .wrap .search-form {

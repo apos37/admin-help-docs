@@ -55,7 +55,7 @@ Yes, you can choose to automatically feed documents or copy them locally from a 
 We recommend using our [website support forum](https://pluginrx.com/support/plugin/admin-help-docs/) as the primary method for requesting features and getting help. You can also reach out via our [Discord support server](https://discord.gg/3HnzNEJVnR) or the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-help-docs/), but please note that WordPress.org doesn’t always notify us of new posts, so it’s not ideal for time-sensitive issues.
 
 == Demo ==
-https://youtu.be/xC5D894lY00
+https://youtu.be/8_JHpyOSunU
 
 == Screenshots ==
 1. Main documentation page
