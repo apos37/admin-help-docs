@@ -20,6 +20,11 @@
     line-height: revert !important;
 }
 
+#helpdocs-upload-settings,
+#helpdocs-upload-colors { 
+    display: none !important; 
+}
+
 #helpdocs-upload-colors-filename,
 #helpdocs-upload-filename {
     display: none;

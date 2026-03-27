@@ -229,7 +229,7 @@ jQuery( document ).ready( function( $ ) {
     });
 
     // Footer Text
-    $( document ).on( 'input', '#helpdocs_field_left_footer textarea', function() {
+    $( document ).on( 'input', '#helpdocs_field_footer_left textarea', function() {
         let text = $( this ).val();
         text = text.replace( /{version}/g, helpdocs_settings.wp_version );
         const target = $( '#footer-left' );
@@ -240,7 +240,7 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
-    $( document ).on( 'input', '#helpdocs_field_right_footer textarea', function() {
+    $( document ).on( 'input', '#helpdocs_field_footer_right textarea', function() {
         let text = $( this ).val();
         text = text.replace( /{version}/g, helpdocs_settings.wp_version );
         const target = $( '#footer-upgrade' );

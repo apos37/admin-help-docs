@@ -406,7 +406,7 @@ class Settings {
                 'desc'        => __( 'Export your current color settings as a JSON file for backup or transfer to another site. You can also import color settings from a JSON file exported from this plugin. Note: Importing settings will overwrite your current color settings.', 'admin-help-docs' ),
                 'type'        => 'html',
                 'box'         => 'advanced',
-                'content'     => '<button type="button" id="helpdocs-download-colors-btn" class="helpdocs-button">' . __( 'Download Colors', 'admin-help-docs' ) . '</button> <div id="helpdocs-upload-colors-button"><label for="helpdocs-upload-colors"><span class="helpdocs-button">' . __( 'Upload Colors', 'admin-help-docs' ) . '</span></label><input type="file" id="helpdocs-upload-colors" name="helpdocs-upload-colors" accept=".json" style="display:none;"></div> <div id="helpdocs-upload-colors-filename"></div>',
+                'content'     => '<button type="button" id="helpdocs-download-colors-btn" class="helpdocs-button">' . __( 'Download Colors', 'admin-help-docs' ) . '</button> <div id="helpdocs-upload-colors-button"><label for="helpdocs-upload-colors"><span class="helpdocs-button">' . __( 'Upload Colors', 'admin-help-docs' ) . '</span></label><input type="file" id="helpdocs-upload-colors" name="helpdocs-upload-colors" accept=".json"></div> <div id="helpdocs-upload-colors-filename"></div>',
             ],
             [
                 'name'        => 'upload_download_settings',
@@ -414,7 +414,7 @@ class Settings {
                 'desc'        => __( 'Export your current settings as a JSON file for backup or transfer to another site. You can also import settings from a JSON file exported from this plugin. Note: Importing settings will overwrite your current settings.', 'admin-help-docs' ),
                 'type'        => 'html',
                 'box'         => 'advanced',
-                'content'     => '<button type="button" id="helpdocs-download-settings-btn" class="helpdocs-button">' . __( 'Download Settings', 'admin-help-docs' ) . '</button> <div id="helpdocs-upload-button"><label for="helpdocs-upload-settings"><span class="helpdocs-button">' . __( 'Upload Settings', 'admin-help-docs' ) . '</span></label><input type="file" id="helpdocs-upload-settings" name="helpdocs-upload-settings" accept=".json" style="display:none;"></div> <div id="helpdocs-upload-filename"></div>',
+                'content'     => '<button type="button" id="helpdocs-download-settings-btn" class="helpdocs-button">' . __( 'Download Settings', 'admin-help-docs' ) . '</button> <div id="helpdocs-upload-button"><label for="helpdocs-upload-settings"><span class="helpdocs-button">' . __( 'Upload Settings', 'admin-help-docs' ) . '</span></label><input type="file" id="helpdocs-upload-settings" name="helpdocs-upload-settings" accept=".json"></div> <div id="helpdocs-upload-filename"></div>',
             ],
             [
                 'name'        => 'reset_settings',
@@ -728,6 +728,8 @@ class Settings {
         }
 
         $required = ! empty( $field[ 'required' ] ) ? ' required' : '';
+        
+        $field_id = str_starts_with( $field[ 'name' ], 'footer' ) ? 'helpdocs_' . $field[ 'name' ] : $field[ 'name' ];
         ?>
         <div id="helpdocs_field_<?php echo esc_attr( $field[ 'name' ] ); ?>"
             class="helpdocs-field<?php echo esc_attr( $conditional_class ); ?>"
@@ -736,7 +738,7 @@ class Settings {
                 data-condition-value="<?php echo esc_attr( $data_condition_value ); ?>"
             <?php endif; ?>>
             <?php $this->render_field_label( $field, $field[ 'name' ] ); ?>
-            <textarea id="<?php echo esc_attr( $field[ 'name' ] ); ?>"
+            <textarea id="<?php echo esc_attr( $field_id ); ?>"
                 name="helpdocs_<?php echo esc_attr( $field[ 'name' ] ); ?>"
                 <?php echo esc_attr( $required ); ?>
                 placeholder="<?php if ( isset( $field[ 'default' ] ) ) { echo esc_attr( $field[ 'default' ] ); } ?>"><?php echo esc_textarea( $value ); ?></textarea>
@@ -1128,7 +1130,27 @@ class Settings {
                 <?php endif; ?>
             </label>
             <div class="helpdocs-html-content">
-                <?php echo wp_kses_post( $field[ 'content' ] ?? '' ); ?>
+                <?php 
+                $allowed_html = wp_kses_allowed_html( 'post' );
+
+                $allowed_html[ 'button' ] = [
+                    'type'  => true,
+                    'id'    => true,
+                    'class' => true,
+                ];
+                $allowed_html[ 'input' ] = [
+                    'type'   => true,
+                    'id'     => true,
+                    'name'   => true,
+                    'accept' => true,
+                    'style'  => true,
+                    'value'  => true,
+                    'class'  => true,
+                ];
+                $allowed_html[ 'label' ][ 'for' ] = true;
+
+                echo wp_kses( ( $field[ 'content' ] ?? '' ), $allowed_html );
+                ?>
             </div>
         </div>
         <?php
