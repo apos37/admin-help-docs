@@ -314,6 +314,9 @@ class Documentation {
                             $active = '';
                         }
 
+                        $is_folder_active = ( $current_doc_id && in_array( $current_doc_id, $folder[ 'docs' ] ) );
+                        $visibility_class = $is_folder_active ? ' in-active-folder' : '';
+
                         if ( isset( $doc->auto_feed ) && $doc->auto_feed != '' ) {
                             $incl_feed = '&feed=true';
                             $feed = $doc->ID;
@@ -331,7 +334,7 @@ class Documentation {
                             'id' => $doc->ID,
                         ], $current_url );
                         ?>
-                        <li id="item-<?php echo esc_attr( $doc->ID ); ?>" class="helpdocs-sidebar-item <?php echo in_array( $doc->ID, $in_folders ) ? 'in-folder' : 'not-in-folder'; ?><?php echo esc_attr( $active ); ?>" draggable="true" data-type="item" data-item-id="<?php echo esc_attr( $doc->ID ); ?>" data-import="<?php echo esc_attr( $data_import ); ?>" data-folder-id="<?php echo esc_attr( $folder_id ?? 0 ); ?>" data-import-id="<?php echo esc_attr( $import_id ); ?>">
+                        <li id="item-<?php echo esc_attr( $doc->ID ); ?>" class="helpdocs-sidebar-item in-folder<?php echo esc_attr( $visibility_class ); ?><?php echo esc_attr( $active ); ?>" draggable="true" data-type="item" data-item-id="<?php echo esc_attr( $doc->ID ); ?>" data-import="<?php echo esc_attr( $data_import ); ?>" data-folder-id="<?php echo esc_attr( $folder_id ?? 0 ); ?>" data-import-id="<?php echo esc_attr( $import_id ); ?>">
                             <a href="<?php echo esc_url( $item_url ); ?><?php echo esc_attr( $incl_feed ); ?>"><span class="<?php echo esc_attr( $file_icon_class ); ?>"></span> <span class="item-title"><?php echo esc_html( $doc->post_title ); ?></span></a>
                         </li>
                         <?php
@@ -395,7 +398,7 @@ class Documentation {
                     'id' => $doc->ID,
                 ], $current_url );
                 ?>
-                <li id="item-<?php echo esc_attr( $doc->ID ); ?>" class="helpdocs-sidebar-item <?php echo in_array( $doc->ID, $in_folders ) ? 'in-folder' : 'not-in-folder'; ?><?php echo esc_attr( $active ); ?>" draggable="true" data-type="item" data-item-id="<?php echo esc_attr( $doc->ID ); ?>" data-import="<?php echo esc_attr( $data_import ); ?>" data-folder-id="0" data-import-id="<?php echo esc_attr( $import_id ); ?>">
+                <li id="item-<?php echo esc_attr( $doc->ID ); ?>" class="helpdocs-sidebar-item not-in-folder<?php echo esc_attr( $active ); ?>" draggable="true" data-type="item" data-item-id="<?php echo esc_attr( $doc->ID ); ?>" data-import="<?php echo esc_attr( $data_import ); ?>" data-folder-id="0" data-import-id="<?php echo esc_attr( $import_id ); ?>">
                     <a href="<?php echo esc_url( $item_url ); ?><?php echo esc_attr( $incl_feed ); ?>"><span class="<?php echo esc_attr( $file_icon_class ); ?>"></span> <span class="item-title"><?php echo esc_html( $doc->post_title ); ?></span></a>
                 </li>
                 <?php
