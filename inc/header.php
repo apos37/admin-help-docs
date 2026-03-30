@@ -5,6 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Logo
 $logo_url = sanitize_url( get_option( 'helpdocs_logo', '' ) );
+if ( strpos( $logo_url, '/wp-content/plugins/admin-help-docs/includes/admin/img/logo.png' ) !== false ) { // TODO: Remove this in a future version
+    $logo_url = str_replace( '/includes/admin/img/logo.png', '/inc/img/logo.png', $logo_url );
+    update_option( 'helpdocs_logo', $logo_url );
+}
 if ( ! $logo_url ) {
     $logo_url = Bootstrap::url( 'inc/img/logo.png' );
 }

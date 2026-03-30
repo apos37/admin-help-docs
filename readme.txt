@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 2.0.0
+Stable tag: 2.0.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,9 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
+= 2.0.0.1 =
+* Fix: Update old image path to new one if using the stock page logo
+
 = 2.0.0 =
 * Update: Complete rebuild for better performance and UI
 * Update: Added ability to reset colors and all settings before save to test before keeping changes

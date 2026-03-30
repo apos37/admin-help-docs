@@ -3,7 +3,7 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://pluginrx.com/plugin/admin-help-docs/
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             2.0.0
+ * Version:             2.0.0.1
  * Requires at least:   5.9
  * Tested up to:        6.9
  * Requires PHP:        8.0
