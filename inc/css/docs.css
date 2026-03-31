@@ -266,6 +266,10 @@
     height: auto;
 }
 
+.helpdocs-doc-content {
+    color: var(--helpdocs-color-doc-font) !important;
+}
+
 /* ----------------------------------------- */
 /* -------- Standard (Top/Bottom/Manual) ---- */
 /* ----------------------------------------- */

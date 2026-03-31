@@ -173,6 +173,17 @@ class Menu {
      * @return void
      */
     public function register_menu() : void {
+        // Register the hidden dashboard replacement page
+        add_submenu_page(
+            'index.php',
+            __( 'Dashboard', 'admin-help-docs' ),
+            __( 'Dashboard', 'admin-help-docs' ),
+            'read',
+            'admin-help-dashboard',
+            [ WPDashboard::class, 'render_replacement_page' ]
+        );
+
+        // Register the help docs main menu
         $title = sanitize_text_field( get_option( 'helpdocs_menu_title', Helpers::get_menu_title() ) );
 
         $icon = Helpers::get_icon();
@@ -195,6 +206,7 @@ class Menu {
             return;
         }
 
+        // Add submenu items for each tab
         $user_can_edit = Helpers::user_can_edit();
 
         global $submenu;
@@ -229,16 +241,6 @@ class Menu {
 
             $submenu[ $parent_slug ][] = [ $tab[ 'label' ] ?? '', 'read', $link ];
         }
-
-        // Register the hidden dashboard replacement page
-        add_submenu_page(
-            'index.php',
-            __( 'Dashboard', 'admin-help-docs' ),
-            __( 'Dashboard', 'admin-help-docs' ),
-            'read',
-            'admin-help-dashboard',
-            [ WPDashboard::class, 'render_replacement_page' ]
-        );
     } // End register_menu()
 
 

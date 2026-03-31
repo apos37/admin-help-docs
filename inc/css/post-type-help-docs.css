@@ -72,6 +72,7 @@ input[name*="[custom]"] {
 .helpdocs-checkboxes {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
     background: #f6f7f7;
     padding: 12px;
     border: 1px solid #dcdcde;

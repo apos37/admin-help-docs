@@ -844,7 +844,7 @@ class Helpers {
      * }
      * @return array List of matching post objects.
      */
-    public static function get_docs( $loc_args = [], $group_by_location = false ) : array {
+    public static function get_docs( $loc_args = [], $group_by_location = false, $order_by = null, $order = null ) : array {
         $site_location = $loc_args[ 'site_location' ] ?? '';
         if ( empty( $site_location ) ) {
             return [];
@@ -860,15 +860,9 @@ class Helpers {
         if ( ! $test_mode ) {
             $cache_version = get_option( 'helpdocs_cache_version', '1.0' );
             $user_seed = $is_admin ? 'admin' : implode( '-', $current_user_roles );
-            $cache_key = 'helpdocs_loc_' . md5( wp_json_encode( $loc_args ) . $user_seed . $cache_version );
+            $cache_params = wp_json_encode( $loc_args ) . $user_seed . $cache_version . $order_by . $order;
+            $cache_key    = 'helpdocs_loc_' . md5( $cache_params );
             $cached = get_transient( $cache_key );
-            if ( false !== $cached ) {
-                return $cached;
-            }
-            
-            $user_seed = $is_admin ? 'admin' : implode( '-', $current_user_roles );
-            $cache_key = 'helpdocs_loc_' . md5( wp_json_encode( $loc_args ) . $user_seed );
-            $cached    = get_transient( $cache_key );
             if ( false !== $cached ) {
                 return $cached;
             }
@@ -1061,7 +1055,21 @@ class Helpers {
         }
 
         if ( ! empty( $filtered_docs ) && ! $group_by_location ) {
-            usort( $filtered_docs, function( $a, $b ) {
+            usort( $filtered_docs, function( $a, $b ) use ( $order_by, $order ) {
+            
+                // If explicit ordering is requested
+                if ( ! empty( $order_by ) ) {
+                    $prop = $order_by;
+                    $val_a = $a->$prop ?? '';
+                    $val_b = $b->$prop ?? '';
+                    
+                    $result = ( is_numeric( $val_a ) && is_numeric( $val_b ) ) 
+                        ? $val_a <=> $val_b 
+                        : strcasecmp( (string)$val_a, (string)$val_b );
+
+                    return ( strtoupper( $order ) === 'DESC' ) ? -$result : $result;
+                }
+
                 // 1. Get Normalized Orders
                 $order_a = isset( $a->helpdocs_order ) ? (int) $a->helpdocs_order : 0;
                 $order_b = isset( $b->helpdocs_order ) ? (int) $b->helpdocs_order : 0;

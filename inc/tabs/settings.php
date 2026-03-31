@@ -398,7 +398,7 @@ class Settings {
                 'label'       => __( 'System Cache Management', 'admin-help-docs' ),
                 'type'        => 'html',
                 'box'         => 'advanced',
-                'content'     => '<button type="button" id="helpdocs-flush-cache" class="button helpdocs-button">' . __( 'Clear Stored Data', 'admin-help-docs' ) . '</button>',
+                'content'     => '<button type="button" id="helpdocs-flush-cache" class="helpdocs-button">' . __( 'Clear Stored Data', 'admin-help-docs' ) . '</button>',
             ],
             [
                 'name'        => 'upload_download_colors',

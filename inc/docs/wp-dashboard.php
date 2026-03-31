@@ -57,7 +57,7 @@ class WPDashboard {
         }
         $docs = Helpers::get_docs( [
             'site_location' => 'replace_dashboard',
-        ] );
+        ], false, 'post_date', 'ASC' );
 
         $doing_toc = false;
         ?>

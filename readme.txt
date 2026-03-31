@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 2.0.0.1
+Stable tag: 2.0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,13 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
+= 2.0.0.2 =
+* Fix: Replacing dashboard wasn't working for some roles
+* Tweak: Updated the dashboard docs (when replacing dashboard entirely) to be sorted by date
+* Fix: Make a few minor CSS adjustments
+* Fix: Save button icon wobbly
+* Fix: Doc font color not taking on some docs
+
 = 2.0.0.1 =
 * Fix: Update old image path to new one if using the stock page logo
 
