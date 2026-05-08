@@ -69,7 +69,7 @@ https://youtu.be/8_JHpyOSunU
 
 == Changelog ==
 = 2.0.1 =
-* Update: Added several helpful shortcodes to be used in docs
+* Update: Added several helpful shortcodes to be used in docs (see help guide on pluginrx.com)
 * Fix: Warning - Uninitialized string offset 2
 
 = 2.0.0.2 =
