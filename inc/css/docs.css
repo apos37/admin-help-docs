@@ -505,3 +505,96 @@ td > .helpdocs-element-item {
 #wp-admin-bar-helpdocs_add_new:hover .ab-item {
     background: #4a525a !important;
 }
+
+
+/* ----------------------------------------- */
+/* -------------- Stale Posts -------------- */
+/* ----------------------------------------- */
+
+.helpdocs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: var(--helpdocs-color-doc-font, #3c434a);
+    box-shadow: var(--helpdocs-shadow);
+    border-radius: var(--helpdocs-radius-small);
+    overflow: hidden; /* Required for border-radius to clip the table edges */
+}
+
+.helpdocs-table thead tr {
+    background: var(--helpdocs-color-header-bg);
+    color: var(--helpdocs-color-header-font);
+    text-align: left;
+}
+
+.helpdocs-table thead th {
+    padding: 9px 14px;
+    font-weight: 600;
+    font-size: 0.80rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.helpdocs-table-type,
+.helpdocs-table-last-modified,
+.helpdocs-table-age {
+    text-align: right;
+    width: 120px;
+}
+
+.helpdocs-table tbody tr {
+    border-bottom: 1px solid var(--helpdocs-color-border);
+    transition: background 0.15s ease;
+}
+
+.helpdocs-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.helpdocs-table tbody tr:nth-child(even) {
+    background: #f6f7f7;
+}
+
+.helpdocs-table tbody tr:hover {
+    background: #f0f2f4;
+}
+
+.helpdocs-table tbody td {
+    padding: 8px 14px;
+    vertical-align: middle;
+}
+
+.helpdocs-table tbody td:last-child {
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.helpdocs-table a {
+    color: var(--helpdocs-color-doc-link);
+    text-decoration: none;
+}
+
+.helpdocs-table a:hover {
+    text-decoration: underline;
+}
+
+.helpdocs-table-none,
+.helpdocs-error {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--helpdocs-radius-small);
+    border-left: 4px solid;
+    margin: 0;
+}
+
+.helpdocs-table-none {
+    background: #f6f7f7;
+    border-color: #c3c4c7;
+    color: #50575e;
+}
+
+.helpdocs-error {
+    background: #fcf0f1;
+    border-color: #d63638;
+    color: #d63638;
+}

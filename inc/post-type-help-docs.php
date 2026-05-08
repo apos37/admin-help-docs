@@ -701,8 +701,8 @@ class HelpDocs {
      * Snippet courtesy of Mighty Minnow
      * https://www.mightyminnow.com/2013/12/how-to-get-urls-for-wordpress-admin-menu-items/
      *
-     * @param [type] $menu_item_file
-     * @param boolean $submenu_as_parent
+     * @param string $menu_item_file
+     * @param bool $submenu_as_parent
      * @return string
      */
     public static function get_admin_menu_item_url( $menu_item_file, $submenu_as_parent = true ) {
@@ -753,9 +753,7 @@ class HelpDocs {
             $sub_item = '';
             foreach( $submenu as $top_file => $submenu_items ) {
     
-                // Reindex $submenu_items
                 $submenu_items = array_values( $submenu_items );
-    
                 foreach( $submenu_items as $key => $submenu_item ) {
                     if ( array_keys( $submenu_item, $menu_item_file ) ) {
                         $sub_item = $submenu_items[ $key ];
@@ -763,11 +761,11 @@ class HelpDocs {
                     }
                 }					
     
-                if ( ! empty( $sub_item ) )
+                if ( ! empty( $sub_item ) ) {
                     break;
+                }
             }
     
-            // Get top-level parent item
             foreach( $menu as $key => $menu_item ) {
                 if ( array_keys( $menu_item, $top_file, true ) ) {
                     $item = $menu[ $key ];
@@ -775,32 +773,35 @@ class HelpDocs {
                 }
             }
     
-            // If the $menu_item_file parameter doesn't match any menu item, return false
-            if ( ! $sub_item )
+            if ( ! $sub_item ) {
                 return false;
+            }
     
-            // Get URL
-            $menu_file = $item[2];
+            if ( is_array( $sub_item ) && isset( $sub_item[2] ) && is_array( $item ) && isset( $item[2] ) ) {
+
+                $menu_file = $item[2];
+                if ( false !== ( $pos = strpos( $menu_file, '?' ) ) ) {
+                    $menu_file = substr( $menu_file, 0, $pos );
+                }
     
-            if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
-                $menu_file = substr( $menu_file, 0, $pos );
-    
-            // Handle current for post_type=post|page|foo pages, which won't match $self.
-            // $self_type = ! empty( $typenow ) ? $self . '?post_type=' . $typenow : 'nothing';
-            $menu_hook = get_plugin_page_hook( $sub_item[2], $item[2] );
-    
-            $sub_file = $sub_item[2];
-            if ( false !== ( $pos = strpos( $sub_file, '?' ) ) )
-                $sub_file = substr($sub_file, 0, $pos);
-    
-            if ( ! empty( $menu_hook ) || ( ( 'index.php' != $sub_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$sub_file" ) && ! file_exists( ABSPATH . "/wp-admin/$sub_file" ) ) ) {
-                // If admin.php is the current page or if the parent exists as a file in the plugins or admin dir
-                if ( ( ! $admin_is_parent && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! is_dir( WP_PLUGIN_DIR . "/{$item[2]}" ) ) || file_exists( $menu_file ) )
-                    $url = add_query_arg( array( 'page' => $sub_item[2] ), $item[2] );
-                else
-                    $url = add_query_arg( array( 'page' => $sub_item[2] ), 'admin.php' );
+                $menu_hook = get_plugin_page_hook( $sub_item[2], $item[2] );
+        
+                $sub_file = $sub_item[2];
+                if ( false !== ( $pos = strpos( $sub_file, '?' ) ) ) {
+                    $sub_file = substr( $sub_file, 0, $pos );
+                }
+        
+                if ( ! empty( $menu_hook ) || ( ( 'index.php' != $sub_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$sub_file" ) && ! file_exists( ABSPATH . "/wp-admin/$sub_file" ) ) ) {
+                    if ( ( ! $admin_is_parent && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! is_dir( WP_PLUGIN_DIR . "/{$item[2]}" ) ) || file_exists( $menu_file ) )
+                        $url = add_query_arg( array( 'page' => $sub_item[2] ), $item[2] );
+                    else
+                        $url = add_query_arg( array( 'page' => $sub_item[2] ), 'admin.php' );
+                } else {
+                    $url = $sub_item[2];
+                }
+
             } else {
-                $url = $sub_item[2];
+                return false;
             }
         }
     
@@ -1131,9 +1132,9 @@ class HelpDocs {
     /**
      * Disable Gutenberg while allowing rest
      *
-     * @param [type] $current_status
-     * @param [type] $post_type
-     * @return void
+     * @param bool $current_status
+     * @param string $post_type
+     * @return bool
      */
     public function disable_gutenberg( $current_status, $post_type ) {
         $disabled_post_types = [ self::$post_type ];
@@ -1147,6 +1148,7 @@ class HelpDocs {
     /**
      * Get the location rules
      *
+     * @param array $all_site_locations
      * @return array
      */
     public static function location_rules( $all_site_locations ) {

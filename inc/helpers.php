@@ -480,6 +480,37 @@ class Helpers {
 
 
     /**
+     * Parse a human-readable "since" string into a GMT date string for WP_Query's date_query.
+     *
+     * Accepts: "X days", "X weeks", "X months", "X years"
+     *
+     * @param  string $since  The since attribute value.
+     * @return string|false   A date string like "2023-05-01 00:00:00", or false on failure.
+     */
+    public static function parse_since_to_date( $since ) {
+        $since = strtolower( trim( $since ) );
+
+        // Match "<number> <unit>" — e.g. "6 months", "90 days", "1 year", "2 weeks"
+        if ( ! preg_match( '/^(\d+)\s*(day|week|month|year)s?$/', $since, $matches ) ) {
+            return false;
+        }
+
+        $amount = (int) $matches[1];
+        $unit   = $matches[2]; // day | week | month | year
+
+        // strtotime understands "X days/weeks/months/years ago" natively.
+        $timestamp = strtotime( "-{$amount} {$unit}s" );
+
+        if ( ! $timestamp ) {
+            return false;
+        }
+
+        // Return in MySQL datetime format (UTC) for WP_Query date_query.
+        return gmdate( 'Y-m-d H:i:s', $timestamp );
+    } // End parse_since_to_date()
+
+
+    /**
      * Base64 URL-safe encoding
      *
      * @param string $data Data to encode
@@ -632,7 +663,7 @@ class Helpers {
     /**
      * Output the logo image HTML if the option to include the logo is enabled
      *
-     * @return void
+     * @return string|null HTML img tag for the logo, or null if the logo should not be included
      */
     public static function maybe_include_logo() {
         if ( ! get_option( 'helpdocs_include_logo_on_docs', true ) ) {
@@ -640,7 +671,7 @@ class Helpers {
         }
         $logo_url = sanitize_text_field( get_option( 'helpdocs_doc_logo', self::get_page_or_default_logo_url() ) );
         if ( $logo_url ) {
-            return '<div class="helpdocs-doc-logo"><img src="' . esc_url( $logo_url ) . '" alt="' . __( 'Help Doc Logo', 'admin-help-docs' ) . ' Logo"></div>';
+            return '<div class="helpdocs-doc-logo"><img src="' . esc_url( $logo_url ) . '" alt="' . __( 'Help Doc Logo', 'admin-help-docs' ) . '"></div>';
         }
         return;
     } // End maybe_include_logo()
@@ -1353,6 +1384,7 @@ class Helpers {
      * Output the HTML for a help doc on the frontend, including title and content, with proper escaping
      *
      * @param int $doc_id The ID of the doc post
+     * @param string $doc_title The title of the doc post
      * @param string $doc_content The raw content of the doc post
      * @param string $page_location The location on the page where this doc is being output (e.g. 'top', 'side', 'bottom')
      * @return void Outputs the HTML directly
@@ -1541,7 +1573,7 @@ class Helpers {
     /**
      * Get admin page title from url
      *
-     * @param string $url
+     * @param string $encoded_url
      * @return string|false
      */
     public static function get_admin_page_title_from_url( $encoded_url ) {
@@ -1560,6 +1592,7 @@ class Helpers {
     /**
      * Get admin page link from site location entry
      *
+     * @param int $post_id
      * @param array $loc
      * @return string|false URL if linkable, false if not linkable or invalid
      */

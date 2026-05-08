@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 2.0.0.2
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -68,6 +68,10 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
+= 2.0.1 =
+* Update: Added several helpful shortcodes to be used in docs
+* Fix: Warning - Uninitialized string offset 2
+
 = 2.0.0.2 =
 * Fix: Replacing dashboard wasn't working for some roles
 * Tweak: Updated the dashboard docs (when replacing dashboard entirely) to be sorted by date

@@ -30,7 +30,7 @@ class Colors {
                     'doc_bg'          => '#DCF3F6',
                     'doc_title'       => '#093B60',
                     'doc_font'        => '#023260',
-                    'doc_link'        => '#00BAD2',
+                    'doc_link'        => '#2271b1',
                     'header_bg'       => '#093B60',
                     'header_font'     => '#BEEEF3',
                     'header_tab'      => '#C99A2C',
