@@ -5,6 +5,7 @@ h4 { font-size: 1.2rem; color: #1d2327; margin: 1em 0 0.5rem; }
 #documentation {
     display: flex;
     gap: 30px;
+    margin-top: 0 !important;
 }
 
 /* Sidebar */

@@ -2,9 +2,9 @@
 Contributors: apos37
 Tags: help, documentation, instructions, how-to, admin
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 2.0.1.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -54,6 +54,9 @@ Yes, you can choose to automatically feed documents or copy them locally from a 
 = Where can I request features and get further support? =
 We recommend using our [website support forum](https://pluginrx.com/support/plugin/admin-help-docs/) as the primary method for requesting features and getting help. You can also reach out via our [Discord support server](https://discord.gg/3HnzNEJVnR) or the [WordPress.org support forum](https://wordpress.org/support/plugin/admin-help-docs/), but please note that WordPress.org doesn’t always notify us of new posts, so it’s not ideal for time-sensitive issues.
 
+= I updated my import's API key or URL, but it still shows an error. =
+The plugin temporarily remembers failed connection attempts for 15 minutes so a broken or misconfigured import doesn't slow down every admin page. After fixing the URL or API key, click "Fetch Docs" on the import's edit screen to check the connection immediately, or wait up to 15 minutes for it to retry automatically.
+
 == Demo ==
 https://youtu.be/8_JHpyOSunU
 
@@ -68,6 +71,17 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
+= 2.0.2 =
+* Fix: Every admin page taking 20-30 seconds to load when an import was configured with an unreachable URL or invalid API key
+* Fix: Failed remote import lookups were never cached, causing a blocking HTTP request on every page load
+* Fix: Remote import data fetched multiple times per request instead of once
+* Fix: Imports with a blank URL still triggering a remote request
+* Tweak: Reduced remote request timeout from 20 to 5 seconds outside of manual fetches
+* Tweak: Removed browser cache header detection as a trigger for clearing remote import data
+* Update: Added an admin notice when a configured import cannot reach the remote site
+* Tweak: Standardized header styling and fixed minor button sizing inconsistencies across admin pages
+* Fix: Replacing the WordPress Dashboard was intercepting other plugins' ajax/iframe requests to index.php (e.g. Gravity Forms' Select Columns modal)
+
 = 2.0.1.1 =
 * Compatibility: Increased minimum required WordPress version to 6.0
 * Compatibility: Tested with WordPress 7.0

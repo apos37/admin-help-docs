@@ -8,6 +8,11 @@ namespace PluginRx\AdminHelpDocs;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class ImportEditor {
+
+    /**
+     * @var array Per-request memoization of remote lookups
+     */
+    private static array $request_cache = [];
     
 
     /**
@@ -36,6 +41,7 @@ class ImportEditor {
         add_action( 'helpdocs_subheader_right', [ $this, 'debug_quick_link' ] );
         add_action( 'admin_head', [ $this, 'pre_cache_locations' ] );
         add_action( 'admin_init', [ $this, 'save_import_settings' ] );
+        add_action( 'admin_notices', [ $this, 'render_failed_import_notice' ] );
         add_action( 'wp_ajax_helpdocs_fetch_remote_docs', [ $this, 'ajax_fetch_remote_docs' ] );
         add_action( 'wp_ajax_helpdocs_import_individual_doc', [ $this, 'ajax_import_individual_doc' ] );
     } // End __construct()
@@ -113,6 +119,87 @@ class ImportEditor {
         
         HelpDocs::site_locations();
     } // End pre_cache_locations()
+
+
+    /**
+     * Show an admin notice when a published import cannot reach its remote site
+     *
+     * @return void
+     */
+    public function render_failed_import_notice() {
+        if ( ! Helpers::user_can_edit() ) {
+            return;
+        }
+
+        $import_posts = get_posts( [
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'post_type'      => Imports::$post_type,
+            'no_found_rows'  => true,
+            'meta_query'     => [
+                [
+                    'key'     => 'helpdocs_url',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+            ],
+        ] );
+
+        if ( empty( $import_posts ) ) {
+            return;
+        }
+
+        $current_import_id = ( Menu::is_our_tab( 'import' ) && isset( $_GET[ 'id' ] ) ) ? absint( $_GET[ 'id' ] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        $failed = [];
+
+        foreach ( $import_posts as $import ) {
+            $url     = get_post_meta( $import->ID, 'helpdocs_url', true );
+            $api_key = get_post_meta( $import->ID, 'helpdocs_api_key', true );
+            $data    = self::get_all_import_data( $url, $api_key );
+
+            if ( ! empty( $data[ 'error' ] ) ) {
+                $failed[] = [
+                    'title'      => $import->post_title,
+                    'error'      => $data[ 'error' ],
+                    'is_current' => ( $import->ID === $current_import_id ),
+                    'url'        => add_query_arg( [ 'page' => Bootstrap::textdomain(), 'tab' => 'import', 'id' => $import->ID ], Bootstrap::admin_url( 'admin.php' ) ),
+                ];
+            }
+        }
+
+        if ( empty( $failed ) ) {
+            return;
+        }
+
+        echo '<div class="notice notice-error" style="background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);"><p><strong>' . esc_html__( 'Admin Help Docs:', 'admin-help-docs' ) . '</strong> ';
+
+        foreach ( $failed as $item ) {
+            $reason = ( 'unauthorized' === $item[ 'error' ] )
+                ? __( 'invalid API key', 'admin-help-docs' )
+                : __( 'connection failed', 'admin-help-docs' );
+
+            if ( $item[ 'is_current' ] ) {
+                printf(
+                    /* translators: 1: import title, 2: failure reason */
+                    esc_html__( 'The import "%1$s" could not connect to its remote site (%2$s).', 'admin-help-docs' ),
+                    esc_html( $item[ 'title' ] ),
+                    esc_html( $reason )
+                );
+            } else {
+                printf(
+                    /* translators: 1: import title, 2: failure reason, 3: edit URL */
+                    esc_html__( 'The import "%1$s" could not connect to its remote site (%2$s). %3$s', 'admin-help-docs' ),
+                    esc_html( $item[ 'title' ] ),
+                    esc_html( $reason ),
+                    '<a href="' . esc_url( $item[ 'url' ] ) . '">' . esc_html__( 'Review import', 'admin-help-docs' ) . '</a>'
+                );
+            }
+            echo ' ';
+        }
+
+        echo '</p></div>';
+    } // End render_failed_import_notice()
 
 
     /**
@@ -372,67 +459,55 @@ class ImportEditor {
 
 
     /**
-     * Check if the current request is a browser "Hard Refresh"
-     * * @return bool
-     */
-    private static function is_hard_refresh() {
-        $cache_control = filter_input( INPUT_SERVER, 'HTTP_CACHE_CONTROL', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        $pragma        = filter_input( INPUT_SERVER, 'HTTP_PRAGMA', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-
-        $is_no_cache = ( 'no-cache' === $cache_control || 'no-cache' === $pragma );
-        
-        $is_max_age = ( 'max-age=0' === $cache_control );
-
-        return ( $is_no_cache || $is_max_age );
-    } // End is_hard_refresh()
-
-
-    /**
      * Get all import data for a given website
      *
-     * @param string $website The website to get imports for
-     * @return array Array of import objects
+     * @param string $website_url The remote site URL
+     * @param string $api_key Optional API key for the remote site
+     * @return array
      */
     public static function get_all_import_data( $website_url, $api_key = '' ) {
-        $import_id = isset( $_GET[ 'id' ] ) ? absint( $_GET[ 'id' ] ) : 0; // phpcs:ignore
+        $website_url = esc_url_raw( trim( (string) $website_url ) );
+        if ( empty( $website_url ) ) {
+            return [ 'docs' => [] ];
+        }
 
         if ( empty( $api_key ) ) {
-            $api_key = isset( $_POST[ 'helpdocs_api_key' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'helpdocs_api_key' ] ) ) : get_post_meta( $import_id, 'helpdocs_api_key', true ); // phpcs:ignore
+            $import_id = isset( $_GET[ 'id' ] ) ? absint( $_GET[ 'id' ] ) : 0; // phpcs:ignore
+            $api_key   = isset( $_POST[ 'helpdocs_api_key' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'helpdocs_api_key' ] ) ) : (string) get_post_meta( $import_id, 'helpdocs_api_key', true ); // phpcs:ignore
         }
 
         $cache_key = 'helpdocs_remote_' . md5( $website_url . $api_key );
 
-        if ( self::is_hard_refresh() ) {
-            delete_transient( $cache_key );
+        if ( isset( self::$request_cache[ $cache_key ] ) ) {
+            return self::$request_cache[ $cache_key ];
         }
 
         $cached = get_transient( $cache_key );
-
         if ( false !== $cached ) {
+            self::$request_cache[ $cache_key ] = $cached;
             return $cached;
         }
 
-        $v2_url = API::api_path();
-        $v2_url = str_replace( home_url(), $website_url, $v2_url );
+        $timeout = apply_filters( 'helpdocs_import_timeout', is_admin() && wp_doing_ajax() ? 20 : 5, $website_url );
+
+        $v2_url = str_replace( home_url(), $website_url, API::api_path() );
 
         $version_found = 'v2';
-        $response      = self::fetch_remote_json( $v2_url, $api_key );
+        $response      = self::fetch_remote_json( $v2_url, $api_key, $timeout );
         $status        = wp_remote_retrieve_response_code( $response );
 
-        // If V2 is 404, try V1
-        if ( ! is_wp_error( $response ) && $status === 404 ) {
+        if ( ! is_wp_error( $response ) && 404 === $status ) {
             $version_found = 'v1';
-            $v1_url        = str_replace( '/v2/', '/v1/', $v2_url );
-            $response      = self::fetch_remote_json( $v1_url, $api_key );
+            $response      = self::fetch_remote_json( str_replace( '/v2/', '/v1/', $v2_url ), $api_key, $timeout );
             $status        = wp_remote_retrieve_response_code( $response );
         }
 
         if ( is_wp_error( $response ) ) {
-            return [ 'error' => 'connection_failed' ];
+            return self::cache_result( $cache_key, [ 'error' => 'connection_failed' ], true, $website_url );
         }
 
-        if ( $status === 401 ) {
-            return [ 'error' => 'unauthorized' ];
+        if ( 401 === $status ) {
+            return self::cache_result( $cache_key, [ 'error' => 'unauthorized' ], true, $website_url );
         }
 
         $docs = json_decode( wp_remote_retrieve_body( $response ) );
@@ -442,20 +517,62 @@ class ImportEditor {
                 'version' => $version_found,
                 'docs'    => $docs,
             ];
-            set_transient( $cache_key, $data, apply_filters( 'helpdocs_import_cache_duration', 12 * HOUR_IN_SECONDS, $website_url ) );
-            return $data;
+
+            return self::cache_result( $cache_key, $data, false, $website_url );
         }
 
-        return [ 'docs' => [] ];
+        return self::cache_result( $cache_key, [ 'docs' => [] ], true, $website_url );
     } // End get_all_import_data()
 
 
     /**
-     * Helper to keep the remote request clean
+     * Store a lookup result in both the request cache and a transient
+     *
+     * @param string $cache_key
+     * @param array $data
+     * @param bool $is_failure Failures get a much shorter TTL so a fixed remote recovers quickly
+     * @param string $website_url
+     * @return array
      */
-    private static function fetch_remote_json( $url, $api_key = '' ) {
+    private static function cache_result( $cache_key, $data, $is_failure, $website_url ) {
+        $success_ttl = apply_filters( 'helpdocs_import_cache_duration', 12 * HOUR_IN_SECONDS, $website_url );
+        $failure_ttl = apply_filters( 'helpdocs_import_failure_cache_duration', 15 * MINUTE_IN_SECONDS, $website_url );
+
+        set_transient( $cache_key, $data, $is_failure ? $failure_ttl : $success_ttl );
+        self::$request_cache[ $cache_key ] = $data;
+
+        return $data;
+    } // End cache_result()
+
+
+    /**
+     * Force a fresh lookup, bypassing both caches
+     *
+     * @param string $website_url
+     * @param string $api_key
+     * @return array
+     */
+    public static function refresh_import_data( $website_url, $api_key = '' ) {
+        $cache_key = 'helpdocs_remote_' . md5( esc_url_raw( trim( (string) $website_url ) ) . $api_key );
+
+        unset( self::$request_cache[ $cache_key ] );
+        delete_transient( $cache_key );
+
+        return self::get_all_import_data( $website_url, $api_key );
+    } // End refresh_import_data()
+
+
+    /**
+     * Helper to keep the remote request clean
+     *
+     * @param string $url
+     * @param string $api_key
+     * @param int $timeout
+     * @return array|\WP_Error
+     */
+    private static function fetch_remote_json( $url, $api_key = '', $timeout = 5 ) {
         $args = [
-            'timeout'     => 20,
+            'timeout'     => absint( $timeout ),
             'httpversion' => '1.1',
             'user-agent'  => 'AdminHelpDocs Importer; ' . home_url(),
             'headers'     => [
@@ -562,6 +679,9 @@ class ImportEditor {
 
     /**
      * Helper to check if title already exists for this CPT
+     * 
+     * @param string $title The title to check
+     * @param int $post_id The current post ID to exclude from the check
      */
     private function title_exists( $title, $post_id ) {
         global $wpdb;
@@ -591,10 +711,7 @@ class ImportEditor {
             wp_send_json_error( [ 'message' => __( 'Please enter a valid URL.', 'admin-help-docs' ) ] );
         }
 
-        // Delete transient using the new cache key logic (url + key)
-        delete_transient( 'helpdocs_remote_' . md5( $url . $api_key ) );
-
-        $import_data = self::get_all_import_data( $url, $api_key );
+        $import_data = self::refresh_import_data( $url, $api_key );
         $docs        = $import_data[ 'docs' ] ?? [];
         $version     = $import_data[ 'version' ] ?? 'v2';
         $error       = $import_data[ 'error' ] ?? '';
@@ -644,10 +761,7 @@ class ImportEditor {
             wp_send_json_error( __( 'Invalid request data.', 'admin-help-docs' ) );
         }
 
-        $cache_key = 'helpdocs_remote_' . md5( $url . $api_key );
-        delete_transient( $cache_key );
-
-        $import_data = self::get_all_import_data( $url, $api_key );
+        $import_data = self::refresh_import_data( $url, $api_key );
         if ( ! empty( $import_data[ 'error' ] ) ) {
             wp_send_json_error( sprintf( __( 'Remote error: %s', 'admin-help-docs' ), $import_data[ 'error' ] ) );
         }

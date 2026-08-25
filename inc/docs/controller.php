@@ -49,16 +49,22 @@ class Controller {
      */
     public function maybe_replace_dashboard() {
         global $pagenow;
-        if ( 'index.php' !== $pagenow || isset( $_GET[ 'page' ] ) || ! get_option( 'helpdocs_replace_dashboard' ) ) { // phpcs:ignore
+        if ( 'index.php' !== $pagenow || ! get_option( 'helpdocs_replace_dashboard' ) ) {
             return;
         }
-        
-        // 1. THE NUCLEAR OPTION: Wipe out all dashboard widgets
-        add_action( ( 'wp_dashboard_setup' ), [ $this, 'nuclear_wipe_widgets' ], 9999 );
 
-        // 2. REDIRECT to our page
-        $redirect_url = admin_url( ( 'admin.php?page=admin-help-dashboard' ) );
-        wp_safe_redirect( $redirect_url );
+        if ( wp_doing_ajax() || wp_doing_cron() || ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+            return;
+        }
+
+        // Third-party plugins use /wp-admin/?foo=bar as an endpoint (Gravity Forms' ?gf_page=select_columns iframe, for one), so bail on anything that isn't a plain dashboard load
+        $allowed = apply_filters( 'helpdocs_dashboard_allowed_params', [ 'message', 'updated', 'welcome' ] );
+        $unknown = array_diff( array_keys( $_GET ), $allowed ); // phpcs:ignore
+        if ( ! empty( $unknown ) ) {
+            return;
+        }
+
+        wp_safe_redirect( admin_url( 'admin.php?page=admin-help-dashboard' ) );
         exit;
     } // End maybe_replace_dashboard()
 

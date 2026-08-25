@@ -1150,6 +1150,14 @@ class Helpers {
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'post_type'      => Imports::$post_type,
+            'no_found_rows'  => true,
+            'meta_query'     => [
+                [
+                    'key'     => 'helpdocs_url',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+            ],
         ] );
 
         if ( empty( $import_posts ) ) {
