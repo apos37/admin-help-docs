@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -57,6 +57,9 @@ We recommend using our [website support forum](https://pluginrx.com/support/plug
 = I updated my import's API key or URL, but it still shows an error. =
 The plugin temporarily remembers failed connection attempts for 15 minutes so a broken or misconfigured import doesn't slow down every admin page. After fixing the URL or API key, click "Fetch Docs" on the import's edit screen to check the connection immediately, or wait up to 15 minutes for it to retry automatically.
 
+= Can I migrate documentation from another plugin? =
+Yes. Admin Help Docs includes a Migrate tab that can copy content from any post type into your Help Docs — including from other admin documentation plugins like WP Help. Just select the post type you want to migrate from, choose which posts to bring over, and they'll be published to your Main Documentation Page, organized into their own folder named after the source.
+
 == Demo ==
 https://youtu.be/8_JHpyOSunU
 
@@ -71,6 +74,13 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
+= 2.0.3 =
+* Update: Added new Migrate tab for copying documents from another post type (e.g. an abandoned plugin like WP Help) into Admin Help Docs as published docs, filed into an auto-created folder named after the source (props Alan B. for the suggestion)
+* Update: Added dismissible admin notice on known source plugins' screens (currently WP Help) linking directly to the Migrate tab with the source pre-selected
+* Update: Added `helpdocs_migrate_known_sources` filter for registering additional migration source plugins
+* Update: Added `helpdocs_migrate_eligible_post_types` filter for controlling which post types appear in the Migrate tab's dropdown
+* Update: Added `helpdocs_migrate_post_imported` action, fired after each post is successfully migrated
+
 = 2.0.2 =
 * Fix: Every admin page taking 20-30 seconds to load when an import was configured with an unreachable URL or invalid API key
 * Fix: Failed remote import lookups were never cached, causing a blocking HTTP request on every page load

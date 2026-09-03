@@ -30,6 +30,8 @@
 .helpdocs-button.button-secondary {
     background: #f6f7f7 !important;
     color: #1d2327 !important;
+    min-height: 30px !important;
+    line-height: 1 !important;
 }
 
 .helpdocs-button.button-secondary:hover {

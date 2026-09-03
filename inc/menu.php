@@ -80,6 +80,11 @@ class Menu {
                 'class'  => ImportEditor::class,
                 'hidden' => true,
             ],
+            'migrate' => [
+                'label' => __( 'Migrate', 'admin-help-docs' ),
+                'title' => __( 'Migrate Docs', 'admin-help-docs' ),
+                'class' => Migrate::class,
+            ],
             'admin-menu' => [
                 'label' => __( 'Admin Menu', 'admin-help-docs' ),
                 'buttons' => [

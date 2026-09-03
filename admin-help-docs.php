@@ -3,7 +3,7 @@
  * Plugin Name:         Admin Help Docs
  * Plugin URI:          https://pluginrx.com/plugin/admin-help-docs/
  * Description:         Site developers and operators can easily create help documentation for the admin area
- * Version:             2.0.2
+ * Version:             2.0.3
  * Requires at least:   6.0
  * Tested up to:        7.1
  * Requires PHP:        8.0
@@ -47,6 +47,7 @@ final class Bootstrap {
         'tabs/faq.php',
         'tabs/support.php',
         'tabs/import.php',
+        'tabs/migrate.php',
         'menu.php',
         'shortcodes.php',
         'api.php',
@@ -133,7 +134,7 @@ final class Bootstrap {
             deactivate_plugins( plugin_basename( __FILE__ ) );
             wp_die( sprintf(
                 /* translators: %1$s is plugin name, %2$s is required PHP version */
-                esc_html( __( '%1$s requires PHP %2$s or higher.', 'dev-debug-tools' ) ),
+                esc_html( __( '%1$s requires PHP %2$s or higher.', 'admin-help-docs' ) ),
                 esc_html( $this->meta[ 'name' ] ),
                 esc_html( $this->meta[ 'requires_php' ] )
             ) );
@@ -238,7 +239,7 @@ final class Bootstrap {
     /**
      * Get a page URL
      *
-     * @param string $append
+     * @param string $slug
      * @return string
      */
     public static function tab_url( $slug ) : string {
@@ -262,6 +263,10 @@ final class Bootstrap {
                     [ 'post_type' => Imports::$post_type ],
                     self::admin_url( 'edit.php' )
                 );
+
+            case 'migrate':
+                $slug = 'migrate';
+                break;
 
             case 'main':
                 $slug = 'documentation';
