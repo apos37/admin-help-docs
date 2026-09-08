@@ -391,8 +391,10 @@ class Migrate {
                     'site_location' => base64_encode( 'main' ),
                     'page_location' => '',
                     'custom'        => '',
+                    'addt_params'   => false,
                     'post_types'    => [],
-                    'order'         => '',
+                    'order'         => 0,
+                    'toc'           => false,
                     'css_selector'  => '',
                 ],
             ] );
@@ -410,6 +412,8 @@ class Migrate {
             $last_id = $new_id;
             $imported++;
         }
+
+        Helpers::flush_location_cache();
 
         wp_send_json_success( [
             'imported' => $imported,
