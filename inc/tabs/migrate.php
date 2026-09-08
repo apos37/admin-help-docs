@@ -349,6 +349,15 @@ class Migrate {
         $last_id  = 0;
 
         foreach ( $source_ids as $source_id ) {
+            $lock_key = 'helpdocs_migrate_lock_' . $source_post_type . '_' . $source_id;
+
+            if ( get_transient( $lock_key ) ) {
+                $skipped++;
+                continue;
+            }
+
+            set_transient( $lock_key, 1, 60 );
+
             $source_post = get_post( $source_id );
 
             if ( ! $source_post || $source_post_type !== $source_post->post_type ) {
@@ -361,10 +370,19 @@ class Migrate {
                 continue;
             }
 
+            $allow_data_uris = static function ( $protocols ) {
+                $protocols[] = 'data';
+                return $protocols;
+            };
+
+            add_filter( 'kses_allowed_protocols', $allow_data_uris );
+            $clean_content = wp_kses_post( $source_post->post_content );
+            remove_filter( 'kses_allowed_protocols', $allow_data_uris );
+
             $new_id = wp_insert_post( [
                 'post_type'    => HelpDocs::$post_type,
                 'post_title'   => $source_post->post_title,
-                'post_content' => wp_kses_post( $source_post->post_content ),
+                'post_content' => $clean_content,
                 'post_excerpt' => $source_post->post_excerpt,
                 'post_status'  => 'publish',
             ], true );

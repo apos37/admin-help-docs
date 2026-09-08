@@ -4,7 +4,7 @@ Tags: help, documentation, instructions, how-to, admin
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 2.0.3.1
+Stable tag: 2.0.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -74,8 +74,8 @@ https://youtu.be/8_JHpyOSunU
 8. Flexible branding options
 
 == Changelog ==
-= 2.0.3.1 =
-* Fix: Migrated documents were not appearing reliably on the Main Documentation Page because the location display cache wasn't being flushed after migration, which could lead to re-running a migration and creating duplicate documents
+= 2.0.3.2 =
+* Fix: Migrated documents were not migrating properly for some users
 
 = 2.0.3 =
 * Update: Added new Migrate tab for copying documents from another post type (e.g. an abandoned plugin like WP Help) into Admin Help Docs as published docs, filed into an auto-created folder named after the source (props Alan B. for the suggestion)
